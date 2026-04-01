@@ -1,0 +1,21 @@
+[package]
+name = "stratum-components"
+description = "Styled UI components for NexusStratum"
+publish = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+
+[dependencies]
+stratum-core = { workspace = true }
+stratum-primitives = { workspace = true }
+stratum-theme = { workspace = true }
+stratum-tailwind = { workspace = true }
+stratum-css = { workspace = true }
+stratum-a11y = { workspace = true }
+stratum-motion = { workspace = true }
+stratum-icons = { workspace = true }

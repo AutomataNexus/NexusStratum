@@ -1,0 +1,21 @@
+[package]
+name = "stratum-test"
+description = "Test utilities for NexusStratum"
+publish = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+
+[dependencies]
+stratum-core = { workspace = true }
+stratum-primitives = { workspace = true }
+stratum-components = { workspace = true }
+stratum-leptos = { workspace = true }
+stratum-theme = { workspace = true }
+
+[features]
+e2e = []

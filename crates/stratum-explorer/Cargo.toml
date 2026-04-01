@@ -1,0 +1,18 @@
+[package]
+name = "stratum-explorer"
+description = "Component explorer for NexusStratum"
+publish = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+
+[dependencies]
+stratum-core = { workspace = true }
+stratum-components = { workspace = true }
+stratum-leptos = { workspace = true }
+stratum-theme = { workspace = true }
+stratum-sdk = { workspace = true }
