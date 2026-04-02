@@ -92,6 +92,14 @@ pub mod generators {
     pub static TOAST: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("toast"));
     pub static TABLE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("table"));
     pub static TREE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("tree"));
+    pub static TOGGLE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("toggle"));
+    pub static PRESSABLE: LazyLock<IdGenerator> =
+        LazyLock::new(|| IdGenerator::new("pressable"));
+    pub static FOCUS_SCOPE: LazyLock<IdGenerator> =
+        LazyLock::new(|| IdGenerator::new("focus-scope"));
+    pub static SEPARATOR: LazyLock<IdGenerator> =
+        LazyLock::new(|| IdGenerator::new("separator"));
+    pub static PORTAL: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("portal"));
     pub static GENERIC: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("id"));
 }
 
