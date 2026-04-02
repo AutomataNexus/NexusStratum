@@ -12,3 +12,5 @@ authors.workspace = true
 
 [dependencies]
 stratum-core = { workspace = true }
+stratum-components = { workspace = true }
+stratum-theme = { workspace = true }
