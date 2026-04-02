@@ -2,7 +2,7 @@
 
 use crate::common::merge_classes;
 use stratum_core::aria::AriaAttributes;
-use stratum_core::render::RenderOutput;
+use stratum_core::render::{AttrValue, RenderOutput};
 
 /// Heading level (h1 through h6).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -74,7 +74,7 @@ impl Heading {
             .with_aria(aria);
 
         if let Some(ref id) = props.id {
-            output = output.with_data("heading-id", id.clone());
+            output = output.with_attr("id", AttrValue::String(id.clone()));
         }
 
         output

@@ -11,6 +11,5 @@ homepage.workspace = true
 authors.workspace = true
 
 [dependencies]
-stratum-core = { workspace = true }
 stratum-theme = { workspace = true }
 stratum-tailwind-macros = { workspace = true }

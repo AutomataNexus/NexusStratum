@@ -14,5 +14,3 @@ authors.workspace = true
 stratum-core = { workspace = true }
 stratum-components = { workspace = true }
 stratum-theme = { workspace = true }
-# leptos is needed for future Leptos component macros (view!, #[component], etc.)
-leptos = { version = "0.8", features = ["csr"] }

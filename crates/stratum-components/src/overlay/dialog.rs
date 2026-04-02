@@ -2,7 +2,7 @@
 
 use crate::common::merge_classes;
 use stratum_core::aria::{AriaAttributes, AriaRole};
-use stratum_core::render::RenderOutput;
+use stratum_core::render::{AttrValue, RenderOutput};
 
 /// Properties for the Dialog overlay/backdrop.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -70,7 +70,7 @@ impl Dialog {
             .with_data("state", if props.open { "open" } else { "closed" });
 
         if let Some(ref id) = props.id {
-            output = output.with_data("dialog-id", id.clone());
+            output = output.with_attr("id", AttrValue::String(id.clone()));
         }
 
         output

@@ -32,4 +32,6 @@ css = ["dep:stratum-css"]
 icons = ["dep:stratum-icons"]
 motion = ["dep:stratum-motion"]
 security = ["dep:stratum-security"]
+# full enables everything except dioxus — leptos and dioxus are mutually
+# exclusive framework choices, so pick one explicitly.
 full = ["leptos", "tailwind", "css", "icons", "motion", "security"]

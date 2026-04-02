@@ -12,10 +12,3 @@ authors.workspace = true
 
 [dependencies]
 stratum-core = { workspace = true }
-stratum-primitives = { workspace = true }
-stratum-theme = { workspace = true }
-stratum-tailwind = { workspace = true }
-stratum-css = { workspace = true }
-stratum-a11y = { workspace = true }
-stratum-motion = { workspace = true }
-stratum-icons = { workspace = true }

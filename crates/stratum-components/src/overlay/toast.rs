@@ -2,7 +2,7 @@
 
 use crate::common::merge_classes;
 use stratum_core::aria::{AriaAttributes, AriaLive, AriaRole};
-use stratum_core::render::RenderOutput;
+use stratum_core::render::{AttrValue, RenderOutput};
 
 /// Toast variant determines the visual style.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -73,7 +73,7 @@ impl Toast {
             .with_data("state", if props.open { "open" } else { "closed" });
 
         if let Some(ref id) = props.id {
-            output = output.with_data("toast-id", id.clone());
+            output = output.with_attr("id", AttrValue::String(id.clone()));
         }
 
         output

@@ -80,6 +80,13 @@ impl Textarea {
             .with_class(classes)
             .with_aria(aria);
 
+        if props.required {
+            output = output.with_attr("required", AttrValue::Bool(true));
+        }
+        if props.readonly {
+            output = output.with_attr("readonly", AttrValue::Bool(true));
+        }
+
         if let Some(ref p) = props.placeholder {
             output = output.with_attr("placeholder", AttrValue::String(p.clone()));
         }

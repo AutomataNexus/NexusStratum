@@ -15,7 +15,6 @@
 pub mod common;
 
 pub mod data_display;
-pub mod feedback;
 pub mod forms;
 pub mod layout;
 pub mod navigation;

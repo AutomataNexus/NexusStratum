@@ -12,7 +12,3 @@ authors.workspace = true
 
 [dependencies]
 stratum-core = { workspace = true }
-stratum-primitives = { workspace = true }
-
-[features]
-e2e = []
