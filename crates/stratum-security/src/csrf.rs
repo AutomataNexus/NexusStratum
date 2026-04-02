@@ -53,15 +53,20 @@ impl fmt::Display for CsrfToken {
 }
 
 /// Constant-time byte comparison to prevent timing attacks.
+///
+/// Both the content and the length comparison are constant-time.
+/// The longer slice is always fully iterated to prevent length leakage.
 fn constant_time_eq(a: &[u8], b: &[u8]) -> bool {
-    if a.len() != b.len() {
-        return false;
-    }
+    let len_eq = a.len() == b.len();
+    // Always iterate the longer of the two to prevent length-based timing
+    let max_len = a.len().max(b.len());
     let mut result = 0u8;
-    for (x, y) in a.iter().zip(b.iter()) {
+    for i in 0..max_len {
+        let x = if i < a.len() { a[i] } else { 0 };
+        let y = if i < b.len() { b[i] } else { 0 };
         result |= x ^ y;
     }
-    result == 0
+    result == 0 && len_eq
 }
 
 #[cfg(test)]

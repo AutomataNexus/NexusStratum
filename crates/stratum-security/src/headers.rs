@@ -14,7 +14,7 @@ pub struct SecurityHeaders {
     pub nosniff: bool,
     /// Referrer policy.
     pub referrer_policy: ReferrerPolicy,
-    /// Permissions policy directives.
+    /// Permissions-Policy directives (e.g., `"camera=()"`, `"microphone=()"`).
     pub permissions_policy: Vec<String>,
 }
 
@@ -45,6 +45,14 @@ impl SecurityHeaders {
     /// Set frame options.
     pub fn with_frame_options(mut self, options: FrameOptions) -> Self {
         self.frame_options = options;
+        self
+    }
+
+    /// Add a Permissions-Policy directive.
+    ///
+    /// Example: `headers.with_permissions_policy("camera=()")`.
+    pub fn with_permissions_policy(mut self, directive: impl Into<String>) -> Self {
+        self.permissions_policy.push(directive.into());
         self
     }
 
@@ -85,11 +93,17 @@ impl SecurityHeaders {
             self.referrer_policy.as_str().to_string(),
         ));
 
-        // X-XSS-Protection (legacy but still useful)
-        headers.push((
-            "X-XSS-Protection".to_string(),
-            "1; mode=block".to_string(),
-        ));
+        // X-XSS-Protection: 0 — XSS Auditor is deprecated in all modern browsers.
+        // Setting to 0 disables it, which is the current OWASP recommendation.
+        headers.push(("X-XSS-Protection".to_string(), "0".to_string()));
+
+        // Permissions-Policy
+        if !self.permissions_policy.is_empty() {
+            headers.push((
+                "Permissions-Policy".to_string(),
+                self.permissions_policy.join(", "),
+            ));
+        }
 
         headers
     }
@@ -146,13 +160,9 @@ mod tests {
         let headers = SecurityHeaders::new();
         let pairs = headers.to_header_pairs();
 
-        let has_csp = pairs.iter().any(|(k, _)| k == "Content-Security-Policy");
-        let has_frame = pairs.iter().any(|(k, _)| k == "X-Frame-Options");
-        let has_nosniff = pairs.iter().any(|(k, _)| k == "X-Content-Type-Options");
-
-        assert!(has_csp);
-        assert!(has_frame);
-        assert!(has_nosniff);
+        assert!(pairs.iter().any(|(k, _)| k == "Content-Security-Policy"));
+        assert!(pairs.iter().any(|(k, _)| k == "X-Frame-Options"));
+        assert!(pairs.iter().any(|(k, _)| k == "X-Content-Type-Options"));
     }
 
     #[test]
@@ -161,10 +171,7 @@ mod tests {
         let headers = SecurityHeaders::new().with_nonce(nonce);
         let pairs = headers.to_header_pairs();
 
-        let csp = pairs
-            .iter()
-            .find(|(k, _)| k == "Content-Security-Policy")
-            .unwrap();
+        let csp = pairs.iter().find(|(k, _)| k == "Content-Security-Policy").unwrap();
         assert!(csp.1.contains("nonce-test-nonce-123"));
         assert!(!csp.1.contains("unsafe-inline"));
     }
@@ -174,11 +181,33 @@ mod tests {
         let headers = SecurityHeaders::new();
         let pairs = headers.to_header_pairs();
 
-        let csp = pairs
-            .iter()
-            .find(|(k, _)| k == "Content-Security-Policy")
-            .unwrap();
+        let csp = pairs.iter().find(|(k, _)| k == "Content-Security-Policy").unwrap();
         assert!(csp.1.contains("unsafe-inline"));
+    }
+
+    #[test]
+    fn xss_protection_disabled() {
+        let headers = SecurityHeaders::new();
+        let pairs = headers.to_header_pairs();
+        let xss = pairs.iter().find(|(k, _)| k == "X-XSS-Protection").unwrap();
+        assert_eq!(xss.1, "0");
+    }
+
+    #[test]
+    fn permissions_policy_emitted() {
+        let headers = SecurityHeaders::new()
+            .with_permissions_policy("camera=()")
+            .with_permissions_policy("microphone=()");
+        let pairs = headers.to_header_pairs();
+        let pp = pairs.iter().find(|(k, _)| k == "Permissions-Policy").unwrap();
+        assert_eq!(pp.1, "camera=(), microphone=()");
+    }
+
+    #[test]
+    fn permissions_policy_omitted_when_empty() {
+        let headers = SecurityHeaders::new();
+        let pairs = headers.to_header_pairs();
+        assert!(!pairs.iter().any(|(k, _)| k == "Permissions-Policy"));
     }
 
     #[test]

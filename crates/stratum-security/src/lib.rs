@@ -16,8 +16,10 @@ pub mod csp;
 pub mod csrf;
 pub mod headers;
 pub mod sanitize;
+pub mod sri;
 
 pub use csp::CspNonce;
 pub use csrf::CsrfToken;
 pub use headers::SecurityHeaders;
 pub use sanitize::Sanitizer;
+pub use sri::SriHash;

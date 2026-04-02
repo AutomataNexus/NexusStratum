@@ -6,17 +6,15 @@
 pub struct Sanitizer {
     /// Strip all HTML tags.
     pub strip_tags: bool,
-    /// Maximum input length (0 = unlimited).
+    /// Maximum input length in characters (0 = unlimited).
     pub max_length: usize,
     /// Trim whitespace from start and end.
     pub trim: bool,
     /// Collapse multiple whitespace characters to single spaces.
     pub collapse_whitespace: bool,
-    /// Allowed characters regex pattern (empty = allow all after other rules).
-    pub allowed_pattern: Option<String>,
     /// Strip null bytes.
     pub strip_null_bytes: bool,
-    /// Strip control characters (except newline, tab).
+    /// Strip control characters (except newline `\n`, tab `\t`, and carriage return `\r`).
     pub strip_control_chars: bool,
 }
 
@@ -27,7 +25,6 @@ impl Default for Sanitizer {
             max_length: 0,
             trim: true,
             collapse_whitespace: false,
-            allowed_pattern: None,
             strip_null_bytes: true,
             strip_control_chars: true,
         }
@@ -40,33 +37,31 @@ impl Sanitizer {
         Self::default()
     }
 
-    /// Create a strict sanitizer (all protections enabled).
+    /// Create a strict sanitizer (all protections enabled, 10k char limit).
     pub fn strict() -> Self {
         Self {
             strip_tags: true,
             max_length: 10000,
             trim: true,
             collapse_whitespace: true,
-            allowed_pattern: None,
             strip_null_bytes: true,
             strip_control_chars: true,
         }
     }
 
-    /// Create a permissive sanitizer (minimal sanitization).
+    /// Create a permissive sanitizer (minimal sanitization — only null bytes stripped).
     pub fn permissive() -> Self {
         Self {
             strip_tags: false,
             max_length: 0,
             trim: false,
             collapse_whitespace: false,
-            allowed_pattern: None,
             strip_null_bytes: true,
             strip_control_chars: false,
         }
     }
 
-    /// Set maximum length.
+    /// Set maximum length in characters.
     pub fn with_max_length(mut self, max: usize) -> Self {
         self.max_length = max;
         self
@@ -87,7 +82,7 @@ impl Sanitizer {
             result = result.replace('\0', "");
         }
 
-        // Strip control characters
+        // Strip control characters (preserve \n, \t, \r)
         if self.strip_control_chars {
             result = result
                 .chars()
@@ -110,9 +105,8 @@ impl Sanitizer {
             result = collapse_spaces(&result);
         }
 
-        // Enforce max length
-        if self.max_length > 0 && result.len() > self.max_length {
-            // Truncate at char boundary
+        // Enforce max length (measured in characters, not bytes)
+        if self.max_length > 0 && result.chars().count() > self.max_length {
             result = result.chars().take(self.max_length).collect();
         }
 
@@ -121,18 +115,42 @@ impl Sanitizer {
 }
 
 /// Strip HTML tags from a string.
+///
+/// Handles malformed tags (unclosed `<`) by treating everything after
+/// an unmatched `<` as inside a tag until end-of-string. This is the
+/// safe default — it errs on the side of stripping too much rather
+/// than allowing potentially dangerous content through.
+///
+/// Note: this is a basic state-machine approach. For untrusted HTML with
+/// complex payloads (encoded entities, nested attributes with angle brackets),
+/// use a dedicated HTML sanitizer library like `ammonia`.
 fn strip_html_tags(input: &str) -> String {
     let mut result = String::with_capacity(input.len());
     let mut in_tag = false;
+    let mut in_attr_quote: Option<char> = None;
 
     for ch in input.chars() {
-        match ch {
-            '<' => in_tag = true,
-            '>' => in_tag = false,
-            _ if !in_tag => result.push(ch),
-            _ => {}
+        if in_tag {
+            // Track quoted attribute values so > inside quotes doesn't end the tag
+            match in_attr_quote {
+                Some(q) if ch == q => in_attr_quote = None,
+                Some(_) => {}
+                None if ch == '"' || ch == '\'' => in_attr_quote = Some(ch),
+                None if ch == '>' => {
+                    in_tag = false;
+                    in_attr_quote = None;
+                }
+                _ => {}
+            }
+        } else if ch == '<' {
+            in_tag = true;
+            in_attr_quote = None;
+        } else {
+            result.push(ch);
         }
     }
+    // If we ended inside a tag (unclosed <), everything after the < is stripped.
+    // This is intentional — unclosed tags are suspicious.
 
     result
 }
@@ -172,10 +190,21 @@ mod tests {
     #[test]
     fn sanitize_strips_nested_tags() {
         let s = Sanitizer::new();
-        assert_eq!(
-            s.sanitize("<div><p>hello</p></div>"),
-            "hello"
-        );
+        assert_eq!(s.sanitize("<div><p>hello</p></div>"), "hello");
+    }
+
+    #[test]
+    fn sanitize_strips_unclosed_tags() {
+        let s = Sanitizer::new();
+        // Unclosed tag — everything after < is stripped (safe default)
+        assert_eq!(s.sanitize("hello<img src=x onerror=alert(1)"), "hello");
+    }
+
+    #[test]
+    fn sanitize_handles_quotes_in_attrs() {
+        let s = Sanitizer::new();
+        // > inside a quoted attribute should not end the tag
+        assert_eq!(s.sanitize("<a href=\"x>y\">link</a>"), "link");
     }
 
     #[test]
@@ -193,17 +222,20 @@ mod tests {
     #[test]
     fn sanitize_strips_control_chars() {
         let s = Sanitizer::new();
-        // Tab and newline should be preserved
+        // Tab, newline, and carriage return should be preserved
         assert_eq!(s.sanitize("hello\tworld"), "hello\tworld");
         assert_eq!(s.sanitize("hello\nworld"), "hello\nworld");
+        assert_eq!(s.sanitize("hello\rworld"), "hello\rworld");
         // Other control chars stripped
         assert_eq!(s.sanitize("hello\x07world"), "helloworld");
     }
 
     #[test]
-    fn sanitize_max_length() {
+    fn sanitize_max_length_counts_chars() {
         let s = Sanitizer::new().with_max_length(5);
         assert_eq!(s.sanitize("hello world"), "hello");
+        // Multi-byte: 5 characters, not 5 bytes
+        assert_eq!(s.sanitize("héllo world"), "héllo");
     }
 
     #[test]
@@ -244,7 +276,6 @@ mod tests {
     #[test]
     fn sanitize_unicode_safe() {
         let s = Sanitizer::new().with_max_length(5);
-        // Should not break in the middle of a multi-byte character
         let result = s.sanitize("helloéàü");
         assert_eq!(result.chars().count(), 5);
     }

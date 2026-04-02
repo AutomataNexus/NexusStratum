@@ -38,8 +38,10 @@ impl CspNonce {
     }
 
     /// Generate the `nonce` attribute for a `<style>` tag.
+    ///
+    /// The nonce value is escaped to prevent attribute injection.
     pub fn style_attr(&self) -> String {
-        format!("nonce=\"{}\"", self.value)
+        format!("nonce=\"{}\"", stratum_core::security::escape_attr(&self.value))
     }
 
     /// Generate the CSP directive for this nonce.
