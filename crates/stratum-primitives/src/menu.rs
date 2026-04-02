@@ -28,6 +28,8 @@ pub struct MenuProps {
     pub default_open: bool,
     /// Callback when open state changes.
     pub on_open_change: Option<Callback<bool>>,
+    /// Callback when an item is activated (Enter/Space on a focused item).
+    pub on_select: Option<Callback<String>>,
     /// Optional explicit ID.
     pub id: Option<String>,
     /// Menu items.
@@ -122,10 +124,12 @@ impl Component for Menu {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
+        let effective_open = props.open.unwrap_or(state.open);
+
         // Trigger
         let trigger_aria = AriaAttributes::new()
             .with_haspopup(AriaHasPopup::Menu)
-            .with_expanded(state.open)
+            .with_expanded(effective_open)
             .with_controls(&state.menu_id);
 
         let trigger = RenderOutput::new()
@@ -142,7 +146,7 @@ impl Component for Menu {
             .with_aria(menu_aria)
             .with_attr("id", AttrValue::String(state.menu_id.clone()));
 
-        if !state.open {
+        if !effective_open {
             menu = menu.with_attr("hidden", AttrValue::Bool(true));
         }
 
@@ -175,7 +179,7 @@ impl Component for Menu {
         RenderOutput::new()
             .with_tag("div")
             .with_attr("id", AttrValue::String(state.id.clone()))
-            .with_data("state", if state.open { "open" } else { "closed" })
+            .with_data("state", if effective_open { "open" } else { "closed" })
             .with_children(ChildrenSpec::Elements(all_children))
     }
 
@@ -186,8 +190,11 @@ impl Component for Menu {
     ) -> EventResult {
         match event {
             ComponentEvent::Click { .. } => {
-                state.open = !state.open;
-                if state.open && !props.items.is_empty() {
+                let new_open = !props.open.unwrap_or(state.open);
+                if props.open.is_none() {
+                    state.open = new_open;
+                }
+                if new_open && !props.items.is_empty() {
                     // Focus first enabled item
                     state.focused_index = props.items.iter()
                         .position(|item| !item.disabled);
@@ -195,14 +202,16 @@ impl Component for Menu {
                     state.focused_index = None;
                 }
                 if let Some(ref cb) = props.on_open_change {
-                    cb.call(state.open);
+                    cb.call(new_open);
                 }
                 EventResult::state_changed()
             }
-            ComponentEvent::KeyDown { key, .. } if state.open => {
+            ComponentEvent::KeyDown { key, .. } if props.open.unwrap_or(state.open) => {
                 match key {
                     Key::Escape => {
-                        state.open = false;
+                        if props.open.is_none() {
+                            state.open = false;
+                        }
                         state.focused_index = None;
                         if let Some(ref cb) = props.on_open_change {
                             cb.call(false);
@@ -234,8 +243,18 @@ impl Component for Menu {
                         EventResult::prevent_and_changed()
                     }
                     Key::Enter | Key::Space => {
+                        // Fire on_select for the focused item
+                        if let Some(idx) = state.focused_index {
+                            if idx < props.items.len() && !props.items[idx].disabled {
+                                if let Some(ref cb) = props.on_select {
+                                    cb.call(props.items[idx].id.clone());
+                                }
+                            }
+                        }
                         // Activate current item and close
-                        state.open = false;
+                        if props.open.is_none() {
+                            state.open = false;
+                        }
                         if let Some(ref cb) = props.on_open_change {
                             cb.call(false);
                         }
@@ -251,8 +270,10 @@ impl Component for Menu {
                     _ => EventResult::default(),
                 }
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space | Key::ArrowDown, .. } if !state.open => {
-                state.open = true;
+            ComponentEvent::KeyDown { key: Key::Enter | Key::Space | Key::ArrowDown, .. } if !props.open.unwrap_or(state.open) => {
+                if props.open.is_none() {
+                    state.open = true;
+                }
                 state.focused_index = props.items.iter()
                     .position(|item| !item.disabled);
                 if let Some(ref cb) = props.on_open_change {
@@ -262,6 +283,20 @@ impl Component for Menu {
             }
             _ => EventResult::default(),
         }
+    }
+
+    fn props_changed(
+        _old_props: &Self::Props,
+        new_props: &Self::Props,
+        state: &mut Self::State,
+    ) -> bool {
+        if let Some(controlled) = new_props.open {
+            if state.open != controlled {
+                state.open = controlled;
+                return true;
+            }
+        }
+        false
     }
 }
 

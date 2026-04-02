@@ -11,7 +11,4 @@ homepage.workspace = true
 authors.workspace = true
 
 [dependencies]
-stratum-core = { workspace = true }
-stratum-a11y = { workspace = true }
 serde = { workspace = true }
-serde_json = { workspace = true }

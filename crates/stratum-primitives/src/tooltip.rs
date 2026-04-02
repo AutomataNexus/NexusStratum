@@ -75,10 +75,11 @@ impl Component for Tooltip {
             .with_aria(aria)
             .with_attr("id", AttrValue::String(state.trigger_id.clone()));
 
-        output = output.with_data("state", if state.open { "open" } else { "closed" });
+        let effective_open = props.open.unwrap_or(state.open);
+
+        output = output.with_data("state", if effective_open { "open" } else { "closed" });
         output = output.with_data("delay", props.delay_ms.to_string());
 
-        // Tooltip content as a child element
         let content_aria = AriaAttributes::new()
             .with_role(AriaRole::ToolTip);
 
@@ -87,12 +88,11 @@ impl Component for Tooltip {
             .with_aria(content_aria)
             .with_attr("id", AttrValue::String(state.content_id.clone()));
 
-        if !state.open {
+        if !effective_open {
             content = content.with_attr("hidden", AttrValue::Bool(true));
         }
 
         output = output.with_children(ChildrenSpec::Elements(vec![content]));
-
         output
     }
 
@@ -101,32 +101,40 @@ impl Component for Tooltip {
         state: &mut Self::State,
         event: ComponentEvent,
     ) -> EventResult {
+        let current = props.open.unwrap_or(state.open);
+
         match event {
             ComponentEvent::PointerEnter | ComponentEvent::Focus => {
-                if !state.open {
-                    state.open = true;
+                if !current {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(true);
+                    }
+                    if props.open.is_none() {
+                        state.open = true;
                     }
                     return EventResult::state_changed();
                 }
                 EventResult::default()
             }
             ComponentEvent::PointerLeave | ComponentEvent::Blur => {
-                if state.open {
-                    state.open = false;
+                if current {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
+                    }
+                    if props.open.is_none() {
+                        state.open = false;
                     }
                     return EventResult::state_changed();
                 }
                 EventResult::default()
             }
             ComponentEvent::KeyDown { key: Key::Escape, .. } => {
-                if state.open {
-                    state.open = false;
+                if current {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
+                    }
+                    if props.open.is_none() {
+                        state.open = false;
                     }
                     return EventResult::prevent_and_changed();
                 }
@@ -134,6 +142,20 @@ impl Component for Tooltip {
             }
             _ => EventResult::default(),
         }
+    }
+
+    fn props_changed(
+        _old_props: &Self::Props,
+        new_props: &Self::Props,
+        state: &mut Self::State,
+    ) -> bool {
+        if let Some(open) = new_props.open {
+            if state.open != open {
+                state.open = open;
+                return true;
+            }
+        }
+        false
     }
 }
 

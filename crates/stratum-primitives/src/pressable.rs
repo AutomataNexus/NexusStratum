@@ -66,7 +66,7 @@ impl Component for Pressable {
 
     fn on_event(
         props: &Self::Props,
-        state: &mut Self::State,
+        _state: &mut Self::State,
         event: ComponentEvent,
     ) -> EventResult {
         if props.disabled {
@@ -90,20 +90,7 @@ impl Component for Pressable {
                         state_changed: false,
                     }
             }
-            ComponentEvent::PointerEnter => {
-                if let Some(ref cb) = props.on_press_start {
-                    cb.call(());
-                }
-                state.pressed = true;
-                EventResult::state_changed()
-            }
-            ComponentEvent::PointerLeave => {
-                if let Some(ref cb) = props.on_press_end {
-                    cb.call(());
-                }
-                state.pressed = false;
-                EventResult::state_changed()
-            }
+            ComponentEvent::PointerEnter | ComponentEvent::PointerLeave => EventResult::default(),
             ComponentEvent::Focus | ComponentEvent::Blur => EventResult::default(),
             _ => EventResult::default(),
         }

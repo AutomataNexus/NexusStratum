@@ -15,8 +15,15 @@ pub struct Hsl {
 
 impl Hsl {
     /// Create a new HSL color.
+    ///
+    /// Values are clamped to valid ranges: h to 0..360, s and l to 0..100.
+    /// NaN values are replaced with 0.
     pub fn new(h: f64, s: f64, l: f64) -> Self {
-        Self { h, s, l }
+        Self {
+            h: clamp_or_zero(h, 0.0, 360.0),
+            s: clamp_or_zero(s, 0.0, 100.0),
+            l: clamp_or_zero(l, 0.0, 100.0),
+        }
     }
 
     /// Render as a full CSS `hsl(...)` function string.
@@ -34,12 +41,23 @@ impl Hsl {
     }
 }
 
-/// Format an f64 without trailing zeros.
+/// Clamp a value to [min, max], replacing NaN/Infinity with 0.
+fn clamp_or_zero(v: f64, min: f64, max: f64) -> f64 {
+    if v.is_nan() || v.is_infinite() {
+        0.0
+    } else {
+        v.clamp(min, max)
+    }
+}
+
+/// Format an f64 without trailing zeros. NaN/Infinity produce "0".
 fn format_f64(v: f64) -> String {
-    if v == v.floor() {
+    if v.is_nan() || v.is_infinite() {
+        return "0".to_string();
+    }
+    if v == v.floor() && v.abs() < i64::MAX as f64 {
         format!("{}", v as i64)
     } else {
-        // Trim trailing zeros after the decimal
         let s = format!("{}", v);
         s.trim_end_matches('0').trim_end_matches('.').to_string()
     }
@@ -114,6 +132,23 @@ mod tests {
     fn hsl_integer_values() {
         let c = Hsl::new(0.0, 0.0, 100.0);
         assert_eq!(c.to_css(), "hsl(0 0% 100%)");
+    }
+
+    #[test]
+    fn hsl_clamps_nan_and_infinity() {
+        let c = Hsl::new(f64::NAN, f64::INFINITY, f64::NEG_INFINITY);
+        assert_eq!(c.h, 0.0);
+        assert_eq!(c.s, 0.0);
+        assert_eq!(c.l, 0.0);
+        assert_eq!(c.to_css(), "hsl(0 0% 0%)");
+    }
+
+    #[test]
+    fn hsl_clamps_out_of_range() {
+        let c = Hsl::new(400.0, 150.0, -10.0);
+        assert_eq!(c.h, 360.0);
+        assert_eq!(c.s, 100.0);
+        assert_eq!(c.l, 0.0);
     }
 
     #[test]

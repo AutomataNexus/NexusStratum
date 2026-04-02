@@ -187,10 +187,27 @@ impl Theme {
     // Builder methods
     // ------------------------------------------------------------------
 
-    /// Override the primary color (applies the same hue to both light/dark primary).
-    pub fn with_primary(mut self, color: Hsl) -> Self {
-        self.colors.primary.light = color;
-        self.colors.primary.dark = color;
+    /// Override the primary color with separate light and dark values.
+    pub fn with_primary(mut self, light: Hsl, dark: Hsl) -> Self {
+        self.colors.primary = ColorToken { light, dark };
+        self
+    }
+
+    /// Override the secondary color.
+    pub fn with_secondary(mut self, light: Hsl, dark: Hsl) -> Self {
+        self.colors.secondary = ColorToken { light, dark };
+        self
+    }
+
+    /// Override the accent color.
+    pub fn with_accent(mut self, light: Hsl, dark: Hsl) -> Self {
+        self.colors.accent = ColorToken { light, dark };
+        self
+    }
+
+    /// Override the destructive color.
+    pub fn with_destructive(mut self, light: Hsl, dark: Hsl) -> Self {
+        self.colors.destructive = ColorToken { light, dark };
         self
     }
 
@@ -200,9 +217,33 @@ impl Theme {
         self
     }
 
+    /// Override the spacing scale.
+    pub fn with_spacing(mut self, spacing: SpacingScale) -> Self {
+        self.spacing = spacing;
+        self
+    }
+
+    /// Override the shadow scale.
+    pub fn with_shadows(mut self, shadows: ShadowScale) -> Self {
+        self.shadows = shadows;
+        self
+    }
+
     /// Override the sans-serif font family.
     pub fn with_font_sans(mut self, font: impl Into<String>) -> Self {
         self.typography.font_sans = font.into();
+        self
+    }
+
+    /// Override the serif font family.
+    pub fn with_font_serif(mut self, font: impl Into<String>) -> Self {
+        self.typography.font_serif = font.into();
+        self
+    }
+
+    /// Override the monospace font family.
+    pub fn with_font_mono(mut self, font: impl Into<String>) -> Self {
+        self.typography.font_mono = font.into();
         self
     }
 }

@@ -208,27 +208,37 @@ impl CssState {
         if let Some(ref max_height) = self.max_height {
             parts.push(format!("max-height: {}", max_height));
         }
-        parts.join("; ")
+        if parts.is_empty() {
+            String::new()
+        } else {
+            format!("{};", parts.join("; "))
+        }
     }
 }
 
 /// Generated CSS for applying a transition with reduced-motion support.
 ///
 /// Framework adapters use this to apply transition styles to elements.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AnimationStyle {
     /// CSS for the entering/active state.
     pub enter_css: String,
     /// CSS for the exiting/inactive state.
     pub exit_css: String,
-    /// CSS transition property string.
-    pub transition_css: String,
+    /// CSS transition for the enter phase.
+    pub enter_transition_css: String,
+    /// CSS transition for the exit phase.
+    pub exit_transition_css: String,
     /// CSS for reduced-motion users (instant, no animation).
     pub reduced_motion_css: String,
 }
 
 impl AnimationStyle {
-    /// Generate animation CSS from a transition preset.
+    /// Generate animation CSS from enter and exit transition presets.
+    ///
+    /// Both enter and exit timing are preserved — if the exit transition
+    /// has different duration/easing/delay, those values are used for the
+    /// exit phase.
     pub fn from_transition(enter: &Transition, exit: &Transition) -> Self {
         let enter_config = enter.to_config();
         let exit_config = exit.to_config();
@@ -238,12 +248,19 @@ impl AnimationStyle {
         Self {
             enter_css: enter_config.to.to_inline_css(),
             exit_css: exit_config.to.to_inline_css(),
-            transition_css: format!(
+            enter_transition_css: format!(
                 "transition: {} {}ms {} {}ms",
                 transition_props,
                 enter_config.duration_ms,
                 enter_config.easing.to_css(),
                 enter_config.delay_ms,
+            ),
+            exit_transition_css: format!(
+                "transition: {} {}ms {} {}ms",
+                transition_props,
+                exit_config.duration_ms,
+                exit_config.easing.to_css(),
+                exit_config.delay_ms,
             ),
             reduced_motion_css: format!(
                 "transition: {} 0ms",
@@ -331,8 +348,33 @@ mod tests {
         let style = AnimationStyle::from_transition(&Transition::FadeIn, &Transition::FadeOut);
         assert!(style.enter_css.contains("opacity: 1"));
         assert!(style.exit_css.contains("opacity: 0"));
-        assert!(style.transition_css.contains("150ms"));
+        assert!(style.enter_transition_css.contains("150ms"));
+        assert!(style.exit_transition_css.contains("150ms"));
         assert!(style.reduced_motion_css.contains("0ms"));
+    }
+
+    #[test]
+    fn animation_style_separate_enter_exit_timing() {
+        let enter = Transition::Custom(Box::new(TransitionConfig {
+            duration_ms: 200,
+            easing: Easing::EaseOut,
+            delay_ms: 0,
+            from: CssState { opacity: Some(0.0), ..Default::default() },
+            to: CssState { opacity: Some(1.0), ..Default::default() },
+        }));
+        let exit = Transition::Custom(Box::new(TransitionConfig {
+            duration_ms: 100,
+            easing: Easing::EaseIn,
+            delay_ms: 50,
+            from: CssState { opacity: Some(1.0), ..Default::default() },
+            to: CssState { opacity: Some(0.0), ..Default::default() },
+        }));
+        let style = AnimationStyle::from_transition(&enter, &exit);
+        assert!(style.enter_transition_css.contains("200ms"));
+        assert!(style.enter_transition_css.contains("ease-out"));
+        assert!(style.exit_transition_css.contains("100ms"));
+        assert!(style.exit_transition_css.contains("ease-in"));
+        assert!(style.exit_transition_css.contains("50ms"));
     }
 
     #[test]

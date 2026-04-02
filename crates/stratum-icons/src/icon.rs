@@ -85,21 +85,27 @@ impl Icon {
              stroke-width=\"{}\" \
              stroke-linecap=\"round\" \
              stroke-linejoin=\"round\"",
-            props.size, props.size, self.view_box, props.color, props.stroke_width
+            props.size,
+            props.size,
+            self.view_box,
+            stratum_core::security::escape_attr(&props.color),
+            props.stroke_width
         );
 
         if !props.class.is_empty() {
             attrs.push_str(&format!(" class=\"{}\"", stratum_core::security::escape_attr(&props.class)));
         }
 
-        if props.aria_hidden {
-            attrs.push_str(" aria-hidden=\"true\"");
-        }
+        // aria-hidden and aria-label are mutually exclusive.
+        // If a label is provided, the icon is meaningful — skip aria-hidden.
+        // If no label, mark as decorative with aria-hidden="true".
         if let Some(ref label) = props.aria_label {
             attrs.push_str(&format!(
                 " role=\"img\" aria-label=\"{}\"",
                 stratum_core::security::escape_attr(label)
             ));
+        } else if props.aria_hidden {
+            attrs.push_str(" aria-hidden=\"true\"");
         }
 
         format!("<svg {}>{}</svg>", attrs, self.svg_content)
@@ -183,5 +189,37 @@ mod tests {
         assert!(html.contains("&quot;"));
         // The onmouseover should be inside the escaped aria-label value, not a standalone attribute
         assert!(!html.contains("\" onmouseover=\""));
+    }
+
+    #[test]
+    fn icon_render_label_overrides_aria_hidden() {
+        // Even if aria_hidden is manually set to true, a label should take precedence
+        let icon = Icon {
+            name: "test",
+            svg_content: "<circle/>",
+            view_box: "0 0 24 24",
+        };
+        let props = IconProps {
+            aria_hidden: true,
+            aria_label: Some("Important".to_string()),
+            ..IconProps::default()
+        };
+        let html = icon.render(&props);
+        assert!(html.contains("role=\"img\""));
+        assert!(html.contains("aria-label=\"Important\""));
+        assert!(!html.contains("aria-hidden"));
+    }
+
+    #[test]
+    fn icon_render_color_escaped() {
+        let icon = Icon {
+            name: "test",
+            svg_content: "<circle/>",
+            view_box: "0 0 24 24",
+        };
+        let props = IconProps::new().with_color("red\" onclick=\"alert(1)");
+        let html = icon.render(&props);
+        assert!(!html.contains("\" onclick=\""));
+        assert!(html.contains("&quot;"));
     }
 }

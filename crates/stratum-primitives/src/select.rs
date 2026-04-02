@@ -127,7 +127,9 @@ impl Component for Select {
             trigger_aria = trigger_aria.with_disabled(true);
         }
 
-        let display_text = state.selected.as_ref()
+        let effective_selected = props.value.as_ref().or(state.selected.as_ref());
+
+        let display_text = effective_selected
             .and_then(|sel| props.options.iter().find(|o| o.value == *sel))
             .map(|o| o.label.clone())
             .or_else(|| props.placeholder.clone())
@@ -155,7 +157,7 @@ impl Component for Select {
         // Options
         let mut option_elems = Vec::new();
         for (i, opt) in props.options.iter().enumerate() {
-            let is_selected = state.selected.as_ref() == Some(&opt.value);
+            let is_selected = effective_selected == Some(&opt.value);
             let mut opt_aria = AriaAttributes::new()
                 .with_role(AriaRole::Option)
                 .with_selected(is_selected);
@@ -236,7 +238,9 @@ impl Component for Select {
                         if state.focused_index < props.options.len() {
                             let opt = &props.options[state.focused_index];
                             if !opt.disabled {
-                                state.selected = Some(opt.value.clone());
+                                if props.value.is_none() {
+                                    state.selected = Some(opt.value.clone());
+                                }
                                 if let Some(ref cb) = props.on_change {
                                     cb.call(opt.value.clone());
                                 }

@@ -76,7 +76,11 @@ impl Theme {
         Self::write_color_var(css, "input", &c.input, dark);
         Self::write_color_var(css, "ring", &c.ring, dark);
 
-        // Palette steps
+        // Palette steps — these are mode-independent by design.
+        // Unlike semantic ColorTokens (which have light/dark), palettes
+        // provide a fixed 9-step scale used for both modes. Consumers
+        // should use semantic tokens (primary, accent, etc.) for mode-aware
+        // colors and palettes for explicit color references.
         let palettes: &[(&str, &crate::token::ColorPalette)] = &[
             ("gray", &c.gray),
             ("red", &c.red),
@@ -134,6 +138,49 @@ impl Theme {
                 rem.to_css()
             ));
         }
+
+        let weights = [
+            ("thin", t.weight_thin),
+            ("light", t.weight_light),
+            ("normal", t.weight_normal),
+            ("medium", t.weight_medium),
+            ("semibold", t.weight_semibold),
+            ("bold", t.weight_bold),
+            ("extrabold", t.weight_extrabold),
+            ("black", t.weight_black),
+        ];
+        for (name, weight) in &weights {
+            css.push_str(&format!(
+                "  --stratum-font-weight-{}: {};\n",
+                name, weight
+            ));
+        }
+
+        css.push_str(&format!(
+            "  --stratum-leading-tight: {};\n",
+            t.leading_tight
+        ));
+        css.push_str(&format!(
+            "  --stratum-leading-normal: {};\n",
+            t.leading_normal
+        ));
+        css.push_str(&format!(
+            "  --stratum-leading-relaxed: {};\n",
+            t.leading_relaxed
+        ));
+
+        css.push_str(&format!(
+            "  --stratum-tracking-tight: {};\n",
+            t.tracking_tight.to_css()
+        ));
+        css.push_str(&format!(
+            "  --stratum-tracking-normal: {};\n",
+            t.tracking_normal.to_css()
+        ));
+        css.push_str(&format!(
+            "  --stratum-tracking-wide: {};\n",
+            t.tracking_wide.to_css()
+        ));
     }
 
     fn write_spacing_vars(&self, css: &mut String) {

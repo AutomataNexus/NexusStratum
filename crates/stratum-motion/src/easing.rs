@@ -34,10 +34,13 @@ impl Easing {
             } => {
                 // Approximate spring physics with a cubic-bezier
                 // These are rough approximations based on common spring configs
+                // Map spring parameters to cubic-bezier approximation.
+                // CSS cubic-bezier allows y values outside 0..1 for overshoot.
                 let tension = stiffness / 100.0;
                 let friction = damping / 10.0;
                 let x1 = (0.5 - tension * 0.2).clamp(0.0, 1.0);
-                let y1 = (1.0 + tension * 0.5).clamp(0.0, 2.0).min(1.0);
+                // Allow y1 > 1.0 for spring overshoot (CSS spec permits this)
+                let y1 = (1.0 + tension * 0.5).clamp(0.0, 2.0);
                 let x2 = (0.3 + friction * 0.1).clamp(0.0, 1.0);
                 let y2 = 1.0;
                 format!("cubic-bezier({:.3}, {:.3}, {:.3}, {:.3})", x1, y1, x2, y2)

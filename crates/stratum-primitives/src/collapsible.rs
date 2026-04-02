@@ -54,8 +54,10 @@ impl Component for Collapsible {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
+        let effective_open = props.open.unwrap_or(state.open);
+
         let mut aria = AriaAttributes::new()
-            .with_expanded(state.open);
+            .with_expanded(effective_open);
 
         if props.disabled {
             aria = aria.with_disabled(true);
@@ -66,7 +68,7 @@ impl Component for Collapsible {
             .with_attr("id", AttrValue::String(state.content_id.clone()))
             .with_aria(AriaAttributes::new().with_role(AriaRole::Region));
 
-        if !state.open {
+        if !effective_open {
             content = content.with_attr("hidden", AttrValue::Bool(true));
         }
 
@@ -74,7 +76,7 @@ impl Component for Collapsible {
             .with_tag("div")
             .with_aria(aria)
             .with_attr("id", AttrValue::String(state.id.clone()))
-            .with_data("state", if state.open { "open" } else { "closed" })
+            .with_data("state", if effective_open { "open" } else { "closed" })
             .with_data("disabled", props.disabled.to_string())
             .with_children(ChildrenSpec::Elements(vec![content]))
     }
@@ -90,21 +92,43 @@ impl Component for Collapsible {
 
         match event {
             ComponentEvent::Click { .. } => {
-                state.open = !state.open;
+                let current = props.open.unwrap_or(state.open);
+                let next = !current;
                 if let Some(ref cb) = props.on_open_change {
-                    cb.call(state.open);
+                    cb.call(next);
+                }
+                if props.open.is_none() {
+                    state.open = next;
                 }
                 EventResult::state_changed()
             }
             ComponentEvent::KeyDown { key: Key::Enter | Key::Space, .. } => {
-                state.open = !state.open;
+                let current = props.open.unwrap_or(state.open);
+                let next = !current;
                 if let Some(ref cb) = props.on_open_change {
-                    cb.call(state.open);
+                    cb.call(next);
+                }
+                if props.open.is_none() {
+                    state.open = next;
                 }
                 EventResult::prevent_and_changed()
             }
             _ => EventResult::default(),
         }
+    }
+
+    fn props_changed(
+        _old_props: &Self::Props,
+        new_props: &Self::Props,
+        state: &mut Self::State,
+    ) -> bool {
+        if let Some(open) = new_props.open {
+            if state.open != open {
+                state.open = open;
+                return true;
+            }
+        }
+        false
     }
 }
 

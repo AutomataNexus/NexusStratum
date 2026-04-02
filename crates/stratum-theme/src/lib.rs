@@ -57,10 +57,11 @@ mod tests {
 
     #[test]
     fn builder_with_primary() {
-        let custom = Hsl::new(280.0, 80.0, 50.0);
-        let theme = Theme::default().with_primary(custom);
-        assert_eq!(theme.colors.primary.light, custom);
-        assert_eq!(theme.colors.primary.dark, custom);
+        let light = Hsl::new(280.0, 80.0, 50.0);
+        let dark = Hsl::new(280.0, 70.0, 60.0);
+        let theme = Theme::default().with_primary(light, dark);
+        assert_eq!(theme.colors.primary.light, light);
+        assert_eq!(theme.colors.primary.dark, dark);
     }
 
     #[test]

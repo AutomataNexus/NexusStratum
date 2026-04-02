@@ -61,7 +61,7 @@ impl Component for AlertDialog {
         }
     }
 
-    fn render(_props: &Self::Props, state: &Self::State) -> RenderOutput {
+    fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
         let aria = AriaAttributes::new()
             .with_role(AriaRole::AlertDialog)
             .with_modal(true)
@@ -73,9 +73,10 @@ impl Component for AlertDialog {
             .with_aria(aria)
             .with_attr("id", AttrValue::String(state.id.clone()));
 
-        output = output.with_data("state", if state.open { "open" } else { "closed" });
+        let effective_open = props.open.unwrap_or(state.open);
+        output = output.with_data("state", if effective_open { "open" } else { "closed" });
 
-        if !state.open {
+        if !effective_open {
             output = output.with_attr("hidden", AttrValue::Bool(true));
         }
 
@@ -87,12 +88,16 @@ impl Component for AlertDialog {
         state: &mut Self::State,
         event: ComponentEvent,
     ) -> EventResult {
+        let current = props.open.unwrap_or(state.open);
+
         match event {
             ComponentEvent::KeyDown { key: Key::Escape, .. } => {
-                if state.open {
-                    state.open = false;
+                if current {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
+                    }
+                    if props.open.is_none() {
+                        state.open = false;
                     }
                     return EventResult::prevent_and_changed();
                 }
@@ -100,6 +105,20 @@ impl Component for AlertDialog {
             }
             _ => EventResult::default(),
         }
+    }
+
+    fn props_changed(
+        _old_props: &Self::Props,
+        new_props: &Self::Props,
+        state: &mut Self::State,
+    ) -> bool {
+        if let Some(open) = new_props.open {
+            if state.open != open {
+                state.open = open;
+                return true;
+            }
+        }
+        false
     }
 }
 
