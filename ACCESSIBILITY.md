@@ -170,23 +170,28 @@ The table below tracks the accessibility compliance status of all Tier 1 compone
 
 | Component | ARIA | Keyboard | Contrast | Screen Reader | Status |
 |-----------|------|----------|----------|---------------|--------|
-| Button | Pending | Pending | Pending | Pending | Pending |
-| Checkbox | Pending | Pending | Pending | Pending | Pending |
-| Radio | Pending | Pending | Pending | Pending | Pending |
-| Select | Pending | Pending | Pending | Pending | Pending |
-| Input | Pending | Pending | Pending | Pending | Pending |
-| Textarea | Pending | Pending | Pending | Pending | Pending |
-| Switch | Pending | Pending | Pending | Pending | Pending |
-| Slider | Pending | Pending | Pending | Pending | Pending |
-| Dialog | Pending | Pending | Pending | Pending | Pending |
-| Menu | Pending | Pending | Pending | Pending | Pending |
-| Tabs | Pending | Pending | Pending | Pending | Pending |
-| Accordion | Pending | Pending | Pending | Pending | Pending |
-| Tooltip | Pending | Pending | Pending | Pending | Pending |
-| Popover | Pending | Pending | Pending | Pending | Pending |
-| Date Picker | Pending | Pending | Pending | Pending | Pending |
-| Tree | Pending | Pending | Pending | Pending | Pending |
-| Table | Pending | Pending | Pending | Pending | Pending |
-| Progress | Pending | Pending | Pending | Pending | Pending |
-| Alert | Pending | Pending | Pending | Pending | Pending |
-| Toast | Pending | Pending | Pending | Pending | Pending |
+| Button/Pressable | Done | Done | Pending | Pending | Implemented |
+| Checkbox | Done | Done | Pending | Pending | Implemented |
+| Radio | Done | Done | Pending | Pending | Implemented |
+| Select | Done | Done | Pending | Pending | Implemented |
+| Input | Done | Done | Pending | Pending | Implemented |
+| Textarea | Done | Done | Pending | Pending | Implemented |
+| Switch | Done | Done | Pending | Pending | Implemented |
+| Dialog | Done | Done | Pending | Pending | Implemented |
+| AlertDialog | Done | Done | Pending | Pending | Implemented |
+| Menu | Done | Done | Pending | Pending | Implemented |
+| Tabs | Done | Done | Pending | Pending | Implemented |
+| Accordion | Done | Done | Pending | Pending | Implemented |
+| Tooltip | Done | Done | Pending | Pending | Implemented |
+| Popover | Done | Done | Pending | Pending | Implemented |
+| Toast | Done | N/A | Pending | Pending | Implemented |
+| Progress | Done | N/A | Pending | Pending | Implemented |
+| Form | Done | Done | Pending | Pending | Implemented |
+| Toggle | Done | Done | Pending | Pending | Implemented |
+| Separator | Done | N/A | Pending | Pending | Implemented |
+| Collapsible | Done | Done | Pending | Pending | Implemented |
+| Disclosure | Done | Done | Pending | Pending | Implemented |
+| FocusScope | Done | Done | Pending | Pending | Implemented |
+| VisuallyHidden | Done | N/A | N/A | Pending | Implemented |
+
+**Note:** ARIA and Keyboard are implemented and unit-tested in stratum-primitives. Contrast checking requires visual testing against rendered output. Screen reader testing requires manual verification with NVDA/JAWS/VoiceOver.
