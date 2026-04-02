@@ -1,10 +1,16 @@
-# NexusStratum
+<p align="center">
+  <img src="assets/Stratum_Logo.png" alt="NexusStratum" width="480">
+</p>
 
-**A complete UI component system for Rust frontends.**
+<p align="center">
+  <strong>A complete UI component system for Rust frontends.</strong>
+</p>
 
-[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/AutomataNexus/NexusStratum#license)
-[![Rust](https://img.shields.io/badge/rust-1.85%2B-orange.svg)](https://www.rust-lang.org)
-[![Tests](https://img.shields.io/badge/tests-676%20passing-brightgreen.svg)](https://github.com/AutomataNexus/NexusStratum)
+<p align="center">
+  <a href="https://github.com/AutomataNexus/NexusStratum#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg" alt="License"></a>
+  <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/rust-1.85%2B-orange.svg" alt="Rust"></a>
+  <a href="https://github.com/AutomataNexus/NexusStratum"><img src="https://img.shields.io/badge/tests-676%20passing-brightgreen.svg" alt="Tests"></a>
+</p>
 
 ---
 
