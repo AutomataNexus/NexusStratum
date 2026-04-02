@@ -12,3 +12,4 @@ authors.workspace = true
 
 [dependencies]
 stratum-core = { workspace = true }
+getrandom = "0.3"

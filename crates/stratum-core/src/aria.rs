@@ -268,7 +268,9 @@ impl AriaAttributes {
             pairs.push(("aria-haspopup".to_string(), popup.as_str().to_string()));
         }
         if let Some(level) = self.level {
-            pairs.push(("aria-level".to_string(), level.to_string()));
+            // ARIA heading levels must be 1-6; clamp to valid range
+            let clamped = level.clamp(1, 6);
+            pairs.push(("aria-level".to_string(), clamped.to_string()));
         }
         if let Some(ref orientation) = self.orientation {
             pairs.push((
@@ -311,6 +313,45 @@ impl AriaAttributes {
         }
         if let Some(modal) = self.modal {
             pairs.push(("aria-modal".to_string(), modal.to_string()));
+        }
+        if let Some(col) = self.colcount {
+            pairs.push(("aria-colcount".to_string(), col.to_string()));
+        }
+        if let Some(col) = self.colindex {
+            pairs.push(("aria-colindex".to_string(), col.to_string()));
+        }
+        if let Some(col) = self.colspan {
+            pairs.push(("aria-colspan".to_string(), col.to_string()));
+        }
+        if let Some(row) = self.rowcount {
+            pairs.push(("aria-rowcount".to_string(), row.to_string()));
+        }
+        if let Some(row) = self.rowindex {
+            pairs.push(("aria-rowindex".to_string(), row.to_string()));
+        }
+        if let Some(row) = self.rowspan {
+            pairs.push(("aria-rowspan".to_string(), row.to_string()));
+        }
+        if let Some(ref sort) = self.sort {
+            pairs.push(("aria-sort".to_string(), sort.as_str().to_string()));
+        }
+        if let Some(ref ac) = self.autocomplete {
+            pairs.push(("aria-autocomplete".to_string(), ac.as_str().to_string()));
+        }
+        if let Some(ref cur) = self.current {
+            pairs.push(("aria-current".to_string(), cur.as_str().to_string()));
+        }
+        if let Some(ref err) = self.errormessage {
+            pairs.push(("aria-errormessage".to_string(), err.clone()));
+        }
+        if let Some(ref ks) = self.keyshortcuts {
+            pairs.push(("aria-keyshortcuts".to_string(), ks.clone()));
+        }
+        if let Some(ref rd) = self.roledescription {
+            pairs.push(("aria-roledescription".to_string(), rd.clone()));
+        }
+        if let Some(ref ph) = self.placeholder {
+            pairs.push(("aria-placeholder".to_string(), ph.clone()));
         }
 
         pairs

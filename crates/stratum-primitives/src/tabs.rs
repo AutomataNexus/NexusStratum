@@ -91,6 +91,8 @@ impl Component for Tabs {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
+        let active_tab = props.value.as_deref().unwrap_or(&state.active_tab);
+
         // TabList
         let tablist_aria = AriaAttributes::new()
             .with_role(AriaRole::TabList)
@@ -103,7 +105,7 @@ impl Component for Tabs {
         // Individual tabs
         let mut tabs = Vec::new();
         for (i, item) in props.items.iter().enumerate() {
-            let is_active = *item == state.active_tab;
+            let is_active = *item == *active_tab;
             let mut tab_aria = AriaAttributes::new()
                 .with_role(AriaRole::Tab)
                 .with_selected(is_active);
@@ -126,7 +128,7 @@ impl Component for Tabs {
         // Panels
         let mut panels = Vec::new();
         for (i, item) in props.items.iter().enumerate() {
-            let is_active = *item == state.active_tab;
+            let is_active = *item == *active_tab;
             let mut panel_aria = AriaAttributes::new()
                 .with_role(AriaRole::TabPanel);
 
@@ -170,65 +172,43 @@ impl Component for Tabs {
         match event {
             ComponentEvent::KeyDown { key, .. } => {
                 let len = props.items.len();
-                match key {
+                let new_index = match key {
                     Key::ArrowRight if props.orientation == Orientation::Horizontal => {
-                        state.focused_index = (state.focused_index + 1) % len;
-                        state.active_tab = props.items[state.focused_index].clone();
-                        if let Some(ref cb) = props.on_value_change {
-                            cb.call(state.active_tab.clone());
-                        }
-                        EventResult::prevent_and_changed()
+                        Some((state.focused_index + 1) % len)
                     }
                     Key::ArrowLeft if props.orientation == Orientation::Horizontal => {
-                        state.focused_index = if state.focused_index == 0 {
-                            len - 1
-                        } else {
-                            state.focused_index - 1
-                        };
-                        state.active_tab = props.items[state.focused_index].clone();
-                        if let Some(ref cb) = props.on_value_change {
-                            cb.call(state.active_tab.clone());
-                        }
-                        EventResult::prevent_and_changed()
+                        Some(if state.focused_index == 0 { len - 1 } else { state.focused_index - 1 })
                     }
                     Key::ArrowDown if props.orientation == Orientation::Vertical => {
-                        state.focused_index = (state.focused_index + 1) % len;
-                        state.active_tab = props.items[state.focused_index].clone();
-                        if let Some(ref cb) = props.on_value_change {
-                            cb.call(state.active_tab.clone());
-                        }
-                        EventResult::prevent_and_changed()
+                        Some((state.focused_index + 1) % len)
                     }
                     Key::ArrowUp if props.orientation == Orientation::Vertical => {
-                        state.focused_index = if state.focused_index == 0 {
-                            len - 1
-                        } else {
-                            state.focused_index - 1
-                        };
-                        state.active_tab = props.items[state.focused_index].clone();
-                        if let Some(ref cb) = props.on_value_change {
-                            cb.call(state.active_tab.clone());
-                        }
-                        EventResult::prevent_and_changed()
+                        Some(if state.focused_index == 0 { len - 1 } else { state.focused_index - 1 })
                     }
-                    Key::Home => {
-                        state.focused_index = 0;
-                        state.active_tab = props.items[0].clone();
-                        if let Some(ref cb) = props.on_value_change {
-                            cb.call(state.active_tab.clone());
-                        }
-                        EventResult::prevent_and_changed()
+                    Key::Home => Some(0),
+                    Key::End => Some(len - 1),
+                    _ => None,
+                };
+
+                if let Some(idx) = new_index {
+                    let new_value = props.items[idx].clone();
+                    if let Some(ref cb) = props.on_value_change {
+                        cb.call(new_value.clone());
                     }
-                    Key::End => {
-                        state.focused_index = len - 1;
-                        state.active_tab = props.items[len - 1].clone();
-                        if let Some(ref cb) = props.on_value_change {
-                            cb.call(state.active_tab.clone());
-                        }
-                        EventResult::prevent_and_changed()
+                    // Only update internal state in uncontrolled mode
+                    if props.value.is_none() {
+                        state.focused_index = idx;
+                        state.active_tab = new_value;
+                        return EventResult::prevent_and_changed();
                     }
-                    _ => EventResult::default(),
+                    return EventResult {
+                        prevent_default: true,
+                        stop_propagation: false,
+                        state_changed: false,
+                    };
                 }
+
+                EventResult::default()
             }
             _ => EventResult::default(),
         }

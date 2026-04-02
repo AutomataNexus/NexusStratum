@@ -89,7 +89,7 @@ impl Icon {
         );
 
         if !props.class.is_empty() {
-            attrs.push_str(&format!(" class=\"{}\"", props.class));
+            attrs.push_str(&format!(" class=\"{}\"", stratum_core::security::escape_attr(&props.class)));
         }
 
         if props.aria_hidden {

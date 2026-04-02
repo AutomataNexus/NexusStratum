@@ -15,8 +15,5 @@ name = "stratum"
 path = "src/main.rs"
 
 [dependencies]
-stratum-core = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
 clap = { version = "4", features = ["derive"] }
 toml = "0.8"

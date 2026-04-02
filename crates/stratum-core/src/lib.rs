@@ -24,11 +24,14 @@ pub mod render;
 pub mod security;
 pub mod state;
 
-pub use aria::{AriaAttributes, AriaHasPopup, AriaLive, AriaRole, Orientation, TriState};
-pub use callback::Callback;
+pub use aria::{
+    AriaAttributes, AriaAutocomplete, AriaCurrent, AriaHasPopup, AriaLive, AriaRole, AriaSort,
+    Orientation, TriState,
+};
+pub use callback::{ActionCallback, BoolCallback, Callback, IndexCallback, StringCallback};
 pub use component::Component;
 pub use event::{ComponentEvent, EventResult, Key, ModifierKeys, MouseButton};
-pub use focus::{FocusManager, FocusStrategy};
+pub use focus::{FocusInstruction, FocusManager, FocusStrategy};
 pub use id::IdGenerator;
 pub use props::Props;
 pub use render::{AttrValue, ChildrenSpec, RenderOutput};

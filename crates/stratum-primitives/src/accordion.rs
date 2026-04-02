@@ -63,6 +63,11 @@ pub struct AccordionState {
 pub struct Accordion;
 
 impl Accordion {
+    /// Compute the effective open items, preferring controlled prop over internal state.
+    fn effective_open_items<'a>(props: &'a AccordionProps, state: &'a AccordionState) -> &'a Vec<String> {
+        props.value.as_ref().unwrap_or(&state.open_items)
+    }
+
     /// Toggle an item in the open_items list based on accordion rules.
     fn toggle_item(
         props: &AccordionProps,
@@ -73,20 +78,27 @@ impl Accordion {
             return;
         }
 
-        let is_open = state.open_items.contains(&item.to_string());
+        let current_items = Self::effective_open_items(props, state);
+        let is_open = current_items.contains(&item.to_string());
 
+        let mut new_items = current_items.clone();
         if is_open {
-            if props.collapsible || state.open_items.len() > 1 {
-                state.open_items.retain(|i| i != item);
+            if props.collapsible || new_items.len() > 1 {
+                new_items.retain(|i| i != item);
             }
         } else if props.multiple {
-            state.open_items.push(item.to_string());
+            new_items.push(item.to_string());
         } else {
-            state.open_items = vec![item.to_string()];
+            new_items = vec![item.to_string()];
         }
 
         if let Some(ref cb) = props.on_value_change {
-            cb.call(state.open_items.clone());
+            cb.call(new_items.clone());
+        }
+
+        // Only update internal state in uncontrolled mode
+        if props.value.is_none() {
+            state.open_items = new_items;
         }
     }
 }
@@ -118,10 +130,11 @@ impl Component for Accordion {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
+        let open_items = Accordion::effective_open_items(props, state);
         let mut items = Vec::new();
 
         for (i, item) in props.items.iter().enumerate() {
-            let is_open = state.open_items.contains(item);
+            let is_open = open_items.contains(item);
 
             // Trigger (button)
             let mut trigger_aria = AriaAttributes::new()
@@ -204,7 +217,16 @@ impl Component for Accordion {
                     Key::Enter | Key::Space => {
                         let item = props.items[state.focused_index].clone();
                         Accordion::toggle_item(props, state, &item);
-                        EventResult::prevent_and_changed()
+                        if props.value.is_some() {
+                            // Controlled mode: no internal state change
+                            EventResult {
+                                prevent_default: true,
+                                stop_propagation: false,
+                                state_changed: false,
+                            }
+                        } else {
+                            EventResult::prevent_and_changed()
+                        }
                     }
                     _ => EventResult::default(),
                 }

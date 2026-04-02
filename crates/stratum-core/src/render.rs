@@ -49,8 +49,18 @@ impl RenderOutput {
     }
 
     /// Add a CSS class.
+    ///
+    /// Validates the class name to prevent CSS injection. Invalid class
+    /// names are silently dropped. Use [`crate::security::is_safe_class_name`]
+    /// to check before calling if you need to handle the error.
     pub fn with_class(mut self, class: impl Into<String>) -> Self {
-        self.classes.push(class.into());
+        let c = class.into();
+        // Split on whitespace to validate each class individually
+        for part in c.split_whitespace() {
+            if crate::security::is_safe_class_name(part) {
+                self.classes.push(part.to_string());
+            }
+        }
         self
     }
 
@@ -79,8 +89,15 @@ impl RenderOutput {
     }
 
     /// Add an inline style.
+    ///
+    /// Validates the value to prevent CSS injection. Unsafe values
+    /// (containing `expression()`, `url()`, `javascript:`, etc.) are
+    /// silently dropped.
     pub fn with_style(mut self, property: impl Into<String>, value: impl Into<String>) -> Self {
-        self.styles.push((property.into(), value.into()));
+        let v = value.into();
+        if crate::security::is_safe_css_value(&v) {
+            self.styles.push((property.into(), v));
+        }
         self
     }
 
@@ -117,7 +134,10 @@ impl RenderOutput {
         if other.tag.is_some() {
             self.tag = other.tag;
         }
-        if other.children != ChildrenSpec::default() {
+        // Always take other's children if they differ from self's.
+        // This avoids the edge case where ChildrenSpec::Children (the default)
+        // would be silently skipped.
+        if other.children != self.children {
             self.children = other.children;
         }
 
@@ -156,6 +176,21 @@ impl RenderOutput {
         merge_aria_field!(activedescendant);
         merge_aria_field!(busy);
         merge_aria_field!(modal);
+        merge_aria_field!(posinset);
+        merge_aria_field!(setsize);
+        merge_aria_field!(colcount);
+        merge_aria_field!(colindex);
+        merge_aria_field!(colspan);
+        merge_aria_field!(rowcount);
+        merge_aria_field!(rowindex);
+        merge_aria_field!(rowspan);
+        merge_aria_field!(sort);
+        merge_aria_field!(autocomplete);
+        merge_aria_field!(current);
+        merge_aria_field!(errormessage);
+        merge_aria_field!(keyshortcuts);
+        merge_aria_field!(roledescription);
+        merge_aria_field!(placeholder);
 
         self
     }

@@ -80,6 +80,8 @@ impl Component for Dialog {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
+        let is_open = props.open.unwrap_or(state.open);
+
         let mut aria = AriaAttributes::new()
             .with_role(AriaRole::Dialog)
             .with_labelledby(&state.title_id)
@@ -94,9 +96,9 @@ impl Component for Dialog {
             .with_aria(aria)
             .with_attr("id", AttrValue::String(state.id.clone()));
 
-        output = output.with_data("state", if state.open { "open" } else { "closed" });
+        output = output.with_data("state", if is_open { "open" } else { "closed" });
 
-        if !state.open {
+        if !is_open {
             output = output.with_attr("hidden", AttrValue::Bool(true));
         }
 
@@ -108,14 +110,23 @@ impl Component for Dialog {
         state: &mut Self::State,
         event: ComponentEvent,
     ) -> EventResult {
+        let is_open = props.open.unwrap_or(state.open);
         match event {
             ComponentEvent::KeyDown { key: Key::Escape, .. } => {
-                if state.open {
-                    state.open = false;
+                if is_open {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
                     }
-                    return EventResult::prevent_and_changed();
+                    // Only update internal state in uncontrolled mode
+                    if props.open.is_none() {
+                        state.open = false;
+                        return EventResult::prevent_and_changed();
+                    }
+                    return EventResult {
+                        prevent_default: true,
+                        stop_propagation: false,
+                        state_changed: false,
+                    };
                 }
                 EventResult::default()
             }

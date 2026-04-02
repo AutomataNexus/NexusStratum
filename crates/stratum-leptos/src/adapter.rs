@@ -67,7 +67,7 @@ impl StratumAdapter {
             "PageDown" => Key::PageDown,
             "Backspace" => Key::Backspace,
             "Delete" => Key::Delete,
-            s if s.len() == 1 => Key::Char(s.chars().next().unwrap()),
+            s if s.chars().count() == 1 => Key::Char(s.chars().next().unwrap()),
             s if s.starts_with('F') => {
                 if let Ok(n) = s[1..].parse::<u8>() {
                     Key::F(n)
@@ -80,6 +80,9 @@ impl StratumAdapter {
     }
 
     /// Convert DOM mouse button number to stratum-core MouseButton.
+    ///
+    /// Unknown button values (anything other than 0, 1, or 2) are silently
+    /// mapped to `MouseButton::Left`.
     pub fn mouse_button_from_u16(button: u16) -> MouseButton {
         match button {
             0 => MouseButton::Left,

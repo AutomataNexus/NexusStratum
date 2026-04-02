@@ -49,13 +49,16 @@ impl ThemeContext {
     }
 
     /// Whether the current mode is dark.
+    ///
+    /// Returns false for System mode since OS preference is determined at runtime
+    /// in the browser. Use CSS media queries for System mode detection.
     pub fn is_dark(&self) -> bool {
         matches!(self.dark_mode, DarkMode::Dark)
     }
 }
 
 /// Toast notification context for managing toast state.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct ToasterContext {
     /// Maximum number of visible toasts.
     pub max_visible: usize,
@@ -90,13 +93,19 @@ impl ToastPosition {
     }
 }
 
-impl ToasterContext {
-    pub fn new() -> Self {
+impl Default for ToasterContext {
+    fn default() -> Self {
         Self {
             max_visible: 5,
             default_duration_ms: 5000,
             position: ToastPosition::BottomRight,
         }
+    }
+}
+
+impl ToasterContext {
+    pub fn new() -> Self {
+        Self::default()
     }
 }
 

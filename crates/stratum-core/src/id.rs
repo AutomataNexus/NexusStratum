@@ -12,6 +12,15 @@ pub struct IdGenerator {
     counter: AtomicU64,
 }
 
+impl std::fmt::Debug for IdGenerator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("IdGenerator")
+            .field("prefix", &self.prefix)
+            .field("counter", &self.counter.load(Ordering::Relaxed))
+            .finish()
+    }
+}
+
 impl IdGenerator {
     /// Create a new ID generator with the given prefix.
     ///

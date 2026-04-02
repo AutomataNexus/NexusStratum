@@ -66,30 +66,34 @@ impl StyleProps {
 
         push_str_prop!(color, "color");
         push_str_prop!(background, "background");
-        push_str_prop!(padding, "padding");
 
-        // padding_x expands to padding-left + padding-right
-        if let Some(ref val) = self.padding_x {
-            parts.push(format!("padding-left: {}", val));
-            parts.push(format!("padding-right: {}", val));
-        }
-        // padding_y expands to padding-top + padding-bottom
-        if let Some(ref val) = self.padding_y {
-            parts.push(format!("padding-top: {}", val));
-            parts.push(format!("padding-bottom: {}", val));
+        // Directional padding takes precedence over shorthand.
+        // If padding_x or padding_y is set, skip the shorthand to avoid conflicts.
+        if self.padding_x.is_some() || self.padding_y.is_some() {
+            if let Some(ref val) = self.padding_x {
+                parts.push(format!("padding-left: {}", val));
+                parts.push(format!("padding-right: {}", val));
+            }
+            if let Some(ref val) = self.padding_y {
+                parts.push(format!("padding-top: {}", val));
+                parts.push(format!("padding-bottom: {}", val));
+            }
+        } else {
+            push_str_prop!(padding, "padding");
         }
 
-        push_str_prop!(margin, "margin");
-
-        // margin_x expands to margin-left + margin-right
-        if let Some(ref val) = self.margin_x {
-            parts.push(format!("margin-left: {}", val));
-            parts.push(format!("margin-right: {}", val));
-        }
-        // margin_y expands to margin-top + margin-bottom
-        if let Some(ref val) = self.margin_y {
-            parts.push(format!("margin-top: {}", val));
-            parts.push(format!("margin-bottom: {}", val));
+        // Same precedence logic for margin.
+        if self.margin_x.is_some() || self.margin_y.is_some() {
+            if let Some(ref val) = self.margin_x {
+                parts.push(format!("margin-left: {}", val));
+                parts.push(format!("margin-right: {}", val));
+            }
+            if let Some(ref val) = self.margin_y {
+                parts.push(format!("margin-top: {}", val));
+                parts.push(format!("margin-bottom: {}", val));
+            }
+        } else {
+            push_str_prop!(margin, "margin");
         }
 
         push_str_prop!(width, "width");
@@ -141,7 +145,7 @@ impl StyleProps {
             parts.push(format!("z-index: {}", val));
         }
         if let Some(val) = self.opacity {
-            parts.push(format!("opacity: {}", val));
+            parts.push(format!("opacity: {:.4}", val));
         }
 
         if let Some(ref val) = self.overflow {
@@ -155,7 +159,12 @@ impl StyleProps {
         push_str_prop!(box_shadow, "box-shadow");
         push_str_prop!(transform, "transform");
 
-        parts.join("; ")
+        if parts.is_empty() {
+            String::new()
+        } else {
+            // Trailing semicolon ensures safe concatenation with other CSS
+            format!("{};", parts.join("; "))
+        }
     }
 
     /// Whether any properties are set.

@@ -21,19 +21,15 @@ impl CspNonce {
         }
     }
 
-    /// Generate a nonce using a simple random approach.
+    /// Generate a cryptographically secure nonce.
     ///
-    /// For production use, prefer `new()` with a nonce from your
-    /// server framework's CSP middleware.
+    /// Uses the OS CSPRNG via `getrandom`. For production deployments
+    /// behind a server framework with CSP middleware, prefer `new()` with
+    /// the framework-provided nonce instead.
     pub fn generate() -> Self {
-        // Simple pseudo-random nonce using thread_rng-like approach
-        // In production, this should come from the server framework
-        let timestamp = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap_or_default()
-            .as_nanos();
-        let nonce = format!("{:x}{:x}", timestamp, timestamp.wrapping_mul(6364136223846793005));
-        Self { value: nonce }
+        Self {
+            value: generate_secure_token(24),
+        }
     }
 
     /// Get the nonce value.
@@ -56,6 +52,13 @@ impl fmt::Display for CspNonce {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.value)
     }
+}
+
+/// Generate a hex-encoded cryptographically secure random token.
+pub(crate) fn generate_secure_token(byte_len: usize) -> String {
+    let mut buf = vec![0u8; byte_len];
+    getrandom::fill(&mut buf).expect("OS CSPRNG should be available");
+    buf.iter().map(|b| format!("{:02x}", b)).collect()
 }
 
 #[cfg(test)]
@@ -83,10 +86,16 @@ mod tests {
     #[test]
     fn csp_nonce_generate_unique() {
         let a = CspNonce::generate();
-        // Small sleep to ensure different timestamp
-        std::thread::sleep(std::time::Duration::from_millis(1));
         let b = CspNonce::generate();
         assert_ne!(a, b);
+        // 24 random bytes = 48 hex chars
+        assert_eq!(a.value().len(), 48);
+    }
+
+    #[test]
+    fn csp_nonce_generate_is_hex() {
+        let nonce = CspNonce::generate();
+        assert!(nonce.value().chars().all(|c| c.is_ascii_hexdigit()));
     }
 
     #[test]

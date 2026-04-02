@@ -60,10 +60,12 @@ impl Component for Popover {
         }
     }
 
-    fn render(_props: &Self::Props, state: &Self::State) -> RenderOutput {
+    fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
+        let is_open = props.open.unwrap_or(state.open);
+
         // Trigger element
         let trigger_aria = AriaAttributes::new()
-            .with_expanded(state.open)
+            .with_expanded(is_open)
             .with_controls(&state.content_id)
             .with_haspopup(AriaHasPopup::Dialog);
 
@@ -81,13 +83,13 @@ impl Component for Popover {
             .with_aria(content_aria)
             .with_attr("id", AttrValue::String(state.content_id.clone()));
 
-        if !state.open {
+        if !is_open {
             content = content.with_attr("hidden", AttrValue::Bool(true));
         }
 
         RenderOutput::new()
             .with_tag("div")
-            .with_data("state", if state.open { "open" } else { "closed" })
+            .with_data("state", if is_open { "open" } else { "closed" })
             .with_children(ChildrenSpec::Elements(vec![trigger, content]))
     }
 
@@ -96,21 +98,33 @@ impl Component for Popover {
         state: &mut Self::State,
         event: ComponentEvent,
     ) -> EventResult {
+        let is_open = props.open.unwrap_or(state.open);
         match event {
             ComponentEvent::Click { .. } => {
-                state.open = !state.open;
+                let next = !is_open;
                 if let Some(ref cb) = props.on_open_change {
-                    cb.call(state.open);
+                    cb.call(next);
                 }
-                EventResult::state_changed()
+                if props.open.is_none() {
+                    state.open = next;
+                    return EventResult::state_changed();
+                }
+                EventResult::default()
             }
             ComponentEvent::KeyDown { key: Key::Escape, .. } => {
-                if state.open {
-                    state.open = false;
+                if is_open {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
                     }
-                    return EventResult::prevent_and_changed();
+                    if props.open.is_none() {
+                        state.open = false;
+                        return EventResult::prevent_and_changed();
+                    }
+                    return EventResult {
+                        prevent_default: true,
+                        stop_propagation: false,
+                        state_changed: false,
+                    };
                 }
                 EventResult::default()
             }

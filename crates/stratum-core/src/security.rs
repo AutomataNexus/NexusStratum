@@ -1,8 +1,10 @@
-/// Core security primitives built into every NexusStratum component.
+/// Core security primitives for NexusStratum.
 ///
-/// These are always active — no feature flag needed. They prevent common
-/// web security vulnerabilities at the framework level so individual
-/// components cannot accidentally introduce them.
+/// - [`escape_html`] and [`escape_attr`] are used by `stratum-icons` for
+///   safe SVG rendering.
+/// - [`is_safe_class_name`] is enforced by [`crate::render::RenderOutput::with_class`].
+/// - [`is_safe_css_value`] is enforced by [`crate::render::RenderOutput::with_style`].
+/// - [`sanitize_id`] is available for consumer use on user-provided IDs.
 ///
 /// For additional hardened security features (CSP, CSRF, security headers),
 /// see the `stratum-security` crate.
@@ -28,8 +30,9 @@ pub fn escape_html(input: &str) -> String {
 
 /// Escapes a string for safe use in an HTML attribute value.
 ///
-/// More aggressive than content escaping — also handles backticks,
-/// equals signs, and other attribute-context injection vectors.
+/// Handles all characters that could break out of an attribute context:
+/// quotes, angle brackets, ampersands, backticks, forward slashes,
+/// and equals signs.
 pub fn escape_attr(input: &str) -> String {
     let mut output = String::with_capacity(input.len());
     for ch in input.chars() {
@@ -40,6 +43,8 @@ pub fn escape_attr(input: &str) -> String {
             '"' => output.push_str("&quot;"),
             '\'' => output.push_str("&#x27;"),
             '`' => output.push_str("&#x60;"),
+            '/' => output.push_str("&#x2F;"),
+            '=' => output.push_str("&#x3D;"),
             _ => output.push(ch),
         }
     }
@@ -119,8 +124,15 @@ mod tests {
         assert_eq!(escape_attr("hello"), "hello");
         assert_eq!(
             escape_attr("\" onmouseover=\"alert(1)"),
-            "&quot; onmouseover=&quot;alert(1)"
+            "&quot; onmouseover&#x3D;&quot;alert(1)"
         );
+    }
+
+    #[test]
+    fn escape_attr_covers_slash_and_equals() {
+        assert!(escape_attr("a/b").contains("&#x2F;"));
+        assert!(escape_attr("a=b").contains("&#x3D;"));
+        assert!(escape_attr("a`b").contains("&#x60;"));
     }
 
     #[test]

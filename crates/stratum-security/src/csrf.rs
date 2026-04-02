@@ -17,17 +17,11 @@ impl CsrfToken {
         }
     }
 
-    /// Generate a new random CSRF token.
+    /// Generate a new cryptographically secure CSRF token.
+    ///
+    /// Uses the OS CSPRNG via `getrandom`.
     pub fn generate() -> Self {
-        let timestamp = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap_or_default()
-            .as_nanos();
-        let token = format!(
-            "csrf_{:x}{:x}",
-            timestamp,
-            timestamp.wrapping_mul(1442695040888963407)
-        );
+        let token = format!("csrf_{}", crate::csp::generate_secure_token(32));
         Self { value: token }
     }
 
@@ -79,7 +73,7 @@ mod tests {
         let token = CsrfToken::new("secret-token-123");
         assert!(token.validate("secret-token-123"));
         assert!(!token.validate("wrong-token"));
-        assert!(!token.validate("secret-token-12")); // length mismatch
+        assert!(!token.validate("secret-token-12"));
     }
 
     #[test]
@@ -94,9 +88,16 @@ mod tests {
     #[test]
     fn csrf_token_generate_unique() {
         let a = CsrfToken::generate();
-        std::thread::sleep(std::time::Duration::from_millis(1));
         let b = CsrfToken::generate();
         assert_ne!(a, b);
+        assert!(a.value().starts_with("csrf_"));
+    }
+
+    #[test]
+    fn csrf_token_generate_sufficient_entropy() {
+        let token = CsrfToken::generate();
+        // "csrf_" prefix + 64 hex chars (32 bytes)
+        assert!(token.value().len() >= 69);
     }
 
     #[test]
