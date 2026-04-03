@@ -5,7 +5,7 @@ export default defineConfig({
   timeout: 30000,
   retries: 1,
   use: {
-    baseURL: 'https://stratum-ui.com',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'https://stratum-ui.com',
     screenshot: 'only-on-failure',
     headless: true,
   },

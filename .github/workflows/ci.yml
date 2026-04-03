@@ -60,6 +60,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install --save-dev @playwright/test
+      - run: npm install --save-dev @playwright/test serve wait-on
       - run: npx playwright install --with-deps chromium
+      - name: Serve site locally
+        run: npx serve site -p 4000 &
+      - name: Wait for server
+        run: npx wait-on http://localhost:4000 --timeout 15000
       - run: npx playwright test tests/e2e/site.spec.ts --config=tests/e2e/playwright.config.ts
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:4000
