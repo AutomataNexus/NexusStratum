@@ -7,3 +7,6 @@ Cargo.lock
 .idea/
 .vscode/
 *.log
+PRD.md
+PROGRESS.md
+ARCHITECTURE.md

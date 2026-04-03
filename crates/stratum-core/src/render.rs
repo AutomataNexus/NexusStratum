@@ -65,8 +65,18 @@ impl RenderOutput {
     }
 
     /// Add multiple CSS classes.
+    ///
+    /// Each class is validated individually via [`crate::security::is_safe_class_name`].
+    /// Invalid class names are silently dropped.
     pub fn with_classes(mut self, classes: impl IntoIterator<Item = impl Into<String>>) -> Self {
-        self.classes.extend(classes.into_iter().map(|c| c.into()));
+        for class in classes {
+            let c = class.into();
+            for part in c.split_whitespace() {
+                if crate::security::is_safe_class_name(part) {
+                    self.classes.push(part.to_string());
+                }
+            }
+        }
         self
     }
 
