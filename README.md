@@ -7,9 +7,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/AutomataNexus/NexusStratum/actions/workflows/ci.yml"><img src="https://github.com/AutomataNexus/NexusStratum/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AutomataNexus/NexusStratum#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg" alt="License"></a>
   <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/rust-1.85%2B-orange.svg" alt="Rust"></a>
-  <a href="https://github.com/AutomataNexus/NexusStratum"><img src="https://img.shields.io/badge/tests-701%20passing-brightgreen.svg" alt="Tests"></a>
 </p>
 
 ---
