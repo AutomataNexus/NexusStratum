@@ -17,3 +17,4 @@ security-audit/
 test-results/
 playwright-report/
 site/
+*:Zone.Identifier
