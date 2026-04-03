@@ -90,8 +90,10 @@ impl Sanitizer {
                 .collect();
         }
 
-        // Strip HTML tags
+        // Decode common HTML entities before stripping tags,
+        // so entity-encoded tags like &lt;script&gt; are caught.
         if self.strip_tags {
+            result = decode_html_entities(&result);
             result = strip_html_tags(&result);
         }
 
@@ -112,6 +114,22 @@ impl Sanitizer {
 
         result
     }
+}
+
+/// Decode common HTML entities to their character equivalents.
+/// This ensures entity-encoded tags (e.g., `&lt;script&gt;`) are
+/// caught by the subsequent tag stripping pass.
+fn decode_html_entities(input: &str) -> String {
+    input
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&#x27;", "'")
+        .replace("&#39;", "'")
+        .replace("&#x2F;", "/")
+        .replace("&#x3D;", "=")
+        .replace("&#x60;", "`")
 }
 
 /// Strip HTML tags from a string.
@@ -191,6 +209,17 @@ mod tests {
     fn sanitize_strips_nested_tags() {
         let s = Sanitizer::new();
         assert_eq!(s.sanitize("<div><p>hello</p></div>"), "hello");
+    }
+
+    #[test]
+    fn sanitize_strips_entity_encoded_tags() {
+        let s = Sanitizer::new();
+        // Entity-encoded tags should be decoded first, then stripped
+        assert_eq!(
+            s.sanitize("&lt;script&gt;alert(1)&lt;/script&gt;"),
+            "alert(1)"
+        );
+        assert_eq!(s.sanitize("&lt;b&gt;bold&lt;/b&gt;"), "bold");
     }
 
     #[test]

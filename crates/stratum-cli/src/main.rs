@@ -399,11 +399,17 @@ fn theme_apply(name: &str) {
 
     let toml_content = fs::read_to_string("stratum.toml").expect("Failed to read stratum.toml");
 
-    let updated = if toml_content.contains("name = ") {
+    let updated = if toml_content.contains("[theme]") {
+        let mut in_theme_section = false;
+        let mut replaced = false;
         toml_content
             .lines()
             .map(|line| {
-                if line.starts_with("name = ") && toml_content[..toml_content.find(line).unwrap()].contains("[theme]") {
+                if line.starts_with('[') {
+                    in_theme_section = line.trim() == "[theme]";
+                }
+                if in_theme_section && line.starts_with("name = ") && !replaced {
+                    replaced = true;
                     format!("name = \"{}\"", name)
                 } else {
                     line.to_string()

@@ -10,3 +10,8 @@ Cargo.lock
 PRD.md
 PROGRESS.md
 ARCHITECTURE.md
+node_modules/
+package.json
+package-lock.json
+SECURITY-AUDIT.md
+security-audit/
