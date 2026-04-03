@@ -1,7 +1,6 @@
 [package]
-name = "stratum-components"
+name = "nexus-stratum-components"
 description = "Styled UI components for NexusStratum"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,5 +9,8 @@ repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
 
+[lib]
+name = "stratum_components"
+
 [dependencies]
-stratum-core = { workspace = true }
+nexus-stratum-core = { workspace = true }

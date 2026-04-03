@@ -1,7 +1,6 @@
 [package]
-name = "stratum-icons"
+name = "nexus-stratum-icons"
 description = "Icon library for NexusStratum"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,6 +9,9 @@ repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
 
+[lib]
+name = "stratum_icons"
+
 [dependencies]
-stratum-core = { workspace = true }
+nexus-stratum-core = { workspace = true }
 serde = { workspace = true }

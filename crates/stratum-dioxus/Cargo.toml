@@ -1,7 +1,6 @@
 [package]
-name = "stratum-dioxus"
+name = "nexus-stratum-dioxus"
 description = "Dioxus framework adapter for NexusStratum"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,7 +9,10 @@ repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
 
+[lib]
+name = "stratum_dioxus"
+
 [dependencies]
-stratum-core = { workspace = true }
-stratum-components = { workspace = true }
-stratum-theme = { workspace = true }
+nexus-stratum-core = { workspace = true }
+nexus-stratum-components = { workspace = true }
+nexus-stratum-theme = { workspace = true }

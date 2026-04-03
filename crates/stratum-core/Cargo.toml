@@ -1,7 +1,6 @@
 [package]
-name = "stratum-core"
+name = "nexus-stratum-core"
 description = "Core traits and types for NexusStratum UI component library"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -9,6 +8,9 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
+
+[lib]
+name = "stratum_core"
 
 [dependencies]
 serde = { workspace = true }

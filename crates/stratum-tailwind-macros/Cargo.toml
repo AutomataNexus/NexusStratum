@@ -1,7 +1,6 @@
 [package]
-name = "stratum-tailwind-macros"
-description = "Proc macros for stratum-tailwind"
-publish = false
+name = "nexus-stratum-tailwind-macros"
+description = "Proc macros for nexus-stratum-tailwind"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,6 +11,7 @@ authors.workspace = true
 
 [lib]
 proc-macro = true
+name = "stratum_tailwind_macros"
 
 [dependencies]
 syn = { version = "2", features = ["full"] }

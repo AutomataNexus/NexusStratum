@@ -1,7 +1,6 @@
 [package]
-name = "stratum-css"
+name = "nexus-stratum-css"
 description = "CSS-in-Rust system for NexusStratum"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,6 +9,9 @@ repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
 
+[lib]
+name = "stratum_css"
+
 [dependencies]
-stratum-css-macros = { workspace = true }
+nexus-stratum-css-macros = { workspace = true }
 serde = { workspace = true }

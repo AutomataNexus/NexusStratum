@@ -1,7 +1,6 @@
 [package]
-name = "stratum-security"
+name = "nexus-stratum-security"
 description = "Security hardening for NexusStratum — XSS prevention, CSP, input sanitization"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,6 +9,9 @@ repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
 
+[lib]
+name = "stratum_security"
+
 [dependencies]
-stratum-core = { workspace = true }
+nexus-stratum-core = { workspace = true }
 getrandom = "0.3"

@@ -1,7 +1,6 @@
 [package]
-name = "stratum-motion"
+name = "nexus-stratum-motion"
 description = "Animation and transition system for NexusStratum"
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -9,6 +8,9 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
+
+[lib]
+name = "stratum_motion"
 
 [dependencies]
 serde = { workspace = true }

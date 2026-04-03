@@ -28,29 +28,30 @@ edition = "2024"
 rust-version = "1.85"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/AutomataNexus/NexusStratum"
-homepage = "https://github.com/AutomataNexus/NexusStratum"
+homepage = "https://stratum-ui.com"
 authors = ["Andrew Jewell Sr. <devops@automatanexus.com>"]
 
 [workspace.dependencies]
-# Internal crates
-stratum-core = { path = "crates/stratum-core", version = "0.1.0" }
-stratum-a11y = { path = "crates/stratum-a11y", version = "0.1.0" }
-stratum-primitives = { path = "crates/stratum-primitives", version = "0.1.0" }
-stratum-theme = { path = "crates/stratum-theme", version = "0.1.0" }
-stratum-css = { path = "crates/stratum-css", version = "0.1.0" }
-stratum-css-macros = { path = "crates/stratum-css-macros", version = "0.1.0" }
-stratum-tailwind = { path = "crates/stratum-tailwind", version = "0.1.0" }
-stratum-tailwind-macros = { path = "crates/stratum-tailwind-macros", version = "0.1.0" }
-stratum-icons = { path = "crates/stratum-icons", version = "0.1.0" }
-stratum-motion = { path = "crates/stratum-motion", version = "0.1.0" }
-stratum-components = { path = "crates/stratum-components", version = "0.1.0" }
-stratum-leptos = { path = "crates/stratum-leptos", version = "0.1.0" }
-stratum-dioxus = { path = "crates/stratum-dioxus", version = "0.1.0" }
-stratum-sdk = { path = "crates/stratum-sdk", version = "0.1.0" }
-stratum-test = { path = "crates/stratum-test", version = "0.1.0" }
-stratum-explorer = { path = "crates/stratum-explorer", version = "0.1.0" }
-stratum-cli = { path = "crates/stratum-cli", version = "0.1.0" }
-stratum-security = { path = "crates/stratum-security", version = "0.1.0" }
+# Internal crates — keys use nexus- prefix to match crates.io package names.
+# Each crate sets [lib] name = "stratum_*" so Rust imports stay unchanged.
+nexus-stratum-core = { path = "crates/stratum-core", version = "0.1.0" }
+nexus-stratum-a11y = { path = "crates/stratum-a11y", version = "0.1.0" }
+nexus-stratum-primitives = { path = "crates/stratum-primitives", version = "0.1.0" }
+nexus-stratum-theme = { path = "crates/stratum-theme", version = "0.1.0" }
+nexus-stratum-css = { path = "crates/stratum-css", version = "0.1.0" }
+nexus-stratum-css-macros = { path = "crates/stratum-css-macros", version = "0.1.0" }
+nexus-stratum-tailwind = { path = "crates/stratum-tailwind", version = "0.1.0" }
+nexus-stratum-tailwind-macros = { path = "crates/stratum-tailwind-macros", version = "0.1.0" }
+nexus-stratum-icons = { path = "crates/stratum-icons", version = "0.1.0" }
+nexus-stratum-motion = { path = "crates/stratum-motion", version = "0.1.0" }
+nexus-stratum-components = { path = "crates/stratum-components", version = "0.1.0" }
+nexus-stratum-leptos = { path = "crates/stratum-leptos", version = "0.1.0" }
+nexus-stratum-dioxus = { path = "crates/stratum-dioxus", version = "0.1.0" }
+nexus-stratum-sdk = { path = "crates/stratum-sdk", version = "0.1.0" }
+nexus-stratum-test = { path = "crates/stratum-test", version = "0.1.0" }
+nexus-stratum-explorer = { path = "crates/stratum-explorer", version = "0.1.0" }
+nexus-stratum-cli = { path = "crates/stratum-cli", version = "0.1.0" }
+nexus-stratum-security = { path = "crates/stratum-security", version = "0.1.0" }
 
 # External dependencies
 serde = { version = "1", features = ["derive"] }

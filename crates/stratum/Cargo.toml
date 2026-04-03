@@ -1,7 +1,6 @@
 [package]
-name = "stratum"
-description = "NexusStratum — Production-ready UI component library for Rust"
-publish = false
+name = "nexus-stratum"
+description = "NexusStratum — A complete UI component system for Rust"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,28 +9,31 @@ repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
 
+[lib]
+name = "stratum"
+
 [dependencies]
-stratum-core = { workspace = true }
-stratum-primitives = { workspace = true }
-stratum-components = { workspace = true }
-stratum-theme = { workspace = true }
-stratum-a11y = { workspace = true }
-stratum-leptos = { workspace = true, optional = true }
-stratum-dioxus = { workspace = true, optional = true }
-stratum-tailwind = { workspace = true, optional = true }
-stratum-css = { workspace = true, optional = true }
-stratum-icons = { workspace = true, optional = true }
-stratum-motion = { workspace = true, optional = true }
-stratum-security = { workspace = true, optional = true }
+nexus-stratum-core = { workspace = true }
+nexus-stratum-primitives = { workspace = true }
+nexus-stratum-components = { workspace = true }
+nexus-stratum-theme = { workspace = true }
+nexus-stratum-a11y = { workspace = true }
+nexus-stratum-leptos = { workspace = true, optional = true }
+nexus-stratum-dioxus = { workspace = true, optional = true }
+nexus-stratum-tailwind = { workspace = true, optional = true }
+nexus-stratum-css = { workspace = true, optional = true }
+nexus-stratum-icons = { workspace = true, optional = true }
+nexus-stratum-motion = { workspace = true, optional = true }
+nexus-stratum-security = { workspace = true, optional = true }
 
 [features]
-leptos = ["dep:stratum-leptos"]
-dioxus = ["dep:stratum-dioxus"]
-tailwind = ["dep:stratum-tailwind"]
-css = ["dep:stratum-css"]
-icons = ["dep:stratum-icons"]
-motion = ["dep:stratum-motion"]
-security = ["dep:stratum-security"]
+leptos = ["dep:nexus-stratum-leptos"]
+dioxus = ["dep:nexus-stratum-dioxus"]
+tailwind = ["dep:nexus-stratum-tailwind"]
+css = ["dep:nexus-stratum-css"]
+icons = ["dep:nexus-stratum-icons"]
+motion = ["dep:nexus-stratum-motion"]
+security = ["dep:nexus-stratum-security"]
 # full enables everything except dioxus — leptos and dioxus are mutually
 # exclusive framework choices, so pick one explicitly.
 full = ["leptos", "tailwind", "css", "icons", "motion", "security"]
