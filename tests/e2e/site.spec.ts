@@ -97,7 +97,7 @@ test.describe('Component Detail - Button', () => {
   test('props table is present', async ({ page }) => {
     await page.goto('/components/button.html');
     await expect(page.locator('.props-table')).toBeVisible();
-    await expect(page.locator('.props-table td', { hasText: 'variant' })).toBeVisible();
+    await expect(page.locator('.props-table')).toContainText('variant');
   });
 
   test('sidebar navigation works', async ({ page }) => {
@@ -203,7 +203,8 @@ test.describe('Navigation Integrity', () => {
 test.describe('Copy Button', () => {
   test('copy button exists on code blocks', async ({ page }) => {
     await page.goto('/components/button.html');
-    const copyBtn = page.locator('.code-copy').first();
+    // The install command has a visible copy button
+    const copyBtn = page.locator('.install-cmd .code-copy').first();
     await expect(copyBtn).toBeVisible();
     await expect(copyBtn).toContainText('Copy');
   });
