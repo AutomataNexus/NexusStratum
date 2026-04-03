@@ -16,3 +16,4 @@ name = "stratum_dioxus"
 nexus-stratum-core = { workspace = true }
 nexus-stratum-components = { workspace = true }
 nexus-stratum-theme = { workspace = true }
+dioxus = "0.7"

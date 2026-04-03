@@ -1,52 +1,30 @@
 //! # stratum-dioxus
 //!
-//! Dioxus framework adapter for NexusStratum.
+//! Real Dioxus UI components for NexusStratum.
 //!
-//! Provides idiomatic Dioxus component APIs wrapping the headless
-//! primitives from `stratum-primitives` with styled defaults from
-//! `stratum-components`.
+//! Every component is a native Dioxus `#[component]` function that renders
+//! actual HTML with Tailwind CSS classes. Use in any Dioxus `rsx!` macro.
 //!
-//! ## What the adapter does
+//! ```ignore
+//! use stratum_dioxus::components::button::*;
 //!
-//! - Converts `stratum-primitives` state to Dioxus signals (`use_signal`)
-//! - Bridges `ComponentEvent` to Dioxus event handlers
-//! - Generates RSX output from `RenderOutput`
-//! - Provides Dioxus-specific context providers (ThemeProvider, ToasterProvider)
-//! - Supports Dioxus's multi-target model (web, desktop, mobile, TUI)
+//! rsx! { Button { variant: ButtonVariant::Destructive, "Delete" } }
+//! ```
 
 pub mod adapter;
+pub mod components;
 pub mod provider;
 
-// Re-export all styled component types for convenience
-pub use stratum_components::common::Size;
-pub use stratum_components::data_display::badge::{Badge, BadgeProps, BadgeVariant};
-pub use stratum_components::data_display::card::{Card, CardProps};
-pub use stratum_components::data_display::skeleton::{Skeleton, SkeletonProps};
-pub use stratum_components::data_display::spinner::{Spinner, SpinnerProps};
-pub use stratum_components::forms::button::{Button, ButtonProps, ButtonVariant};
-pub use stratum_components::forms::checkbox::{Checkbox, CheckboxProps};
-pub use stratum_components::forms::form::{Form, FormField, FormFieldProps, FormProps};
-pub use stratum_components::forms::input::{Input, InputProps};
-pub use stratum_components::forms::radio::{Radio, RadioProps};
-pub use stratum_components::forms::select::{Select, SelectProps};
-pub use stratum_components::forms::switch::{Switch, SwitchProps};
-pub use stratum_components::forms::textarea::{Textarea, TextareaProps};
-pub use stratum_components::layout::divider::{Divider, DividerProps};
-pub use stratum_components::layout::stack::{Stack, StackProps};
-pub use stratum_components::navigation::accordion::{Accordion, AccordionProps};
-pub use stratum_components::navigation::tabs::{Tab, TabList, TabPanel, TabProps};
-pub use stratum_components::overlay::alert_dialog::{AlertDialog, AlertDialogProps};
-pub use stratum_components::overlay::dialog::{Dialog, DialogProps};
-pub use stratum_components::overlay::popover::{Popover, PopoverProps};
-pub use stratum_components::overlay::toast::{Toast, ToastProps, ToastVariant};
-pub use stratum_components::overlay::tooltip::{Tooltip, TooltipProps};
-pub use stratum_components::typography::heading::{Heading, HeadingProps};
-pub use stratum_components::typography::link::{Link, LinkProps};
-pub use stratum_components::typography::text::{Text, TextProps};
-pub use stratum_components::utility::focus_scope::{FocusScope, FocusScopeProps};
-pub use stratum_components::utility::portal::Portal;
-pub use stratum_components::utility::separator::{Separator, SeparatorProps};
-pub use stratum_components::utility::visually_hidden::VisuallyHidden;
+pub use components::alert::*;
+pub use components::badge::*;
+pub use components::button::*;
+pub use components::card::*;
+pub use components::heading::*;
+pub use components::input::*;
+pub use components::separator::*;
+pub use components::skeleton::*;
+pub use components::spinner::*;
+pub use components::text::*;
 
 pub use adapter::DioxusAdapter;
 pub use provider::ThemeContext;

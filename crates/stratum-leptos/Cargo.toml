@@ -16,3 +16,4 @@ name = "stratum_leptos"
 nexus-stratum-core = { workspace = true }
 nexus-stratum-components = { workspace = true }
 nexus-stratum-theme = { workspace = true }
+leptos = "0.8"
