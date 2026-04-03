@@ -1,8 +1,10 @@
+pub mod accordion;
 pub mod alert;
 pub mod badge;
 pub mod button;
 pub mod card;
 pub mod checkbox;
+pub mod dialog;
 pub mod heading;
 pub mod input;
 pub mod label;
@@ -13,5 +15,7 @@ pub mod separator;
 pub mod skeleton;
 pub mod spinner;
 pub mod switch;
+pub mod tabs;
 pub mod text;
 pub mod textarea;
+pub mod tooltip;
