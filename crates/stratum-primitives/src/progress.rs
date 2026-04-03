@@ -55,8 +55,7 @@ impl Component for Progress {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
-        let mut aria = AriaAttributes::new()
-            .with_role(AriaRole::ProgressBar);
+        let mut aria = AriaAttributes::new().with_role(AriaRole::ProgressBar);
 
         aria.valuemin = Some(0.0);
         aria.valuemax = Some(props.max);
@@ -157,9 +156,11 @@ mod tests {
         let state = Progress::initial_state(&props);
         let output = Progress::render(&props, &state);
         assert_eq!(output.aria.valuenow, None);
-        assert!(output
-            .data_attrs
-            .contains(&("state".to_string(), "indeterminate".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("state".to_string(), "indeterminate".to_string()))
+        );
     }
 
     #[test]
@@ -171,12 +172,16 @@ mod tests {
         };
         let state = Progress::initial_state(&props);
         let output = Progress::render(&props, &state);
-        assert!(output
-            .data_attrs
-            .contains(&("state".to_string(), "determinate".to_string())));
-        assert!(output
-            .data_attrs
-            .contains(&("value".to_string(), "75".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("state".to_string(), "determinate".to_string()))
+        );
+        assert!(
+            output
+                .data_attrs
+                .contains(&("value".to_string(), "75".to_string()))
+        );
     }
 
     #[test]
@@ -190,9 +195,11 @@ mod tests {
         let output = Progress::render(&props, &state);
         assert_eq!(output.aria.valuemax, Some(10.0));
         assert_eq!(output.aria.valuenow, Some(5.0));
-        assert!(output
-            .data_attrs
-            .contains(&("value".to_string(), "50".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("value".to_string(), "50".to_string()))
+        );
     }
 
     #[test]

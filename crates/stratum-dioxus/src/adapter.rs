@@ -83,7 +83,12 @@ impl DioxusAdapter {
 
     /// Create modifier keys from event state.
     pub fn modifiers(shift: bool, ctrl: bool, alt: bool, meta: bool) -> ModifierKeys {
-        ModifierKeys { shift, ctrl, alt, meta }
+        ModifierKeys {
+            shift,
+            ctrl,
+            alt,
+            meta,
+        }
     }
 
     /// Create a Click ComponentEvent.
@@ -96,7 +101,13 @@ impl DioxusAdapter {
     }
 
     /// Create a KeyDown ComponentEvent.
-    pub fn keydown_event(key: &str, shift: bool, ctrl: bool, alt: bool, meta: bool) -> ComponentEvent {
+    pub fn keydown_event(
+        key: &str,
+        shift: bool,
+        ctrl: bool,
+        alt: bool,
+        meta: bool,
+    ) -> ComponentEvent {
         ComponentEvent::KeyDown {
             key: Self::key_from_str(key),
             modifiers: Self::modifiers(shift, ctrl, alt, meta),
@@ -178,7 +189,11 @@ mod tests {
         let output = RenderOutput::new()
             .with_tag("button")
             .with_class("btn")
-            .with_aria(AriaAttributes::new().with_role(AriaRole::Button).with_disabled(false));
+            .with_aria(
+                AriaAttributes::new()
+                    .with_role(AriaRole::Button)
+                    .with_disabled(false),
+            );
 
         let attrs = DioxusAdapter::render_attrs(&output);
         assert!(attrs.iter().any(|(k, v)| k == "class" && v.contains("btn")));
@@ -189,7 +204,11 @@ mod tests {
     fn render_attrs_data() {
         let output = RenderOutput::new().with_data("testid", "save-btn");
         let attrs = DioxusAdapter::render_attrs(&output);
-        assert!(attrs.iter().any(|(k, v)| k == "data-testid" && v == "save-btn"));
+        assert!(
+            attrs
+                .iter()
+                .any(|(k, v)| k == "data-testid" && v == "save-btn")
+        );
     }
 
     #[test]

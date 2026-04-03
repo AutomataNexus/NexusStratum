@@ -7,8 +7,8 @@
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use syn::{parse_macro_input, Expr, Token, punctuated::Punctuated};
 use syn::parse::{Parse, ParseStream};
+use syn::{Expr, Token, parse_macro_input, punctuated::Punctuated};
 
 /// A comma-separated list of expressions that evaluate to `&str` or `String`.
 struct TwInput {

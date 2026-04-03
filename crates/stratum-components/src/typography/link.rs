@@ -1,6 +1,6 @@
 //! Styled Link component.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole};
 use stratum_core::render::{AttrValue, RenderOutput};
 
@@ -52,7 +52,13 @@ impl Link {
             ""
         };
 
-        let computed = format!("{} {} {} {}", Self::BASE, variant_cls, size_cls, disabled_cls);
+        let computed = format!(
+            "{} {} {} {}",
+            Self::BASE,
+            variant_cls,
+            size_cls,
+            disabled_cls
+        );
         merge_classes(&computed, &props.class)
     }
 

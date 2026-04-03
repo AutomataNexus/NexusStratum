@@ -91,20 +91,23 @@ impl Component for Switch {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space, .. } => {
-                    let next = !Self::effective_checked(props, state);
-                    if let Some(ref cb) = props.on_checked_change {
-                        cb.call(next);
-                    }
-                    if props.checked.is_none() {
-                        state.checked = next;
-                        return EventResult::prevent_and_changed();
-                    }
-                    EventResult {
-                        prevent_default: true,
-                        stop_propagation: false,
-                        state_changed: false,
-                    }
+            ComponentEvent::KeyDown {
+                key: Key::Enter | Key::Space,
+                ..
+            } => {
+                let next = !Self::effective_checked(props, state);
+                if let Some(ref cb) = props.on_checked_change {
+                    cb.call(next);
+                }
+                if props.checked.is_none() {
+                    state.checked = next;
+                    return EventResult::prevent_and_changed();
+                }
+                EventResult {
+                    prevent_default: true,
+                    stop_propagation: false,
+                    state_changed: false,
+                }
             }
             _ => EventResult::default(),
         }

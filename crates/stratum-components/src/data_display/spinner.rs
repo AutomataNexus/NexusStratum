@@ -1,6 +1,6 @@
 //! Loading spinner component.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole};
 use stratum_core::render::RenderOutput;
 
@@ -25,7 +25,8 @@ impl Default for SpinnerProps {
 pub struct Spinner;
 
 impl Spinner {
-    const BASE: &'static str = "animate-spin rounded-full border-2 border-current border-t-transparent";
+    const BASE: &'static str =
+        "animate-spin rounded-full border-2 border-current border-t-transparent";
 
     pub fn classes(props: &SpinnerProps) -> String {
         let size_cls = match props.size {

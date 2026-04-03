@@ -158,15 +158,16 @@ impl Component for RadioGroup {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Space, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Space, ..
+            } => {
                 if let Some(value) = props.items.get(state.focused_index) {
                     return Self::select(props, state, value.clone());
                 }
                 EventResult::default()
             }
             ComponentEvent::KeyDown { ref key, .. } => {
-                let nav = KeyboardNav::new(props.orientation, NavStrategy::Arrow)
-                    .with_loop(true);
+                let nav = KeyboardNav::new(props.orientation, NavStrategy::Arrow).with_loop(true);
                 if let Some(new_index) = nav.handle(key, props.items.len(), state.focused_index) {
                     if new_index != state.focused_index {
                         state.focused_index = new_index;

@@ -68,7 +68,9 @@ impl KeyboardNav {
         match self.strategy {
             NavStrategy::Arrow => self.arrow_direction(key),
             NavStrategy::Tab => self.tab_direction(key),
-            NavStrategy::Both => self.arrow_direction(key).or_else(|| self.tab_direction(key)),
+            NavStrategy::Both => self
+                .arrow_direction(key)
+                .or_else(|| self.tab_direction(key)),
         }
     }
 

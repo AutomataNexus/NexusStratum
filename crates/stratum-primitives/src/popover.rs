@@ -3,12 +3,14 @@
 //! Provides a headless popover that appears anchored to a trigger element,
 //! with focus management and proper ARIA attributes.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
+use stratum_core::aria::AriaHasPopup;
 use stratum_core::callback::Callback;
+use stratum_core::focus::FocusManager;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
-use stratum_core::focus::FocusManager;
-use stratum_core::aria::AriaHasPopup;
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the Popover primitive.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -75,8 +77,7 @@ impl Component for Popover {
             .with_attr("id", AttrValue::String(state.trigger_id.clone()));
 
         // Content element
-        let content_aria = AriaAttributes::new()
-            .with_role(AriaRole::Dialog);
+        let content_aria = AriaAttributes::new().with_role(AriaRole::Dialog);
 
         let mut content = RenderOutput::new()
             .with_tag("div")
@@ -111,7 +112,9 @@ impl Component for Popover {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Escape, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Escape, ..
+            } => {
                 if is_open {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
@@ -136,10 +139,10 @@ impl Component for Popover {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use stratum_core::event::MouseButton;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use stratum_core::event::ModifierKeys;
+    use stratum_core::event::MouseButton;
 
     fn default_props() -> PopoverProps {
         PopoverProps::default()
@@ -194,7 +197,11 @@ mod tests {
         let state = Popover::initial_state(&props);
         let output = Popover::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(elems[1].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                elems[1]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 
@@ -203,7 +210,8 @@ mod tests {
         let props = default_props();
         let mut state = Popover::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Popover::on_event(&props, &mut state, event.clone());
@@ -259,7 +267,8 @@ mod tests {
         };
         let mut state = Popover::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Popover::on_event(&props, &mut state, event);

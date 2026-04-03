@@ -1,9 +1,9 @@
 //! Styled Button component wrapping the button primitive.
 
-use crate::common::{merge_classes, Size};
-use stratum_core::render::RenderOutput;
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole};
 use stratum_core::render::AttrValue;
+use stratum_core::render::RenderOutput;
 
 /// Visual variant of the button.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -44,9 +44,7 @@ impl Button {
     /// Get the CSS classes for this button configuration.
     pub fn classes(props: &ButtonProps) -> String {
         let variant = match props.variant {
-            ButtonVariant::Default => {
-                "bg-primary text-primary-foreground hover:bg-primary/90"
-            }
+            ButtonVariant::Default => "bg-primary text-primary-foreground hover:bg-primary/90",
             ButtonVariant::Destructive => {
                 "bg-destructive text-destructive-foreground hover:bg-destructive/90"
             }
@@ -177,7 +175,12 @@ mod tests {
         let output = Button::render(&props);
         assert_eq!(output.aria.busy, Some(true));
         assert_eq!(output.aria.disabled, Some(true));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "loading" && v == "true"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "loading" && v == "true")
+        );
     }
 
     #[test]
@@ -201,7 +204,10 @@ mod tests {
             ButtonVariant::Link,
         ];
         for variant in variants {
-            let props = ButtonProps { variant, ..Default::default() };
+            let props = ButtonProps {
+                variant,
+                ..Default::default()
+            };
             let classes = Button::classes(&props);
             assert!(classes.contains("inline-flex"));
         }
@@ -211,7 +217,10 @@ mod tests {
     fn all_sizes_produce_classes() {
         let sizes = [Size::Xs, Size::Sm, Size::Md, Size::Lg, Size::Xl];
         for size in sizes {
-            let props = ButtonProps { size, ..Default::default() };
+            let props = ButtonProps {
+                size,
+                ..Default::default()
+            };
             let classes = Button::classes(&props);
             assert!(!classes.is_empty());
         }

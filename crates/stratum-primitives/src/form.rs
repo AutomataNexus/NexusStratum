@@ -3,10 +3,12 @@
 //! Provides headless form and form field components with proper ARIA
 //! attributes for label, error, and validation state relationships.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
 use stratum_core::callback::Callback;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the Form primitive.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -37,8 +39,7 @@ impl Component for Form {
     }
 
     fn render(_props: &Self::Props, state: &Self::State) -> RenderOutput {
-        let aria = AriaAttributes::new()
-            .with_role(AriaRole::Form);
+        let aria = AriaAttributes::new().with_role(AriaRole::Form);
 
         RenderOutput::new()
             .with_tag("form")
@@ -62,7 +63,9 @@ impl Component for Form {
                     state_changed: false,
                 }
             }
-            ComponentEvent::KeyDown { key: Key::Enter, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Enter, ..
+            } => {
                 if let Some(ref cb) = props.on_submit {
                     cb.call(());
                 }
@@ -186,9 +189,9 @@ impl Component for FormField {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use stratum_core::event::ModifierKeys;
 
     // --- Form tests ---
 
@@ -342,7 +345,11 @@ mod tests {
         let output = FormField::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
             assert_eq!(elems[0].effective_tag(), "label");
-            assert!(elems[0].attrs.contains(&("id".to_string(), AttrValue::String(state.label_id.clone()))));
+            assert!(
+                elems[0]
+                    .attrs
+                    .contains(&("id".to_string(), AttrValue::String(state.label_id.clone())))
+            );
         } else {
             panic!("Expected Elements with label");
         }
@@ -383,7 +390,11 @@ mod tests {
         let props = default_field_props();
         let state = FormField::initial_state(&props);
         let output = FormField::render(&props, &state);
-        assert!(output.attrs.contains(&("name".to_string(), AttrValue::String("email".to_string()))));
+        assert!(
+            output
+                .attrs
+                .contains(&("name".to_string(), AttrValue::String("email".to_string())))
+        );
     }
 
     #[test]

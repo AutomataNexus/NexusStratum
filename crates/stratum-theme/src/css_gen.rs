@@ -108,18 +108,9 @@ impl Theme {
 
     fn write_typography_vars(&self, css: &mut String) {
         let t = &self.typography;
-        css.push_str(&format!(
-            "  --stratum-font-sans: {};\n",
-            t.font_sans
-        ));
-        css.push_str(&format!(
-            "  --stratum-font-serif: {};\n",
-            t.font_serif
-        ));
-        css.push_str(&format!(
-            "  --stratum-font-mono: {};\n",
-            t.font_mono
-        ));
+        css.push_str(&format!("  --stratum-font-sans: {};\n", t.font_sans));
+        css.push_str(&format!("  --stratum-font-serif: {};\n", t.font_serif));
+        css.push_str(&format!("  --stratum-font-mono: {};\n", t.font_mono));
 
         let sizes = [
             ("xs", &t.size_xs),
@@ -150,10 +141,7 @@ impl Theme {
             ("black", t.weight_black),
         ];
         for (name, weight) in &weights {
-            css.push_str(&format!(
-                "  --stratum-font-weight-{}: {};\n",
-                name, weight
-            ));
+            css.push_str(&format!("  --stratum-font-weight-{}: {};\n", name, weight));
         }
 
         css.push_str(&format!(
@@ -220,11 +208,7 @@ impl Theme {
             ("full", &r.full),
         ];
         for (name, rem) in &entries {
-            css.push_str(&format!(
-                "  --stratum-radius-{}: {};\n",
-                name,
-                rem.to_css()
-            ));
+            css.push_str(&format!("  --stratum-radius-{}: {};\n", name, rem.to_css()));
         }
     }
 
@@ -238,56 +222,26 @@ impl Theme {
 
     fn write_transition_vars(&self, css: &mut String) {
         let t = &self.transitions;
-        css.push_str(&format!(
-            "  --stratum-transition-fast: {};\n",
-            t.fast
-        ));
-        css.push_str(&format!(
-            "  --stratum-transition-normal: {};\n",
-            t.normal
-        ));
-        css.push_str(&format!(
-            "  --stratum-transition-slow: {};\n",
-            t.slow
-        ));
+        css.push_str(&format!("  --stratum-transition-fast: {};\n", t.fast));
+        css.push_str(&format!("  --stratum-transition-normal: {};\n", t.normal));
+        css.push_str(&format!("  --stratum-transition-slow: {};\n", t.slow));
     }
 
     fn write_z_index_vars(&self, css: &mut String) {
         let z = &self.z_indices;
-        css.push_str(&format!(
-            "  --stratum-z-dropdown: {};\n",
-            z.dropdown
-        ));
+        css.push_str(&format!("  --stratum-z-dropdown: {};\n", z.dropdown));
         css.push_str(&format!("  --stratum-z-sticky: {};\n", z.sticky));
         css.push_str(&format!("  --stratum-z-modal: {};\n", z.modal));
-        css.push_str(&format!(
-            "  --stratum-z-popover: {};\n",
-            z.popover
-        ));
-        css.push_str(&format!(
-            "  --stratum-z-tooltip: {};\n",
-            z.tooltip
-        ));
+        css.push_str(&format!("  --stratum-z-popover: {};\n", z.popover));
+        css.push_str(&format!("  --stratum-z-tooltip: {};\n", z.tooltip));
     }
 
     fn write_breakpoint_vars(&self, css: &mut String) {
         let b = &self.breakpoints;
-        css.push_str(&format!(
-            "  --stratum-breakpoint-sm: {};\n",
-            b.sm.to_css()
-        ));
-        css.push_str(&format!(
-            "  --stratum-breakpoint-md: {};\n",
-            b.md.to_css()
-        ));
-        css.push_str(&format!(
-            "  --stratum-breakpoint-lg: {};\n",
-            b.lg.to_css()
-        ));
-        css.push_str(&format!(
-            "  --stratum-breakpoint-xl: {};\n",
-            b.xl.to_css()
-        ));
+        css.push_str(&format!("  --stratum-breakpoint-sm: {};\n", b.sm.to_css()));
+        css.push_str(&format!("  --stratum-breakpoint-md: {};\n", b.md.to_css()));
+        css.push_str(&format!("  --stratum-breakpoint-lg: {};\n", b.lg.to_css()));
+        css.push_str(&format!("  --stratum-breakpoint-xl: {};\n", b.xl.to_css()));
         css.push_str(&format!(
             "  --stratum-breakpoint-xxl: {};\n",
             b.xxl.to_css()

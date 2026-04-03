@@ -1,6 +1,6 @@
 //! Styled Checkbox and CheckboxGroup components.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole, TriState};
 use stratum_core::render::{AttrValue, RenderOutput};
 
@@ -137,7 +137,12 @@ mod tests {
         };
         let output = Checkbox::render(&props);
         assert_eq!(output.aria.checked, Some(TriState::True));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "checked"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "checked")
+        );
     }
 
     #[test]

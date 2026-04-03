@@ -3,7 +3,10 @@ use std::fs;
 use std::path::Path;
 
 #[derive(Parser)]
-#[command(name = "stratum", about = "NexusStratum CLI — scaffolding, themes, and component management")]
+#[command(
+    name = "stratum",
+    about = "NexusStratum CLI — scaffolding, themes, and component management"
+)]
 #[command(version, long_about = None)]
 struct Cli {
     #[command(subcommand)]
@@ -80,17 +83,98 @@ enum ThemeCommands {
 
 /// Built-in component registry, organized by category.
 const COMPONENT_REGISTRY: &[(&str, &[&str])] = &[
-    ("Layout", &["Box", "Stack", "HStack", "VStack", "Grid", "Center", "Container", "Divider", "AspectRatio", "ScrollArea", "Resizable"]),
-    ("Typography", &["Text", "Heading", "Code", "Kbd", "Blockquote", "Link"]),
-    ("Forms", &["Button", "Checkbox", "Radio", "Switch", "Slider", "Input", "Textarea", "NumberInput", "Select", "Combobox", "DatePicker", "Form"]),
-    ("Overlay", &["Dialog", "AlertDialog", "Drawer", "Sheet", "Popover", "Tooltip", "ContextMenu", "HoverCard", "Toast"]),
-    ("Navigation", &["Tabs", "Accordion", "NavigationMenu", "Breadcrumb", "Pagination", "Menu", "DropdownMenu"]),
-    ("Data Display", &["Table", "DataTable", "VirtualList", "Tree", "Badge", "Tag", "Avatar", "Card", "Progress", "Skeleton", "Spinner"]),
-    ("Feedback", &["Alert", "Banner", "EmptyState", "ErrorBoundary"]),
-    ("Utility", &["Portal", "VisuallyHidden", "FocusScope", "Separator"]),
+    (
+        "Layout",
+        &[
+            "Box",
+            "Stack",
+            "HStack",
+            "VStack",
+            "Grid",
+            "Center",
+            "Container",
+            "Divider",
+            "AspectRatio",
+            "ScrollArea",
+            "Resizable",
+        ],
+    ),
+    (
+        "Typography",
+        &["Text", "Heading", "Code", "Kbd", "Blockquote", "Link"],
+    ),
+    (
+        "Forms",
+        &[
+            "Button",
+            "Checkbox",
+            "Radio",
+            "Switch",
+            "Slider",
+            "Input",
+            "Textarea",
+            "NumberInput",
+            "Select",
+            "Combobox",
+            "DatePicker",
+            "Form",
+        ],
+    ),
+    (
+        "Overlay",
+        &[
+            "Dialog",
+            "AlertDialog",
+            "Drawer",
+            "Sheet",
+            "Popover",
+            "Tooltip",
+            "ContextMenu",
+            "HoverCard",
+            "Toast",
+        ],
+    ),
+    (
+        "Navigation",
+        &[
+            "Tabs",
+            "Accordion",
+            "NavigationMenu",
+            "Breadcrumb",
+            "Pagination",
+            "Menu",
+            "DropdownMenu",
+        ],
+    ),
+    (
+        "Data Display",
+        &[
+            "Table",
+            "DataTable",
+            "VirtualList",
+            "Tree",
+            "Badge",
+            "Tag",
+            "Avatar",
+            "Card",
+            "Progress",
+            "Skeleton",
+            "Spinner",
+        ],
+    ),
+    (
+        "Feedback",
+        &["Alert", "Banner", "EmptyState", "ErrorBoundary"],
+    ),
+    (
+        "Utility",
+        &["Portal", "VisuallyHidden", "FocusScope", "Separator"],
+    ),
 ];
 
-const BUILT_IN_THEMES: &[&str] = &["default", "slate", "zinc", "rose", "blue", "green", "orange"];
+const BUILT_IN_THEMES: &[&str] = &[
+    "default", "slate", "zinc", "rose", "blue", "green", "orange",
+];
 
 fn find_component(name: &str) -> Option<(&'static str, &'static str)> {
     let lower = name.to_lowercase();
@@ -192,7 +276,10 @@ impl {name} {{
 
 fn init_project(framework: &str) {
     if framework != "leptos" && framework != "dioxus" {
-        eprintln!("Error: unsupported framework '{}'. Use 'leptos' or 'dioxus'.", framework);
+        eprintln!(
+            "Error: unsupported framework '{}'. Use 'leptos' or 'dioxus'.",
+            framework
+        );
         std::process::exit(1);
     }
 
@@ -265,7 +352,9 @@ fn add_components(components: &[String], framework: &str, crate_dep: bool, all: 
             .collect()
     } else {
         if components.is_empty() {
-            eprintln!("Error: no component names provided. Use `stratum add <name>` or `stratum add --all`.");
+            eprintln!(
+                "Error: no component names provided. Use `stratum add <name>` or `stratum add --all`."
+            );
             std::process::exit(1);
         }
         components
@@ -288,18 +377,26 @@ fn add_components(components: &[String], framework: &str, crate_dep: bool, all: 
         let file_path = comp_dir.join(format!("{}.rs", snake));
 
         if crate_dep {
-            println!("  {} — added as crate dependency (stratum-components)", name);
+            println!(
+                "  {} — added as crate dependency (stratum-components)",
+                name
+            );
             added.push(name.to_string());
             continue;
         }
 
         if file_path.exists() {
-            println!("  {} — already exists at {}, skipping.", name, file_path.display());
+            println!(
+                "  {} — already exists at {}, skipping.",
+                name,
+                file_path.display()
+            );
             continue;
         }
 
         let source = component_stub(name, framework);
-        fs::write(&file_path, source).unwrap_or_else(|e| panic!("Failed to write {}: {}", file_path.display(), e));
+        fs::write(&file_path, source)
+            .unwrap_or_else(|e| panic!("Failed to write {}: {}", file_path.display(), e));
         println!("  {} — created {}", name, file_path.display());
         added.push(name.to_string());
     }
@@ -367,7 +464,11 @@ fn theme_create(name: &str, base: &str) {
 
     let theme_file = theme_dir.join(format!("{}.rs", name));
     if theme_file.exists() {
-        eprintln!("Error: theme '{}' already exists at {}", name, theme_file.display());
+        eprintln!(
+            "Error: theme '{}' already exists at {}",
+            name,
+            theme_file.display()
+        );
         std::process::exit(1);
     }
 
@@ -418,7 +519,11 @@ fn theme_apply(name: &str) {
             .collect::<Vec<_>>()
             .join("\n")
     } else {
-        format!("{}\n[theme]\nname = \"{}\"\n", toml_content.trim_end(), name)
+        format!(
+            "{}\n[theme]\nname = \"{}\"\n",
+            toml_content.trim_end(),
+            name
+        )
     };
 
     fs::write("stratum.toml", updated).expect("Failed to write stratum.toml");
@@ -440,7 +545,10 @@ fn diff_component(component: &str, from: &str, to: &str) {
             );
         }
         None => {
-            eprintln!("Error: unknown component '{}'. Run `stratum list`.", component);
+            eprintln!(
+                "Error: unknown component '{}'. Run `stratum list`.",
+                component
+            );
             std::process::exit(1);
         }
     }
@@ -456,14 +564,25 @@ fn docs_component(component: &str) {
 
             // Try to open in browser
             #[cfg(target_os = "linux")]
-            { let _ = std::process::Command::new("xdg-open").arg(&url).spawn(); }
+            {
+                let _ = std::process::Command::new("xdg-open").arg(&url).spawn();
+            }
             #[cfg(target_os = "macos")]
-            { let _ = std::process::Command::new("open").arg(&url).spawn(); }
+            {
+                let _ = std::process::Command::new("open").arg(&url).spawn();
+            }
             #[cfg(target_os = "windows")]
-            { let _ = std::process::Command::new("cmd").args(["/c", "start", &url]).spawn(); }
+            {
+                let _ = std::process::Command::new("cmd")
+                    .args(["/c", "start", &url])
+                    .spawn();
+            }
         }
         None => {
-            eprintln!("Error: unknown component '{}'. Run `stratum list`.", component);
+            eprintln!(
+                "Error: unknown component '{}'. Run `stratum list`.",
+                component
+            );
             std::process::exit(1);
         }
     }
@@ -486,7 +605,12 @@ fn main() {
 
     match cli.command {
         Commands::Init { framework } => init_project(&framework),
-        Commands::Add { components, framework, crate_dep, all } => {
+        Commands::Add {
+            components,
+            framework,
+            crate_dep,
+            all,
+        } => {
             add_components(&components, &framework, crate_dep, all);
         }
         Commands::Theme { command } => match command {
@@ -494,7 +618,11 @@ fn main() {
             ThemeCommands::Create { name, base } => theme_create(&name, &base),
             ThemeCommands::Apply { name } => theme_apply(&name),
         },
-        Commands::Diff { component, from, to } => diff_component(&component, &from, &to),
+        Commands::Diff {
+            component,
+            from,
+            to,
+        } => diff_component(&component, &from, &to),
         Commands::List => list_components(),
         Commands::Docs { component } => docs_component(&component),
         Commands::Explorer => start_explorer(),

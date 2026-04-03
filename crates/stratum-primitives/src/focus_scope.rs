@@ -40,8 +40,7 @@ impl Component for FocusScope {
     }
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
-        let mut output = RenderOutput::new()
-            .with_attr("id", AttrValue::String(state.id.clone()));
+        let mut output = RenderOutput::new().with_attr("id", AttrValue::String(state.id.clone()));
 
         if props.trapped {
             output = output.with_data("focus-trap", "true");
@@ -64,9 +63,7 @@ impl Component for FocusScope {
 
         // When trapped, intercept Tab/Shift+Tab to prevent focus from leaving
         match event {
-            ComponentEvent::KeyDown {
-                key: Key::Tab, ..
-            } => {
+            ComponentEvent::KeyDown { key: Key::Tab, .. } => {
                 // Signal framework adapter to cycle focus within scope
                 EventResult {
                     prevent_default: true,
@@ -126,10 +123,7 @@ mod tests {
         let props = default_props();
         let state = FocusScope::initial_state(&props);
         let output = FocusScope::render(&props, &state);
-        assert!(!output
-            .data_attrs
-            .iter()
-            .any(|(k, _)| k == "focus-trap"));
+        assert!(!output.data_attrs.iter().any(|(k, _)| k == "focus-trap"));
     }
 
     #[test]
@@ -140,9 +134,11 @@ mod tests {
         };
         let state = FocusScope::initial_state(&props);
         let output = FocusScope::render(&props, &state);
-        assert!(output
-            .data_attrs
-            .contains(&("focus-trap".to_string(), "true".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("focus-trap".to_string(), "true".to_string()))
+        );
     }
 
     #[test]
@@ -154,9 +150,11 @@ mod tests {
         };
         let state = FocusScope::initial_state(&props);
         let output = FocusScope::render(&props, &state);
-        assert!(output
-            .data_attrs
-            .contains(&("focus-loop".to_string(), "true".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("focus-loop".to_string(), "true".to_string()))
+        );
     }
 
     #[test]

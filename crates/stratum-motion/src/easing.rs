@@ -28,10 +28,7 @@ impl Easing {
             Self::EaseIn => "ease-in".to_string(),
             Self::EaseOut => "ease-out".to_string(),
             Self::EaseInOut => "ease-in-out".to_string(),
-            Self::Spring {
-                stiffness,
-                damping,
-            } => {
+            Self::Spring { stiffness, damping } => {
                 // Approximate spring physics with a cubic-bezier
                 // These are rough approximations based on common spring configs
                 // Map spring parameters to cubic-bezier approximation.

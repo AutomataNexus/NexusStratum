@@ -64,17 +64,23 @@ impl Popover {
             .with_class(classes)
             .with_aria(aria)
             .with_data("state", if props.open { "open" } else { "closed" })
-            .with_data("side", match props.side {
-                PopoverSide::Top => "top",
-                PopoverSide::Bottom => "bottom",
-                PopoverSide::Left => "left",
-                PopoverSide::Right => "right",
-            })
-            .with_data("align", match props.align {
-                PopoverAlign::Center => "center",
-                PopoverAlign::Start => "start",
-                PopoverAlign::End => "end",
-            });
+            .with_data(
+                "side",
+                match props.side {
+                    PopoverSide::Top => "top",
+                    PopoverSide::Bottom => "bottom",
+                    PopoverSide::Left => "left",
+                    PopoverSide::Right => "right",
+                },
+            )
+            .with_data(
+                "align",
+                match props.align {
+                    PopoverAlign::Center => "center",
+                    PopoverAlign::Start => "start",
+                    PopoverAlign::End => "end",
+                },
+            );
 
         if let Some(ref id) = props.id {
             output = output.with_attr("id", AttrValue::String(id.clone()));
@@ -112,8 +118,23 @@ mod tests {
             ..Default::default()
         };
         let output = Popover::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "open"));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "side" && v == "top"));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "align" && v == "end"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "open")
+        );
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "side" && v == "top")
+        );
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "align" && v == "end")
+        );
     }
 }

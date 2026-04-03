@@ -126,7 +126,10 @@ mod tests {
             HeadingLevel::H6,
         ];
         for level in levels {
-            let props = HeadingProps { level, ..Default::default() };
+            let props = HeadingProps {
+                level,
+                ..Default::default()
+            };
             let output = Heading::render(&props);
             assert_eq!(output.aria.level, Some(level.aria_level()));
         }

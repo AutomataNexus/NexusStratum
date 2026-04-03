@@ -38,7 +38,12 @@ mod tests {
     fn portal_default_container() {
         let props = PortalProps::default();
         let output = Portal::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "portal-container" && v == "body"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "portal-container" && v == "body")
+        );
     }
 
     #[test]
@@ -48,7 +53,12 @@ mod tests {
             ..Default::default()
         };
         let output = Portal::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "portal-container" && v == "#modal-root"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "portal-container" && v == "#modal-root")
+        );
     }
 
     #[test]

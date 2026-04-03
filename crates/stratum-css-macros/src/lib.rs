@@ -32,10 +32,7 @@ pub fn css(input: TokenStream) -> TokenStream {
 
     // Normalize whitespace for deterministic hashing AND for the scoped rule.
     // This ensures the hash and the emitted CSS are derived from the same content.
-    let normalized: String = css_text
-        .split_whitespace()
-        .collect::<Vec<&str>>()
-        .join(" ");
+    let normalized: String = css_text.split_whitespace().collect::<Vec<&str>>().join(" ");
 
     let hash = fnv1a_hash(normalized.as_bytes());
     // Use full 64-bit hash (16 hex digits) to minimize collision probability

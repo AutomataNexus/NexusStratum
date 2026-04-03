@@ -81,10 +81,7 @@ impl SecurityHeaders {
 
         // X-Content-Type-Options
         if self.nosniff {
-            headers.push((
-                "X-Content-Type-Options".to_string(),
-                "nosniff".to_string(),
-            ));
+            headers.push(("X-Content-Type-Options".to_string(), "nosniff".to_string()));
         }
 
         // Referrer-Policy
@@ -171,7 +168,10 @@ mod tests {
         let headers = SecurityHeaders::new().with_nonce(nonce);
         let pairs = headers.to_header_pairs();
 
-        let csp = pairs.iter().find(|(k, _)| k == "Content-Security-Policy").unwrap();
+        let csp = pairs
+            .iter()
+            .find(|(k, _)| k == "Content-Security-Policy")
+            .unwrap();
         assert!(csp.1.contains("nonce-test-nonce-123"));
         assert!(!csp.1.contains("unsafe-inline"));
     }
@@ -181,7 +181,10 @@ mod tests {
         let headers = SecurityHeaders::new();
         let pairs = headers.to_header_pairs();
 
-        let csp = pairs.iter().find(|(k, _)| k == "Content-Security-Policy").unwrap();
+        let csp = pairs
+            .iter()
+            .find(|(k, _)| k == "Content-Security-Policy")
+            .unwrap();
         assert!(csp.1.contains("unsafe-inline"));
     }
 
@@ -199,7 +202,10 @@ mod tests {
             .with_permissions_policy("camera=()")
             .with_permissions_policy("microphone=()");
         let pairs = headers.to_header_pairs();
-        let pp = pairs.iter().find(|(k, _)| k == "Permissions-Policy").unwrap();
+        let pp = pairs
+            .iter()
+            .find(|(k, _)| k == "Permissions-Policy")
+            .unwrap();
         assert_eq!(pp.1, "camera=(), microphone=()");
     }
 

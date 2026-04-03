@@ -44,9 +44,10 @@ pub fn assert_has_attr(output: &RenderOutput, name: &str) -> bool {
 ///
 /// Returns `true` if the attribute exists and its value matches.
 pub fn assert_attr_value(output: &RenderOutput, name: &str, expected: &str) -> bool {
-    output.attrs.iter().any(|(k, v)| {
-        k == name && v.to_html_value().as_deref() == Some(expected)
-    })
+    output
+        .attrs
+        .iter()
+        .any(|(k, v)| k == name && v.to_html_value().as_deref() == Some(expected))
 }
 
 /// Assert that a `RenderOutput` has a data attribute with the given name.
@@ -76,15 +77,14 @@ mod tests {
 
     #[test]
     fn test_assert_aria_role_match() {
-        let output = RenderOutput::new()
-            .with_aria(AriaAttributes::new().with_role(AriaRole::Button));
+        let output =
+            RenderOutput::new().with_aria(AriaAttributes::new().with_role(AriaRole::Button));
         assert!(assert_aria_role(&output, AriaRole::Button));
     }
 
     #[test]
     fn test_assert_aria_role_mismatch() {
-        let output = RenderOutput::new()
-            .with_aria(AriaAttributes::new().with_role(AriaRole::Link));
+        let output = RenderOutput::new().with_aria(AriaAttributes::new().with_role(AriaRole::Link));
         assert!(!assert_aria_role(&output, AriaRole::Button));
     }
 
@@ -100,8 +100,7 @@ mod tests {
 
     #[test]
     fn test_assert_has_data_attr() {
-        let output = RenderOutput::new()
-            .with_data("testid", "save-btn");
+        let output = RenderOutput::new().with_data("testid", "save-btn");
         assert!(assert_has_data_attr(&output, "testid"));
         assert!(!assert_has_data_attr(&output, "other"));
     }

@@ -45,10 +45,16 @@ impl Toast {
     pub fn classes(props: &ToastProps) -> String {
         let variant_cls = match props.variant {
             ToastVariant::Default => "border bg-background text-foreground",
-            ToastVariant::Success => "border-green-500 bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-100",
+            ToastVariant::Success => {
+                "border-green-500 bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-100"
+            }
             ToastVariant::Error => "border-destructive bg-destructive text-destructive-foreground",
-            ToastVariant::Warning => "border-yellow-500 bg-yellow-50 text-yellow-900 dark:bg-yellow-950 dark:text-yellow-100",
-            ToastVariant::Info => "border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-100",
+            ToastVariant::Warning => {
+                "border-yellow-500 bg-yellow-50 text-yellow-900 dark:bg-yellow-950 dark:text-yellow-100"
+            }
+            ToastVariant::Info => {
+                "border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-100"
+            }
         };
 
         let computed = format!("{} {}", Self::BASE, variant_cls);
@@ -57,8 +63,7 @@ impl Toast {
 
     pub fn render(props: &ToastProps) -> RenderOutput {
         let classes = Self::classes(props);
-        let mut aria = AriaAttributes::new()
-            .with_role(AriaRole::Alert);
+        let mut aria = AriaAttributes::new().with_role(AriaRole::Alert);
         aria.live = Some(AriaLive::Assertive);
         aria.atomic = Some(true);
 

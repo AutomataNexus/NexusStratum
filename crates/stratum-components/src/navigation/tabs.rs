@@ -1,6 +1,6 @@
 //! Styled Tabs, TabList, Tab, and TabPanel components.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole, Orientation};
 use stratum_core::render::{AttrValue, RenderOutput};
 
@@ -196,7 +196,12 @@ mod tests {
         };
         let output = Tab::render(&props);
         assert_eq!(output.aria.selected, Some(true));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "active"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "active")
+        );
     }
 
     #[test]
@@ -204,7 +209,12 @@ mod tests {
         let props = TabPanelProps::default();
         let output = TabPanel::render(&props);
         assert_eq!(output.aria.hidden, Some(true));
-        assert!(output.styles.iter().any(|(k, v)| k == "display" && v == "none"));
+        assert!(
+            output
+                .styles
+                .iter()
+                .any(|(k, v)| k == "display" && v == "none")
+        );
     }
 
     #[test]

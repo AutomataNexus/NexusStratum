@@ -36,7 +36,11 @@ impl Separator {
     pub fn render(props: &SeparatorProps) -> RenderOutput {
         let classes = Self::classes(props);
         let mut aria = AriaAttributes::new()
-            .with_role(if props.decorative { AriaRole::None } else { AriaRole::Separator })
+            .with_role(if props.decorative {
+                AriaRole::None
+            } else {
+                AriaRole::Separator
+            })
             .with_orientation(props.orientation);
 
         if props.decorative {

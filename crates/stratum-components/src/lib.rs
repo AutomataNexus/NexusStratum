@@ -30,12 +30,15 @@ pub use common::Size;
 // Forms
 pub use forms::button::{Button, ButtonProps, ButtonVariant};
 pub use forms::checkbox::{Checkbox, CheckboxGroup, CheckboxGroupProps, CheckboxProps};
-pub use forms::form::{Form, FormError, FormErrorProps, FormField, FormFieldProps, FormHelperText, FormHelperTextProps, FormLabel, FormLabelProps, FormProps};
+pub use forms::form::{
+    Form, FormError, FormErrorProps, FormField, FormFieldProps, FormHelperText,
+    FormHelperTextProps, FormLabel, FormLabelProps, FormProps,
+};
 pub use forms::input::{Input, InputGroup, InputProps, InputVariant};
 pub use forms::radio::{Radio, RadioGroup, RadioGroupProps, RadioProps};
 pub use forms::select::{Select, SelectProps};
 pub use forms::switch::{Switch, SwitchProps};
-pub use forms::textarea::{Textarea, TextareaProps, ResizeMode};
+pub use forms::textarea::{ResizeMode, Textarea, TextareaProps};
 
 // Overlay
 pub use overlay::alert_dialog::{AlertDialog, AlertDialogProps};

@@ -1,6 +1,6 @@
 //! Styled Radio and RadioGroup components.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole};
 use stratum_core::render::{AttrValue, RenderOutput};
 
@@ -55,7 +55,14 @@ impl Radio {
             .with_class(classes)
             .with_aria(aria)
             .with_attr("type", AttrValue::String("button".to_string()))
-            .with_data("state", if props.checked { "checked" } else { "unchecked" });
+            .with_data(
+                "state",
+                if props.checked {
+                    "checked"
+                } else {
+                    "unchecked"
+                },
+            );
 
         if props.disabled {
             output = output.with_attr("disabled", AttrValue::Bool(true));
@@ -126,7 +133,12 @@ mod tests {
             ..Default::default()
         };
         let output = Radio::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "checked"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "checked")
+        );
     }
 
     #[test]

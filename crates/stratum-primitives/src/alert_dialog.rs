@@ -3,11 +3,13 @@
 //! Similar to Dialog but always modal with role=alertdialog.
 //! Used for important confirmations that require user acknowledgment.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
 use stratum_core::callback::Callback;
+use stratum_core::focus::FocusManager;
 use stratum_core::id::generators;
 use stratum_core::render::AttrValue;
-use stratum_core::focus::FocusManager;
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the AlertDialog primitive.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -91,7 +93,9 @@ impl Component for AlertDialog {
         let current = props.open.unwrap_or(state.open);
 
         match event {
-            ComponentEvent::KeyDown { key: Key::Escape, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Escape, ..
+            } => {
                 if current {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
@@ -125,9 +129,9 @@ impl Component for AlertDialog {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use stratum_core::event::ModifierKeys;
 
     fn default_props() -> AlertDialogProps {
         AlertDialogProps::default()
@@ -192,7 +196,11 @@ mod tests {
         let props = default_props();
         let state = AlertDialog::initial_state(&props);
         let output = AlertDialog::render(&props, &state);
-        assert!(output.attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+        assert!(
+            output
+                .attrs
+                .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+        );
     }
 
     #[test]
@@ -235,6 +243,10 @@ mod tests {
         };
         let state = AlertDialog::initial_state(&props);
         let output = AlertDialog::render(&props, &state);
-        assert!(output.data_attrs.contains(&("state".to_string(), "open".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("state".to_string(), "open".to_string()))
+        );
     }
 }

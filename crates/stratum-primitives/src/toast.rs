@@ -3,11 +3,13 @@
 //! Provides headless toast notifications with proper ARIA live region
 //! attributes for screen reader announcements.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
+use stratum_core::AriaLive;
 use stratum_core::callback::Callback;
 use stratum_core::id::generators;
 use stratum_core::render::AttrValue;
-use stratum_core::AriaLive;
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Toast variant determining urgency and ARIA role.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -83,8 +85,7 @@ impl Component for Toast {
             _ => (AriaRole::Status, AriaLive::Polite),
         };
 
-        let mut aria = AriaAttributes::new()
-            .with_role(role);
+        let mut aria = AriaAttributes::new().with_role(role);
         aria.live = Some(live);
 
         let mut output = RenderOutput::new()
@@ -111,7 +112,9 @@ impl Component for Toast {
         event: ComponentEvent,
     ) -> EventResult {
         match event {
-            ComponentEvent::KeyDown { key: Key::Escape, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Escape, ..
+            } => {
                 if state.visible {
                     state.visible = false;
                     if let Some(ref cb) = props.on_close {
@@ -140,9 +143,9 @@ impl Component for Toast {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use stratum_core::event::ModifierKeys;
 
     fn default_props() -> ToastProps {
         ToastProps::default()
@@ -213,7 +216,11 @@ mod tests {
         };
         let state = Toast::initial_state(&props);
         let output = Toast::render(&props, &state);
-        assert!(output.data_attrs.contains(&("variant".to_string(), "warning".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("variant".to_string(), "warning".to_string()))
+        );
     }
 
     #[test]
@@ -221,7 +228,11 @@ mod tests {
         let props = default_props();
         let state = Toast::initial_state(&props);
         let output = Toast::render(&props, &state);
-        assert!(output.data_attrs.contains(&("duration".to_string(), "5000".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("duration".to_string(), "5000".to_string()))
+        );
     }
 
     #[test]
@@ -275,8 +286,16 @@ mod tests {
         let mut state = Toast::initial_state(&props);
         state.visible = false;
         let output = Toast::render(&props, &state);
-        assert!(output.attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
-        assert!(output.data_attrs.contains(&("state".to_string(), "hidden".to_string())));
+        assert!(
+            output
+                .attrs
+                .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+        );
+        assert!(
+            output
+                .data_attrs
+                .contains(&("state".to_string(), "hidden".to_string()))
+        );
     }
 
     #[test]

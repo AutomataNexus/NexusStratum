@@ -23,7 +23,14 @@ impl Accordion {
         RenderOutput::new()
             .with_tag("div")
             .with_class(Self::classes(props))
-            .with_data("type", if props.allow_multiple { "multiple" } else { "single" })
+            .with_data(
+                "type",
+                if props.allow_multiple {
+                    "multiple"
+                } else {
+                    "single"
+                },
+            )
     }
 }
 
@@ -158,7 +165,12 @@ mod tests {
     fn accordion_single_mode() {
         let props = AccordionProps::default();
         let output = Accordion::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "type" && v == "single"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "type" && v == "single")
+        );
     }
 
     #[test]
@@ -168,7 +180,12 @@ mod tests {
             ..Default::default()
         };
         let output = Accordion::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "type" && v == "multiple"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "type" && v == "multiple")
+        );
     }
 
     #[test]

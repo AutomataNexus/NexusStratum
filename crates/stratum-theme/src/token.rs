@@ -30,14 +30,24 @@ impl Hsl {
     ///
     /// Example: `"hsl(222.2 84% 4.9%)"`
     pub fn to_css(&self) -> String {
-        format!("hsl({} {}% {}%)", format_f64(self.h), format_f64(self.s), format_f64(self.l))
+        format!(
+            "hsl({} {}% {}%)",
+            format_f64(self.h),
+            format_f64(self.s),
+            format_f64(self.l)
+        )
     }
 
     /// Render as a bare CSS value string suitable for `var()` usage.
     ///
     /// Example: `"222.2 84% 4.9%"`
     pub fn to_css_value(&self) -> String {
-        format!("{} {}% {}%", format_f64(self.h), format_f64(self.s), format_f64(self.l))
+        format!(
+            "{} {}% {}%",
+            format_f64(self.h),
+            format_f64(self.s),
+            format_f64(self.l)
+        )
     }
 }
 

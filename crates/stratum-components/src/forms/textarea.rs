@@ -1,6 +1,6 @@
 //! Styled Textarea component.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole};
 use stratum_core::render::{AttrValue, RenderOutput};
 

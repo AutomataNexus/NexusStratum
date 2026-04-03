@@ -109,21 +109,23 @@ impl Component for Checkbox {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Space, .. } => {
-                    let current = Self::effective_checked(props, state);
-                    let next = current.toggle();
-                    if let Some(ref cb) = props.on_checked_change {
-                        cb.call(next);
-                    }
-                    if props.checked.is_none() {
-                        state.checked = next;
-                        return EventResult::prevent_and_changed();
-                    }
-                    EventResult {
-                        prevent_default: true,
-                        stop_propagation: false,
-                        state_changed: false,
-                    }
+            ComponentEvent::KeyDown {
+                key: Key::Space, ..
+            } => {
+                let current = Self::effective_checked(props, state);
+                let next = current.toggle();
+                if let Some(ref cb) = props.on_checked_change {
+                    cb.call(next);
+                }
+                if props.checked.is_none() {
+                    state.checked = next;
+                    return EventResult::prevent_and_changed();
+                }
+                EventResult {
+                    prevent_default: true,
+                    stop_propagation: false,
+                    state_changed: false,
+                }
             }
             _ => EventResult::default(),
         }
@@ -148,8 +150,8 @@ impl Component for Checkbox {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::{Arc, Mutex};
     use std::sync::atomic::{AtomicBool, Ordering};
+    use std::sync::{Arc, Mutex};
 
     fn default_props() -> CheckboxProps {
         CheckboxProps::default()

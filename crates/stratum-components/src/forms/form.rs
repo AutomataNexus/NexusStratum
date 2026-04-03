@@ -183,7 +183,10 @@ mod tests {
         let output = FormError::render(&props);
         assert_eq!(output.effective_tag(), "p");
         assert_eq!(output.aria.role, Some(AriaRole::Alert));
-        assert_eq!(output.children, ChildrenSpec::Text("Required field".to_string()));
+        assert_eq!(
+            output.children,
+            ChildrenSpec::Text("Required field".to_string())
+        );
     }
 
     #[test]

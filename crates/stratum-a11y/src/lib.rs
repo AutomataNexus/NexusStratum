@@ -17,6 +17,6 @@ pub use focus_visible::{FocusVisibleStrategy, InputModality};
 pub use keyboard::{KeyboardNav, NavStrategy};
 pub use live_region::{Announcement, LiveRegion};
 pub use media_query::{
-    is_keyboard_user, prefers_color_scheme_dark, prefers_high_contrast, prefers_reduced_motion,
-    MediaQueryPreference,
+    MediaQueryPreference, is_keyboard_user, prefers_color_scheme_dark, prefers_high_contrast,
+    prefers_reduced_motion,
 };

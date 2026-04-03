@@ -8,7 +8,7 @@ pub use stratum_css_macros::css;
 mod registry;
 mod style_props;
 
-pub use registry::{StyleRegistry, GLOBAL_REGISTRY};
+pub use registry::{GLOBAL_REGISTRY, StyleRegistry};
 pub use style_props::{
     AlignItems, Cursor, Display, FlexDirection, JustifyContent, Overflow, Position, StyleProps,
     TextAlign,

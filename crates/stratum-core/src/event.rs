@@ -7,23 +7,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum ComponentEvent {
     /// Mouse click event.
-    Click {
-        x: f32,
-        y: f32,
-        button: MouseButton,
-    },
+    Click { x: f32, y: f32, button: MouseButton },
 
     /// Key pressed down.
-    KeyDown {
-        key: Key,
-        modifiers: ModifierKeys,
-    },
+    KeyDown { key: Key, modifiers: ModifierKeys },
 
     /// Key released.
-    KeyUp {
-        key: Key,
-        modifiers: ModifierKeys,
-    },
+    KeyUp { key: Key, modifiers: ModifierKeys },
 
     /// Component received focus.
     Focus,
@@ -32,14 +22,10 @@ pub enum ComponentEvent {
     Blur,
 
     /// Value changed (inputs, selects, etc.).
-    Change {
-        value: String,
-    },
+    Change { value: String },
 
     /// Input event (fires on every keystroke, before Change).
-    Input {
-        value: String,
-    },
+    Input { value: String },
 
     /// Mouse entered the component.
     PointerEnter,
@@ -48,10 +34,7 @@ pub enum ComponentEvent {
     PointerLeave,
 
     /// Touch start (mobile).
-    TouchStart {
-        x: f32,
-        y: f32,
-    },
+    TouchStart { x: f32, y: f32 },
 
     /// Touch end (mobile).
     TouchEnd,

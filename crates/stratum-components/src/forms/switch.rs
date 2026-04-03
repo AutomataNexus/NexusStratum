@@ -1,6 +1,6 @@
 //! Styled Switch toggle component.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::aria::{AriaAttributes, AriaRole, TriState};
 use stratum_core::render::{AttrValue, RenderOutput};
 
@@ -37,7 +37,11 @@ impl Switch {
         let classes = Self::classes(props);
         let mut aria = AriaAttributes::new()
             .with_role(AriaRole::Switch)
-            .with_checked(if props.checked { TriState::True } else { TriState::False });
+            .with_checked(if props.checked {
+                TriState::True
+            } else {
+                TriState::False
+            });
 
         if let Some(ref label) = props.aria_label {
             aria = aria.with_label(label.clone());
@@ -51,7 +55,14 @@ impl Switch {
             .with_class(classes)
             .with_aria(aria)
             .with_attr("type", AttrValue::String("button".to_string()))
-            .with_data("state", if props.checked { "checked" } else { "unchecked" });
+            .with_data(
+                "state",
+                if props.checked {
+                    "checked"
+                } else {
+                    "unchecked"
+                },
+            );
 
         if props.disabled {
             output = output.with_attr("disabled", AttrValue::Bool(true));
@@ -84,7 +95,12 @@ mod tests {
         };
         let output = Switch::render(&props);
         assert_eq!(output.aria.checked, Some(TriState::True));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "checked"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "checked")
+        );
     }
 
     #[test]

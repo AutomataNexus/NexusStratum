@@ -262,10 +262,7 @@ impl AnimationStyle {
                 exit_config.easing.to_css(),
                 exit_config.delay_ms,
             ),
-            reduced_motion_css: format!(
-                "transition: {} 0ms",
-                transition_props,
-            ),
+            reduced_motion_css: format!("transition: {} 0ms", transition_props,),
         }
     }
 }
@@ -292,7 +289,14 @@ mod tests {
     #[test]
     fn slide_in_from_top() {
         let config = Transition::SlideInFromTop.to_config();
-        assert!(config.from.transform.as_ref().unwrap().contains("translateY"));
+        assert!(
+            config
+                .from
+                .transform
+                .as_ref()
+                .unwrap()
+                .contains("translateY")
+        );
         assert_eq!(config.to.opacity, Some(1.0));
     }
 
@@ -359,15 +363,27 @@ mod tests {
             duration_ms: 200,
             easing: Easing::EaseOut,
             delay_ms: 0,
-            from: CssState { opacity: Some(0.0), ..Default::default() },
-            to: CssState { opacity: Some(1.0), ..Default::default() },
+            from: CssState {
+                opacity: Some(0.0),
+                ..Default::default()
+            },
+            to: CssState {
+                opacity: Some(1.0),
+                ..Default::default()
+            },
         }));
         let exit = Transition::Custom(Box::new(TransitionConfig {
             duration_ms: 100,
             easing: Easing::EaseIn,
             delay_ms: 50,
-            from: CssState { opacity: Some(1.0), ..Default::default() },
-            to: CssState { opacity: Some(0.0), ..Default::default() },
+            from: CssState {
+                opacity: Some(1.0),
+                ..Default::default()
+            },
+            to: CssState {
+                opacity: Some(0.0),
+                ..Default::default()
+            },
         }));
         let style = AnimationStyle::from_transition(&enter, &exit);
         assert!(style.enter_transition_css.contains("200ms"));

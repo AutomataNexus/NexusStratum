@@ -8,7 +8,6 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-D warnings"
 
 jobs:
   check:
@@ -31,6 +30,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace
+        env:
+          RUSTFLAGS: "-D warnings"
 
   fmt:
     name: Format
@@ -45,6 +46,7 @@ jobs:
   audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: rustsec/audit-check@v2

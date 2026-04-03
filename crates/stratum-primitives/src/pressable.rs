@@ -80,15 +80,18 @@ impl Component for Pressable {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space, .. } => {
-                    if let Some(ref cb) = props.on_press {
-                        cb.call(());
-                    }
-                    EventResult {
-                        prevent_default: true,
-                        stop_propagation: false,
-                        state_changed: false,
-                    }
+            ComponentEvent::KeyDown {
+                key: Key::Enter | Key::Space,
+                ..
+            } => {
+                if let Some(ref cb) = props.on_press {
+                    cb.call(());
+                }
+                EventResult {
+                    prevent_default: true,
+                    stop_propagation: false,
+                    state_changed: false,
+                }
             }
             ComponentEvent::PointerEnter | ComponentEvent::PointerLeave => EventResult::default(),
             ComponentEvent::Focus | ComponentEvent::Blur => EventResult::default(),
@@ -100,8 +103,8 @@ impl Component for Pressable {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
 
     fn default_props() -> PressableProps {
         PressableProps::default()
@@ -143,7 +146,11 @@ mod tests {
         let state = Pressable::initial_state(&props);
         let output = Pressable::render(&props, &state);
         assert_eq!(output.aria.disabled, Some(true));
-        assert!(output.attrs.contains(&("disabled".to_string(), AttrValue::Bool(true))));
+        assert!(
+            output
+                .attrs
+                .contains(&("disabled".to_string(), AttrValue::Bool(true)))
+        );
     }
 
     #[test]
@@ -151,9 +158,11 @@ mod tests {
         let props = default_props();
         let state = Pressable::initial_state(&props);
         let output = Pressable::render(&props, &state);
-        assert!(output
-            .attrs
-            .contains(&("tabindex".to_string(), AttrValue::String("0".to_string()))));
+        assert!(
+            output
+                .attrs
+                .contains(&("tabindex".to_string(), AttrValue::String("0".to_string())))
+        );
     }
 
     #[test]

@@ -85,8 +85,7 @@ impl Component for Disclosure {
             .with_attr("id", AttrValue::String(state.content_id.clone()))
             .with_aria(content_aria);
 
-        RenderOutput::new()
-            .with_children(ChildrenSpec::Elements(vec![trigger, content]))
+        RenderOutput::new().with_children(ChildrenSpec::Elements(vec![trigger, content]))
     }
 
     fn on_event(
@@ -110,20 +109,23 @@ impl Component for Disclosure {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space, .. } => {
-                    let next = !Self::effective_open(props, state);
-                    if let Some(ref cb) = props.on_open_change {
-                        cb.call(next);
-                    }
-                    if props.open.is_none() {
-                        state.open = next;
-                        return EventResult::prevent_and_changed();
-                    }
-                    EventResult {
-                        prevent_default: true,
-                        stop_propagation: false,
-                        state_changed: false,
-                    }
+            ComponentEvent::KeyDown {
+                key: Key::Enter | Key::Space,
+                ..
+            } => {
+                let next = !Self::effective_open(props, state);
+                if let Some(ref cb) = props.on_open_change {
+                    cb.call(next);
+                }
+                if props.open.is_none() {
+                    state.open = next;
+                    return EventResult::prevent_and_changed();
+                }
+                EventResult {
+                    prevent_default: true,
+                    stop_propagation: false,
+                    state_changed: false,
+                }
             }
             _ => EventResult::default(),
         }

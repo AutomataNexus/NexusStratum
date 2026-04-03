@@ -3,12 +3,14 @@
 //! Provides a headless dropdown menu with keyboard navigation,
 //! type-ahead search, and proper ARIA attributes.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
+use stratum_core::aria::AriaHasPopup;
 use stratum_core::callback::Callback;
+use stratum_core::focus::FocusManager;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
-use stratum_core::focus::FocusManager;
-use stratum_core::aria::AriaHasPopup;
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Data for a single menu item.
 #[derive(Debug, Clone, PartialEq)]
@@ -73,7 +75,11 @@ impl Menu {
     fn prev_enabled(items: &[MenuItemData], from: usize) -> Option<usize> {
         let len = items.len();
         for offset in 1..=len {
-            let idx = if from >= offset { from - offset } else { len - (offset - from) };
+            let idx = if from >= offset {
+                from - offset
+            } else {
+                len - (offset - from)
+            };
             if !items[idx].disabled {
                 return Some(idx);
             }
@@ -138,8 +144,7 @@ impl Component for Menu {
             .with_attr("id", AttrValue::String(state.trigger_id.clone()));
 
         // Menu list
-        let menu_aria = AriaAttributes::new()
-            .with_role(AriaRole::Menu);
+        let menu_aria = AriaAttributes::new().with_role(AriaRole::Menu);
 
         let mut menu = RenderOutput::new()
             .with_tag("div")
@@ -153,8 +158,7 @@ impl Component for Menu {
         // Menu items
         let mut items = Vec::new();
         for (i, item_data) in props.items.iter().enumerate() {
-            let mut item_aria = AriaAttributes::new()
-                .with_role(AriaRole::MenuItem);
+            let mut item_aria = AriaAttributes::new().with_role(AriaRole::MenuItem);
 
             if item_data.disabled {
                 item_aria = item_aria.with_disabled(true);
@@ -167,7 +171,12 @@ impl Component for Menu {
                 .with_attr(
                     "tabindex",
                     AttrValue::String(
-                        if state.focused_index == Some(i) { "0" } else { "-1" }.to_string(),
+                        if state.focused_index == Some(i) {
+                            "0"
+                        } else {
+                            "-1"
+                        }
+                        .to_string(),
                     ),
                 );
             items.push(item);
@@ -196,8 +205,7 @@ impl Component for Menu {
                 }
                 if new_open && !props.items.is_empty() {
                     // Focus first enabled item
-                    state.focused_index = props.items.iter()
-                        .position(|item| !item.disabled);
+                    state.focused_index = props.items.iter().position(|item| !item.disabled);
                 } else {
                     state.focused_index = None;
                 }
@@ -219,7 +227,9 @@ impl Component for Menu {
                         EventResult::prevent_and_changed()
                     }
                     Key::ArrowDown => {
-                        let current = state.focused_index.unwrap_or(props.items.len().wrapping_sub(1));
+                        let current = state
+                            .focused_index
+                            .unwrap_or(props.items.len().wrapping_sub(1));
                         if let Some(next) = Menu::next_enabled(&props.items, current) {
                             state.focused_index = Some(next);
                         }
@@ -233,13 +243,11 @@ impl Component for Menu {
                         EventResult::prevent_and_changed()
                     }
                     Key::Home => {
-                        state.focused_index = props.items.iter()
-                            .position(|item| !item.disabled);
+                        state.focused_index = props.items.iter().position(|item| !item.disabled);
                         EventResult::prevent_and_changed()
                     }
                     Key::End => {
-                        state.focused_index = props.items.iter()
-                            .rposition(|item| !item.disabled);
+                        state.focused_index = props.items.iter().rposition(|item| !item.disabled);
                         EventResult::prevent_and_changed()
                     }
                     Key::Enter | Key::Space => {
@@ -270,12 +278,14 @@ impl Component for Menu {
                     _ => EventResult::default(),
                 }
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space | Key::ArrowDown, .. } if !props.open.unwrap_or(state.open) => {
+            ComponentEvent::KeyDown {
+                key: Key::Enter | Key::Space | Key::ArrowDown,
+                ..
+            } if !props.open.unwrap_or(state.open) => {
                 if props.open.is_none() {
                     state.open = true;
                 }
-                state.focused_index = props.items.iter()
-                    .position(|item| !item.disabled);
+                state.focused_index = props.items.iter().position(|item| !item.disabled);
                 if let Some(ref cb) = props.on_open_change {
                     cb.call(true);
                 }
@@ -303,18 +313,30 @@ impl Component for Menu {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
     use stratum_core::event::ModifierKeys;
     use stratum_core::event::MouseButton;
     use stratum_core::focus::FocusStrategy;
-    use std::sync::atomic::{AtomicBool, Ordering};
-    use std::sync::Arc;
 
     fn test_items() -> Vec<MenuItemData> {
         vec![
-            MenuItemData { id: "cut".to_string(), disabled: false },
-            MenuItemData { id: "copy".to_string(), disabled: false },
-            MenuItemData { id: "paste".to_string(), disabled: true },
-            MenuItemData { id: "delete".to_string(), disabled: false },
+            MenuItemData {
+                id: "cut".to_string(),
+                disabled: false,
+            },
+            MenuItemData {
+                id: "copy".to_string(),
+                disabled: false,
+            },
+            MenuItemData {
+                id: "paste".to_string(),
+                disabled: true,
+            },
+            MenuItemData {
+                id: "delete".to_string(),
+                disabled: false,
+            },
         ]
     }
 
@@ -375,7 +397,11 @@ mod tests {
         let state = Menu::initial_state(&props);
         let output = Menu::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(elems[1].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                elems[1]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 
@@ -384,7 +410,8 @@ mod tests {
         let props = test_props();
         let mut state = Menu::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Menu::on_event(&props, &mut state, event);
@@ -401,7 +428,8 @@ mod tests {
         let mut state = Menu::initial_state(&props);
         state.focused_index = Some(0);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Menu::on_event(&props, &mut state, event);
@@ -571,7 +599,8 @@ mod tests {
         };
         let mut state = Menu::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Menu::on_event(&props, &mut state, event);

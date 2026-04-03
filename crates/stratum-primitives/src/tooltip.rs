@@ -3,10 +3,12 @@
 //! Provides a headless tooltip that appears on hover or focus,
 //! with configurable delay and proper ARIA attributes.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
 use stratum_core::callback::Callback;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the Tooltip primitive.
 #[derive(Debug, Clone, PartialEq)]
@@ -67,8 +69,7 @@ impl Component for Tooltip {
 
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
         // Trigger element output with aria-describedby pointing to content
-        let aria = AriaAttributes::new()
-            .with_describedby(&state.content_id);
+        let aria = AriaAttributes::new().with_describedby(&state.content_id);
 
         let mut output = RenderOutput::new()
             .with_tag("div")
@@ -80,8 +81,7 @@ impl Component for Tooltip {
         output = output.with_data("state", if effective_open { "open" } else { "closed" });
         output = output.with_data("delay", props.delay_ms.to_string());
 
-        let content_aria = AriaAttributes::new()
-            .with_role(AriaRole::ToolTip);
+        let content_aria = AriaAttributes::new().with_role(AriaRole::ToolTip);
 
         let mut content = RenderOutput::new()
             .with_tag("div")
@@ -128,7 +128,9 @@ impl Component for Tooltip {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Escape, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Escape, ..
+            } => {
                 if current {
                     if let Some(ref cb) = props.on_open_change {
                         cb.call(false);
@@ -162,9 +164,9 @@ impl Component for Tooltip {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use stratum_core::event::ModifierKeys;
 
     fn default_props() -> TooltipProps {
         TooltipProps::default()
@@ -221,7 +223,11 @@ mod tests {
         let state = Tooltip::initial_state(&props);
         let output = Tooltip::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(elems[0].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                elems[0]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 
@@ -319,6 +325,10 @@ mod tests {
         };
         let state = Tooltip::initial_state(&props);
         let output = Tooltip::render(&props, &state);
-        assert!(output.data_attrs.contains(&("delay".to_string(), "500".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("delay".to_string(), "500".to_string()))
+        );
     }
 }

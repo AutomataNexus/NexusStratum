@@ -3,10 +3,12 @@
 //! Provides headless accordion with single or multiple open items,
 //! keyboard navigation, and proper ARIA attributes.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
 use stratum_core::callback::Callback;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the Accordion primitive.
 #[derive(Debug, Clone, PartialEq)]
@@ -64,16 +66,15 @@ pub struct Accordion;
 
 impl Accordion {
     /// Compute the effective open items, preferring controlled prop over internal state.
-    fn effective_open_items<'a>(props: &'a AccordionProps, state: &'a AccordionState) -> &'a Vec<String> {
+    fn effective_open_items<'a>(
+        props: &'a AccordionProps,
+        state: &'a AccordionState,
+    ) -> &'a Vec<String> {
         props.value.as_ref().unwrap_or(&state.open_items)
     }
 
     /// Toggle an item in the open_items list based on accordion rules.
-    fn toggle_item(
-        props: &AccordionProps,
-        state: &mut AccordionState,
-        item: &str,
-    ) {
+    fn toggle_item(props: &AccordionProps, state: &mut AccordionState, item: &str) {
         if props.disabled {
             return;
         }
@@ -108,15 +109,25 @@ impl Component for Accordion {
     type State = AccordionState;
 
     fn initial_state(props: &Self::Props) -> Self::State {
-        let base_id = props.id.clone().unwrap_or_else(|| generators::ACCORDION.next());
+        let base_id = props
+            .id
+            .clone()
+            .unwrap_or_else(|| generators::ACCORDION.next());
 
-        let open_items = props.value.clone().unwrap_or_else(|| props.default_value.clone());
+        let open_items = props
+            .value
+            .clone()
+            .unwrap_or_else(|| props.default_value.clone());
 
-        let trigger_ids: Vec<String> = props.items.iter()
+        let trigger_ids: Vec<String> = props
+            .items
+            .iter()
             .map(|item| format!("{}-trigger-{}", base_id, item))
             .collect();
 
-        let content_ids: Vec<String> = props.items.iter()
+        let content_ids: Vec<String> = props
+            .items
+            .iter()
             .map(|item| format!("{}-content-{}", base_id, item))
             .collect();
 
@@ -137,8 +148,7 @@ impl Component for Accordion {
             let is_open = open_items.contains(item);
 
             // Trigger (button)
-            let mut trigger_aria = AriaAttributes::new()
-                .with_expanded(is_open);
+            let mut trigger_aria = AriaAttributes::new().with_expanded(is_open);
 
             if i < state.content_ids.len() {
                 trigger_aria = trigger_aria.with_controls(&state.content_ids[i]);
@@ -154,8 +164,7 @@ impl Component for Accordion {
                 .with_attr("id", AttrValue::String(state.trigger_ids[i].clone()));
 
             // Content (region)
-            let mut content_aria = AriaAttributes::new()
-                .with_role(AriaRole::Region);
+            let mut content_aria = AriaAttributes::new().with_role(AriaRole::Region);
 
             if i < state.trigger_ids.len() {
                 content_aria = content_aria.with_labelledby(&state.trigger_ids[i]);
@@ -239,12 +248,16 @@ impl Component for Accordion {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
     use std::sync::{Arc, Mutex};
+    use stratum_core::event::ModifierKeys;
 
     fn test_props() -> AccordionProps {
         AccordionProps {
-            items: vec!["section1".to_string(), "section2".to_string(), "section3".to_string()],
+            items: vec![
+                "section1".to_string(),
+                "section2".to_string(),
+                "section3".to_string(),
+            ],
             ..AccordionProps::default()
         }
     }
@@ -332,7 +345,11 @@ mod tests {
         let state = Accordion::initial_state(&props);
         let output = Accordion::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(elems[1].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                elems[1]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 

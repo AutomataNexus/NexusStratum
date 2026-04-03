@@ -40,13 +40,21 @@ impl TailwindConfig {
         push_color_token(&mut lines, "primary", &theme.colors.primary);
         push_color_token(&mut lines, "primary-foreground", &theme.colors.primary_fg);
         push_color_token(&mut lines, "secondary", &theme.colors.secondary);
-        push_color_token(&mut lines, "secondary-foreground", &theme.colors.secondary_fg);
+        push_color_token(
+            &mut lines,
+            "secondary-foreground",
+            &theme.colors.secondary_fg,
+        );
         push_color_token(&mut lines, "muted", &theme.colors.muted);
         push_color_token(&mut lines, "muted-foreground", &theme.colors.muted_fg);
         push_color_token(&mut lines, "accent", &theme.colors.accent);
         push_color_token(&mut lines, "accent-foreground", &theme.colors.accent_fg);
         push_color_token(&mut lines, "destructive", &theme.colors.destructive);
-        push_color_token(&mut lines, "destructive-foreground", &theme.colors.destructive_fg);
+        push_color_token(
+            &mut lines,
+            "destructive-foreground",
+            &theme.colors.destructive_fg,
+        );
         push_color_token(&mut lines, "border", &theme.colors.border);
         push_color_token(&mut lines, "input", &theme.colors.input);
         push_color_token(&mut lines, "ring", &theme.colors.ring);
@@ -64,27 +72,33 @@ impl TailwindConfig {
 
         // -- Font family ---------------------------------------------------
         lines.push("  fontFamily: {".to_string());
-        lines.push(format!(
-            "    sans: [\"{}\"],",
-            theme.typography.font_sans
-        ));
-        lines.push(format!(
-            "    serif: [\"{}\"],",
-            theme.typography.font_serif
-        ));
-        lines.push(format!(
-            "    mono: [\"{}\"],",
-            theme.typography.font_mono
-        ));
+        lines.push(format!("    sans: [\"{}\"],", theme.typography.font_sans));
+        lines.push(format!("    serif: [\"{}\"],", theme.typography.font_serif));
+        lines.push(format!("    mono: [\"{}\"],", theme.typography.font_mono));
         lines.push("  },".to_string());
 
         // -- Font size -----------------------------------------------------
         lines.push("  fontSize: {".to_string());
-        lines.push(format!("    xs: \"{}\",", theme.typography.size_xs.to_css()));
-        lines.push(format!("    sm: \"{}\",", theme.typography.size_sm.to_css()));
-        lines.push(format!("    base: \"{}\",", theme.typography.size_md.to_css()));
-        lines.push(format!("    lg: \"{}\",", theme.typography.size_lg.to_css()));
-        lines.push(format!("    xl: \"{}\",", theme.typography.size_xl.to_css()));
+        lines.push(format!(
+            "    xs: \"{}\",",
+            theme.typography.size_xs.to_css()
+        ));
+        lines.push(format!(
+            "    sm: \"{}\",",
+            theme.typography.size_sm.to_css()
+        ));
+        lines.push(format!(
+            "    base: \"{}\",",
+            theme.typography.size_md.to_css()
+        ));
+        lines.push(format!(
+            "    lg: \"{}\",",
+            theme.typography.size_lg.to_css()
+        ));
+        lines.push(format!(
+            "    xl: \"{}\",",
+            theme.typography.size_xl.to_css()
+        ));
         lines.push(format!(
             "    \"2xl\": \"{}\",",
             theme.typography.size_2xl.to_css()
@@ -118,20 +132,11 @@ impl TailwindConfig {
 
         // -- Z-index -------------------------------------------------------
         lines.push("  zIndex: {".to_string());
-        lines.push(format!(
-            "    dropdown: \"{}\",",
-            theme.z_indices.dropdown
-        ));
+        lines.push(format!("    dropdown: \"{}\",", theme.z_indices.dropdown));
         lines.push(format!("    sticky: \"{}\",", theme.z_indices.sticky));
         lines.push(format!("    modal: \"{}\",", theme.z_indices.modal));
-        lines.push(format!(
-            "    popover: \"{}\",",
-            theme.z_indices.popover
-        ));
-        lines.push(format!(
-            "    tooltip: \"{}\",",
-            theme.z_indices.tooltip
-        ));
+        lines.push(format!("    popover: \"{}\",", theme.z_indices.popover));
+        lines.push(format!("    tooltip: \"{}\",", theme.z_indices.tooltip));
         lines.push("  },".to_string());
 
         // -- Screens (breakpoints) -----------------------------------------
@@ -167,16 +172,8 @@ impl TailwindConfig {
 }
 
 /// Helper: push a semantic color token entry (light value as `hsl(...)`).
-fn push_color_token(
-    lines: &mut Vec<String>,
-    name: &str,
-    token: &ColorToken,
-) {
-    lines.push(format!(
-        "    \"{}\": \"{}\",",
-        name,
-        token.light.to_css()
-    ));
+fn push_color_token(lines: &mut Vec<String>, name: &str, token: &ColorToken) {
+    lines.push(format!("    \"{}\": \"{}\",", name, token.light.to_css()));
 }
 
 #[cfg(test)]

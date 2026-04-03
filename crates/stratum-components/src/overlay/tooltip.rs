@@ -50,12 +50,15 @@ impl Tooltip {
             .with_class(classes)
             .with_aria(aria)
             .with_data("state", if props.open { "open" } else { "closed" })
-            .with_data("side", match props.side {
-                TooltipSide::Top => "top",
-                TooltipSide::Right => "right",
-                TooltipSide::Bottom => "bottom",
-                TooltipSide::Left => "left",
-            });
+            .with_data(
+                "side",
+                match props.side {
+                    TooltipSide::Top => "top",
+                    TooltipSide::Right => "right",
+                    TooltipSide::Bottom => "bottom",
+                    TooltipSide::Left => "left",
+                },
+            );
 
         if let Some(ref id) = props.id {
             output = output.with_attr("id", AttrValue::String(id.clone()));

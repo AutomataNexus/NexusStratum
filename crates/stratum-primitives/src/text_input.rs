@@ -107,10 +107,7 @@ impl Component for TextInput {
     type State = TextInputState;
 
     fn initial_state(props: &Self::Props) -> Self::State {
-        let id = props
-            .id
-            .clone()
-            .unwrap_or_else(|| generators::INPUT.next());
+        let id = props.id.clone().unwrap_or_else(|| generators::INPUT.next());
         let value = props
             .value
             .clone()
@@ -142,7 +139,10 @@ impl Component for TextInput {
             .with_tag("input")
             .with_aria(aria)
             .with_attr("id", AttrValue::String(state.id.clone()))
-            .with_attr("type", AttrValue::String(props.input_type.as_str().to_string()))
+            .with_attr(
+                "type",
+                AttrValue::String(props.input_type.as_str().to_string()),
+            )
             .with_attr("value", AttrValue::String(value.to_string()));
 
         if props.disabled {
@@ -216,8 +216,8 @@ impl Component for TextInput {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::{Arc, Mutex};
     use std::sync::atomic::{AtomicBool, Ordering};
+    use std::sync::{Arc, Mutex};
 
     fn default_props() -> TextInputProps {
         TextInputProps::default()
@@ -269,9 +269,10 @@ mod tests {
         };
         let state = TextInput::initial_state(&props);
         let output = TextInput::render(&props, &state);
-        assert!(output
-            .attrs
-            .contains(&("type".to_string(), AttrValue::String("password".to_string()))));
+        assert!(output.attrs.contains(&(
+            "type".to_string(),
+            AttrValue::String("password".to_string())
+        )));
     }
 
     #[test]
@@ -283,7 +284,11 @@ mod tests {
         let state = TextInput::initial_state(&props);
         let output = TextInput::render(&props, &state);
         assert_eq!(output.aria.disabled, Some(true));
-        assert!(output.attrs.contains(&("disabled".to_string(), AttrValue::Bool(true))));
+        assert!(
+            output
+                .attrs
+                .contains(&("disabled".to_string(), AttrValue::Bool(true)))
+        );
     }
 
     #[test]
@@ -295,7 +300,11 @@ mod tests {
         let state = TextInput::initial_state(&props);
         let output = TextInput::render(&props, &state);
         assert_eq!(output.aria.readonly, Some(true));
-        assert!(output.attrs.contains(&("readonly".to_string(), AttrValue::Bool(true))));
+        assert!(
+            output
+                .attrs
+                .contains(&("readonly".to_string(), AttrValue::Bool(true)))
+        );
     }
 
     #[test]
@@ -307,7 +316,11 @@ mod tests {
         let state = TextInput::initial_state(&props);
         let output = TextInput::render(&props, &state);
         assert_eq!(output.aria.required, Some(true));
-        assert!(output.attrs.contains(&("required".to_string(), AttrValue::Bool(true))));
+        assert!(
+            output
+                .attrs
+                .contains(&("required".to_string(), AttrValue::Bool(true)))
+        );
     }
 
     #[test]

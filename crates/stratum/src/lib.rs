@@ -22,23 +22,23 @@
 //! | `full`       | *(all of above except `dioxus`)* | Enable everything  |
 
 // Core crates (always available)
+pub use stratum_a11y;
+pub use stratum_components;
 pub use stratum_core;
 pub use stratum_primitives;
-pub use stratum_components;
 pub use stratum_theme;
-pub use stratum_a11y;
 
 // Optional framework adapters
-#[cfg(feature = "leptos")]
-pub use stratum_leptos;
 #[cfg(feature = "dioxus")]
 pub use stratum_dioxus;
+#[cfg(feature = "leptos")]
+pub use stratum_leptos;
 
 // Optional style backends
-#[cfg(feature = "tailwind")]
-pub use stratum_tailwind;
 #[cfg(feature = "css")]
 pub use stratum_css;
+#[cfg(feature = "tailwind")]
+pub use stratum_tailwind;
 
 // Optional add-ons
 #[cfg(feature = "icons")]

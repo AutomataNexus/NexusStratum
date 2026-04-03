@@ -63,10 +63,7 @@ impl Component for TextArea {
     type State = TextAreaState;
 
     fn initial_state(props: &Self::Props) -> Self::State {
-        let id = props
-            .id
-            .clone()
-            .unwrap_or_else(|| generators::INPUT.next());
+        let id = props.id.clone().unwrap_or_else(|| generators::INPUT.next());
         let value = props
             .value
             .clone()
@@ -179,8 +176,8 @@ impl Component for TextArea {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::{Arc, Mutex};
     use std::sync::atomic::{AtomicBool, Ordering};
+    use std::sync::{Arc, Mutex};
 
     fn default_props() -> TextAreaProps {
         TextAreaProps::default()
@@ -232,7 +229,11 @@ mod tests {
         let state = TextArea::initial_state(&props);
         let output = TextArea::render(&props, &state);
         assert_eq!(output.aria.disabled, Some(true));
-        assert!(output.attrs.contains(&("disabled".to_string(), AttrValue::Bool(true))));
+        assert!(
+            output
+                .attrs
+                .contains(&("disabled".to_string(), AttrValue::Bool(true)))
+        );
     }
 
     #[test]
@@ -266,8 +267,16 @@ mod tests {
         };
         let state = TextArea::initial_state(&props);
         let output = TextArea::render(&props, &state);
-        assert!(output.attrs.contains(&("rows".to_string(), AttrValue::Number(5.0))));
-        assert!(output.attrs.contains(&("cols".to_string(), AttrValue::Number(40.0))));
+        assert!(
+            output
+                .attrs
+                .contains(&("rows".to_string(), AttrValue::Number(5.0)))
+        );
+        assert!(
+            output
+                .attrs
+                .contains(&("cols".to_string(), AttrValue::Number(40.0)))
+        );
     }
 
     #[test]

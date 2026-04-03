@@ -168,18 +168,12 @@ mod tests {
 
     #[test]
     fn mouse_button_mapping() {
-        assert_eq!(
-            StratumAdapter::mouse_button_from_u16(0),
-            MouseButton::Left
-        );
+        assert_eq!(StratumAdapter::mouse_button_from_u16(0), MouseButton::Left);
         assert_eq!(
             StratumAdapter::mouse_button_from_u16(1),
             MouseButton::Middle
         );
-        assert_eq!(
-            StratumAdapter::mouse_button_from_u16(2),
-            MouseButton::Right
-        );
+        assert_eq!(StratumAdapter::mouse_button_from_u16(2), MouseButton::Right);
     }
 
     #[test]
@@ -214,7 +208,11 @@ mod tests {
             .with_tag("button")
             .with_class("btn")
             .with_class("btn-primary")
-            .with_aria(AriaAttributes::new().with_role(AriaRole::Button).with_disabled(false));
+            .with_aria(
+                AriaAttributes::new()
+                    .with_role(AriaRole::Button)
+                    .with_disabled(false),
+            );
 
         let attrs = StratumAdapter::render_attrs(&output);
         assert!(attrs.iter().any(|(k, v)| k == "class" && v.contains("btn")));
@@ -225,9 +223,11 @@ mod tests {
     fn render_attrs_data_attributes() {
         let output = RenderOutput::new().with_data("testid", "save-btn");
         let attrs = StratumAdapter::render_attrs(&output);
-        assert!(attrs
-            .iter()
-            .any(|(k, v)| k == "data-testid" && v == "save-btn"));
+        assert!(
+            attrs
+                .iter()
+                .any(|(k, v)| k == "data-testid" && v == "save-btn")
+        );
     }
 
     #[test]
@@ -236,7 +236,11 @@ mod tests {
             .with_style("display", "flex")
             .with_style("gap", "8px");
         let attrs = StratumAdapter::render_attrs(&output);
-        assert!(attrs.iter().any(|(k, v)| k == "style" && v.contains("flex")));
+        assert!(
+            attrs
+                .iter()
+                .any(|(k, v)| k == "style" && v.contains("flex"))
+        );
     }
 
     #[test]

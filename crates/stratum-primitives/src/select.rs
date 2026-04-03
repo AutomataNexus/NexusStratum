@@ -3,12 +3,14 @@
 //! Provides a headless select with listbox, keyboard navigation,
 //! and proper ARIA combobox/listbox/option attributes.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
+use stratum_core::aria::AriaHasPopup;
 use stratum_core::callback::Callback;
+use stratum_core::focus::FocusManager;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
-use stratum_core::focus::FocusManager;
-use stratum_core::aria::AriaHasPopup;
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// A single select option.
 #[derive(Debug, Clone, PartialEq)]
@@ -77,7 +79,11 @@ impl Select {
     fn prev_enabled(options: &[SelectOption], from: usize) -> usize {
         let len = options.len();
         for offset in 1..=len {
-            let idx = if from >= offset { from - offset } else { len - (offset - from) };
+            let idx = if from >= offset {
+                from - offset
+            } else {
+                len - (offset - from)
+            };
             if !options[idx].disabled {
                 return idx;
             }
@@ -98,7 +104,8 @@ impl Component for Select {
 
         let selected = props.value.clone().or_else(|| props.default_value.clone());
 
-        let focused_index = selected.as_ref()
+        let focused_index = selected
+            .as_ref()
             .and_then(|sel| props.options.iter().position(|o| o.value == *sel))
             .unwrap_or(0);
 
@@ -142,8 +149,7 @@ impl Component for Select {
             .with_data("value", display_text);
 
         // Listbox
-        let listbox_aria = AriaAttributes::new()
-            .with_role(AriaRole::ListBox);
+        let listbox_aria = AriaAttributes::new().with_role(AriaRole::ListBox);
 
         let mut listbox = RenderOutput::new()
             .with_tag("div")
@@ -204,63 +210,68 @@ impl Component for Select {
                 state.open = !state.open;
                 EventResult::state_changed()
             }
-            ComponentEvent::KeyDown { key, .. } if state.open => {
-                match key {
-                    Key::Escape => {
-                        state.open = false;
-                        EventResult::prevent_and_changed()
+            ComponentEvent::KeyDown { key, .. } if state.open => match key {
+                Key::Escape => {
+                    state.open = false;
+                    EventResult::prevent_and_changed()
+                }
+                Key::ArrowDown => {
+                    if !props.options.is_empty() {
+                        state.focused_index =
+                            Select::next_enabled(&props.options, state.focused_index);
                     }
-                    Key::ArrowDown => {
-                        if !props.options.is_empty() {
-                            state.focused_index = Select::next_enabled(&props.options, state.focused_index);
-                        }
-                        EventResult::prevent_and_changed()
+                    EventResult::prevent_and_changed()
+                }
+                Key::ArrowUp => {
+                    if !props.options.is_empty() {
+                        state.focused_index =
+                            Select::prev_enabled(&props.options, state.focused_index);
                     }
-                    Key::ArrowUp => {
-                        if !props.options.is_empty() {
-                            state.focused_index = Select::prev_enabled(&props.options, state.focused_index);
-                        }
-                        EventResult::prevent_and_changed()
-                    }
-                    Key::Home => {
-                        state.focused_index = props.options.iter()
-                            .position(|o| !o.disabled)
-                            .unwrap_or(0);
-                        EventResult::prevent_and_changed()
-                    }
-                    Key::End => {
-                        state.focused_index = props.options.iter()
-                            .rposition(|o| !o.disabled)
-                            .unwrap_or(0);
-                        EventResult::prevent_and_changed()
-                    }
-                    Key::Enter => {
-                        if state.focused_index < props.options.len() {
-                            let opt = &props.options[state.focused_index];
-                            if !opt.disabled {
-                                if props.value.is_none() {
-                                    state.selected = Some(opt.value.clone());
-                                }
-                                if let Some(ref cb) = props.on_change {
-                                    cb.call(opt.value.clone());
-                                }
+                    EventResult::prevent_and_changed()
+                }
+                Key::Home => {
+                    state.focused_index =
+                        props.options.iter().position(|o| !o.disabled).unwrap_or(0);
+                    EventResult::prevent_and_changed()
+                }
+                Key::End => {
+                    state.focused_index =
+                        props.options.iter().rposition(|o| !o.disabled).unwrap_or(0);
+                    EventResult::prevent_and_changed()
+                }
+                Key::Enter => {
+                    if state.focused_index < props.options.len() {
+                        let opt = &props.options[state.focused_index];
+                        if !opt.disabled {
+                            if props.value.is_none() {
+                                state.selected = Some(opt.value.clone());
+                            }
+                            if let Some(ref cb) = props.on_change {
+                                cb.call(opt.value.clone());
                             }
                         }
-                        state.open = false;
-                        EventResult::prevent_and_changed()
                     }
-                    _ => EventResult::default(),
+                    state.open = false;
+                    EventResult::prevent_and_changed()
                 }
-            }
-            ComponentEvent::KeyDown { key: Key::Space, .. } if !state.open => {
+                _ => EventResult::default(),
+            },
+            ComponentEvent::KeyDown {
+                key: Key::Space, ..
+            } if !state.open => {
                 state.open = true;
                 EventResult::prevent_and_changed()
             }
-            ComponentEvent::KeyDown { key: Key::ArrowDown, .. } if !state.open => {
+            ComponentEvent::KeyDown {
+                key: Key::ArrowDown,
+                ..
+            } if !state.open => {
                 state.open = true;
                 EventResult::prevent_and_changed()
             }
-            ComponentEvent::KeyDown { key: Key::ArrowUp, .. } if !state.open => {
+            ComponentEvent::KeyDown {
+                key: Key::ArrowUp, ..
+            } if !state.open => {
                 state.open = true;
                 EventResult::prevent_and_changed()
             }
@@ -272,16 +283,32 @@ impl Component for Select {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use stratum_core::event::MouseButton;
     use std::sync::{Arc, Mutex};
+    use stratum_core::event::ModifierKeys;
+    use stratum_core::event::MouseButton;
 
     fn test_options() -> Vec<SelectOption> {
         vec![
-            SelectOption { value: "a".to_string(), label: "Apple".to_string(), disabled: false },
-            SelectOption { value: "b".to_string(), label: "Banana".to_string(), disabled: false },
-            SelectOption { value: "c".to_string(), label: "Cherry".to_string(), disabled: true },
-            SelectOption { value: "d".to_string(), label: "Date".to_string(), disabled: false },
+            SelectOption {
+                value: "a".to_string(),
+                label: "Apple".to_string(),
+                disabled: false,
+            },
+            SelectOption {
+                value: "b".to_string(),
+                label: "Banana".to_string(),
+                disabled: false,
+            },
+            SelectOption {
+                value: "c".to_string(),
+                label: "Cherry".to_string(),
+                disabled: true,
+            },
+            SelectOption {
+                value: "d".to_string(),
+                label: "Date".to_string(),
+                disabled: false,
+            },
         ]
     }
 
@@ -369,7 +396,11 @@ mod tests {
         let state = Select::initial_state(&props);
         let output = Select::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(elems[0].data_attrs.contains(&("value".to_string(), "Pick one".to_string())));
+            assert!(
+                elems[0]
+                    .data_attrs
+                    .contains(&("value".to_string(), "Pick one".to_string()))
+            );
         }
     }
 
@@ -378,7 +409,8 @@ mod tests {
         let props = test_props();
         let mut state = Select::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Select::on_event(&props, &mut state, event);
@@ -471,7 +503,8 @@ mod tests {
         };
         let mut state = Select::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         let result = Select::on_event(&props, &mut state, event);

@@ -131,10 +131,7 @@ mod tests {
 
     #[test]
     fn conflict_resolution_in_builder() {
-        let result = ClassBuilder::new()
-            .add("h-8 px-3")
-            .add("h-12")
-            .build();
+        let result = ClassBuilder::new().add("h-8 px-3").add("h-12").build();
         assert_eq!(result, "px-3 h-12");
     }
 

@@ -60,10 +60,7 @@ impl Component for Toggle {
             .with_tag("button")
             .with_aria(aria)
             .with_attr("id", AttrValue::String(state.id.clone()))
-            .with_attr(
-                "aria-pressed",
-                AttrValue::String(is_pressed.to_string()),
-            )
+            .with_attr("aria-pressed", AttrValue::String(is_pressed.to_string()))
             .with_attr("tabindex", AttrValue::String("0".to_string()));
 
         if props.disabled {
@@ -94,20 +91,23 @@ impl Component for Toggle {
                 }
                 EventResult::default()
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space, .. } => {
-                    let next = !Self::effective_pressed(props, state);
-                    if let Some(ref cb) = props.on_pressed_change {
-                        cb.call(next);
-                    }
-                    if props.pressed.is_none() {
-                        state.pressed = next;
-                        return EventResult::prevent_and_changed();
-                    }
-                    EventResult {
-                        prevent_default: true,
-                        stop_propagation: false,
-                        state_changed: false,
-                    }
+            ComponentEvent::KeyDown {
+                key: Key::Enter | Key::Space,
+                ..
+            } => {
+                let next = !Self::effective_pressed(props, state);
+                if let Some(ref cb) = props.on_pressed_change {
+                    cb.call(next);
+                }
+                if props.pressed.is_none() {
+                    state.pressed = next;
+                    return EventResult::prevent_and_changed();
+                }
+                EventResult {
+                    prevent_default: true,
+                    stop_propagation: false,
+                    state_changed: false,
+                }
             }
             _ => EventResult::default(),
         }

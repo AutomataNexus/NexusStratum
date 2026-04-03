@@ -174,10 +174,7 @@ mod tests {
     fn sanitize_id_basic() {
         assert_eq!(sanitize_id("my-button"), "my-button");
         assert_eq!(sanitize_id("btn_123"), "btn_123");
-        assert_eq!(
-            sanitize_id("btn\" onclick=\"alert(1)"),
-            "btnonclickalert1"
-        );
+        assert_eq!(sanitize_id("btn\" onclick=\"alert(1)"), "btnonclickalert1");
         assert_eq!(sanitize_id("btn<script>"), "btnscript");
     }
 }

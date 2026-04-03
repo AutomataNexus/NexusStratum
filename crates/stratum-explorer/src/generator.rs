@@ -1,8 +1,8 @@
 //! Static site generator for the component explorer.
 
-use stratum_sdk::metadata::{ComponentMeta, RegistryMeta};
 use std::fs;
 use std::path::Path;
+use stratum_sdk::metadata::{ComponentMeta, RegistryMeta};
 
 /// The component explorer generator.
 pub struct Explorer {

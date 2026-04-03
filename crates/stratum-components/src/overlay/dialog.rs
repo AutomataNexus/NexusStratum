@@ -99,13 +99,23 @@ mod tests {
         let output = Dialog::render(&props);
         assert_eq!(output.aria.role, Some(AriaRole::Dialog));
         assert_eq!(output.aria.modal, Some(true));
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "open"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "open")
+        );
     }
 
     #[test]
     fn dialog_render_closed() {
         let props = DialogProps::default();
         let output = Dialog::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "closed"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "closed")
+        );
     }
 }

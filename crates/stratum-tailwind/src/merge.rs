@@ -53,9 +53,7 @@ const DISPLAY_CLASSES: &[&str] = &[
 const POSITION_CLASSES: &[&str] = &["static", "relative", "absolute", "fixed", "sticky"];
 
 /// Shadow size keywords (not colors).
-const SHADOW_SIZES: &[&str] = &[
-    "sm", "md", "lg", "xl", "2xl", "inner", "none",
-];
+const SHADOW_SIZES: &[&str] = &["sm", "md", "lg", "xl", "2xl", "inner", "none"];
 
 /// Ring size keywords (not colors).
 const RING_SIZES: &[&str] = &["0", "1", "2", "4", "8"];
@@ -150,13 +148,7 @@ fn looks_like_color_value(value: &str) -> bool {
     if value.starts_with('[') {
         return true;
     }
-    let color_keywords = [
-        "inherit",
-        "current",
-        "transparent",
-        "black",
-        "white",
-    ];
+    let color_keywords = ["inherit", "current", "transparent", "black", "white"];
     if color_keywords.contains(&value) {
         return true;
     }
@@ -288,43 +280,50 @@ fn base_class_group(base: &str) -> String {
                 }
             }
             // Border radius.
-            "rounded" => {
-                match value {
-                    "t" | "r" | "b" | "l" | "tl" | "tr" | "br" | "bl" => effective.into(),
-                    v if v.starts_with("t-") || v.starts_with("r-") || v.starts_with("b-")
-                        || v.starts_with("l-") || v.starts_with("tl-") || v.starts_with("tr-")
-                        || v.starts_with("br-") || v.starts_with("bl-") =>
-                    {
-                        if let Some(d) = v.find('-') {
-                            format!("rounded-{}", &v[..d])
-                        } else {
-                            effective.into()
-                        }
+            "rounded" => match value {
+                "t" | "r" | "b" | "l" | "tl" | "tr" | "br" | "bl" => effective.into(),
+                v if v.starts_with("t-")
+                    || v.starts_with("r-")
+                    || v.starts_with("b-")
+                    || v.starts_with("l-")
+                    || v.starts_with("tl-")
+                    || v.starts_with("tr-")
+                    || v.starts_with("br-")
+                    || v.starts_with("bl-") =>
+                {
+                    if let Some(d) = v.find('-') {
+                        format!("rounded-{}", &v[..d])
+                    } else {
+                        effective.into()
                     }
-                    _ => "rounded".into(),
                 }
-            }
+                _ => "rounded".into(),
+            },
             // Border utilities.
-            "border" => {
-                match value {
-                    "t" | "r" | "b" | "l" => effective.into(),
-                    v if v.starts_with("t-") || v.starts_with("r-")
-                        || v.starts_with("b-") || v.starts_with("l-") =>
-                    {
-                        let dir = &v[..1];
-                        let rest = &v[2..];
-                        if looks_like_color_value(rest) {
-                            format!("border-{}-color", dir)
-                        } else {
-                            format!("border-{}", dir)
-                        }
+            "border" => match value {
+                "t" | "r" | "b" | "l" => effective.into(),
+                v if v.starts_with("t-")
+                    || v.starts_with("r-")
+                    || v.starts_with("b-")
+                    || v.starts_with("l-") =>
+                {
+                    let dir = &v[..1];
+                    let rest = &v[2..];
+                    if looks_like_color_value(rest) {
+                        format!("border-{}-color", dir)
+                    } else {
+                        format!("border-{}", dir)
                     }
-                    v if !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()) => "border-width".into(),
-                    "solid" | "dashed" | "dotted" | "double" | "hidden" | "none" => "border-style".into(),
-                    "collapse" | "separate" => "border-collapse".into(),
-                    _ => "border-color".into(),
                 }
-            }
+                v if !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()) => {
+                    "border-width".into()
+                }
+                "solid" | "dashed" | "dotted" | "double" | "hidden" | "none" => {
+                    "border-style".into()
+                }
+                "collapse" | "separate" => "border-collapse".into(),
+                _ => "border-color".into(),
+            },
             // Shadow.
             "shadow" => {
                 if SHADOW_SIZES.contains(&value) {
@@ -346,15 +345,15 @@ fn base_class_group(base: &str) -> String {
                 }
             }
             // Outline.
-            "outline" => {
-                match value {
-                    "none" | "dashed" | "dotted" | "double" => "outline-style".into(),
-                    "offset" => "outline-offset".into(),
-                    v if v.starts_with("offset-") => "outline-offset".into(),
-                    v if !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()) => "outline-width".into(),
-                    _ => "outline-color".into(),
+            "outline" => match value {
+                "none" | "dashed" | "dotted" | "double" => "outline-style".into(),
+                "offset" => "outline-offset".into(),
+                v if v.starts_with("offset-") => "outline-offset".into(),
+                v if !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()) => {
+                    "outline-width".into()
                 }
-            }
+                _ => "outline-color".into(),
+            },
             // Alignment.
             "items" => "items".into(),
             "justify" => "justify".into(),
@@ -382,13 +381,11 @@ fn base_class_group(base: &str) -> String {
                 }
             }
             // Overflow.
-            "overflow" => {
-                match value {
-                    v if v.starts_with("x-") => "overflow-x".into(),
-                    v if v.starts_with("y-") => "overflow-y".into(),
-                    _ => "overflow".into(),
-                }
-            }
+            "overflow" => match value {
+                v if v.starts_with("x-") => "overflow-x".into(),
+                v if v.starts_with("y-") => "overflow-y".into(),
+                _ => "overflow".into(),
+            },
             // Z-index.
             "z" => "z".into(),
             // Opacity.
@@ -410,19 +407,15 @@ fn base_class_group(base: &str) -> String {
             // Whitespace.
             "whitespace" => "whitespace".into(),
             // Overflow-wrap.
-            "break" => {
-                match value {
-                    "normal" | "words" | "all" | "keep" => "overflow-wrap".into(),
-                    _ => effective.into(),
-                }
-            }
+            "break" => match value {
+                "normal" | "words" | "all" | "keep" => "overflow-wrap".into(),
+                _ => effective.into(),
+            },
             // List style.
-            "list" => {
-                match value {
-                    "inside" | "outside" => "list-style-position".into(),
-                    _ => "list-style-type".into(),
-                }
-            }
+            "list" => match value {
+                "inside" | "outside" => "list-style-position".into(),
+                _ => "list-style-type".into(),
+            },
             // Transition.
             "transition" => "transition".into(),
             "duration" => "duration".into(),
@@ -465,14 +458,12 @@ fn base_class_group(base: &str) -> String {
             // Resize.
             "resize" => "resize".into(),
             // Scroll snap.
-            "snap" => {
-                match value {
-                    "start" | "end" | "center" | "align-none" => "snap-align".into(),
-                    "normal" | "always" => "snap-stop".into(),
-                    "none" | "x" | "y" | "both" | "mandatory" | "proximity" => "snap-type".into(),
-                    _ => effective.into(),
-                }
-            }
+            "snap" => match value {
+                "start" | "end" | "center" | "align-none" => "snap-align".into(),
+                "normal" | "always" => "snap-stop".into(),
+                "none" | "x" | "y" | "both" | "mandatory" | "proximity" => "snap-type".into(),
+                _ => effective.into(),
+            },
             // Scroll behavior / margin / padding.
             "scroll" => {
                 if value == "auto" || value == "smooth" {
@@ -548,25 +539,23 @@ fn base_class_group(base: &str) -> String {
             // Aspect ratio.
             "aspect" => "aspect".into(),
             // Object fit / position.
-            "object" => {
-                match value {
-                    "contain" | "cover" | "fill" | "none" | "scale-down" => "object-fit".into(),
-                    _ => "object-position".into(),
-                }
-            }
+            "object" => match value {
+                "contain" | "cover" | "fill" | "none" | "scale-down" => "object-fit".into(),
+                _ => "object-position".into(),
+            },
             // Leading (line-height).
             "leading" => "leading".into(),
             // Tracking (letter-spacing).
             "tracking" => "tracking".into(),
             // Decoration.
-            "decoration" => {
-                match value {
-                    "solid" | "double" | "dotted" | "dashed" | "wavy" => "decoration-style".into(),
-                    "auto" | "from-font" => "decoration-thickness".into(),
-                    v if !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()) => "decoration-thickness".into(),
-                    _ => "decoration-color".into(),
+            "decoration" => match value {
+                "solid" | "double" | "dotted" | "dashed" | "wavy" => "decoration-style".into(),
+                "auto" | "from-font" => "decoration-thickness".into(),
+                v if !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()) => {
+                    "decoration-thickness".into()
                 }
-            }
+                _ => "decoration-color".into(),
+            },
             // Text decoration line.
             "underline" => "text-decoration".into(),
             "overline" => "text-decoration".into(),

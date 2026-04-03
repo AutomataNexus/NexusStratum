@@ -86,28 +86,24 @@ pub mod generators {
     pub static RADIO: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("radio"));
     pub static SWITCH: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("switch"));
     pub static SLIDER: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("slider"));
-    pub static DISCLOSURE: LazyLock<IdGenerator> =
-        LazyLock::new(|| IdGenerator::new("disclosure"));
+    pub static DISCLOSURE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("disclosure"));
     pub static DIALOG: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("dialog"));
     pub static POPOVER: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("popover"));
     pub static TOOLTIP: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("tooltip"));
     pub static MENU: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("menu"));
     pub static SELECT: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("select"));
     pub static TABS: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("tabs"));
-    pub static ACCORDION: LazyLock<IdGenerator> =
-        LazyLock::new(|| IdGenerator::new("accordion"));
+    pub static ACCORDION: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("accordion"));
     pub static FORM: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("form"));
     pub static INPUT: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("input"));
     pub static TOAST: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("toast"));
     pub static TABLE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("table"));
     pub static TREE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("tree"));
     pub static TOGGLE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("toggle"));
-    pub static PRESSABLE: LazyLock<IdGenerator> =
-        LazyLock::new(|| IdGenerator::new("pressable"));
+    pub static PRESSABLE: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("pressable"));
     pub static FOCUS_SCOPE: LazyLock<IdGenerator> =
         LazyLock::new(|| IdGenerator::new("focus-scope"));
-    pub static SEPARATOR: LazyLock<IdGenerator> =
-        LazyLock::new(|| IdGenerator::new("separator"));
+    pub static SEPARATOR: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("separator"));
     pub static PORTAL: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("portal"));
     pub static GENERIC: LazyLock<IdGenerator> = LazyLock::new(|| IdGenerator::new("id"));
 }

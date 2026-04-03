@@ -62,6 +62,11 @@ mod tests {
             ..Default::default()
         };
         let output = AlertDialog::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "state" && v == "open"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "state" && v == "open")
+        );
     }
 }

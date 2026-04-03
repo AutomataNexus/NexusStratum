@@ -46,7 +46,8 @@ mod tests {
         for i in 0..accent_hues.len() {
             for j in (i + 1)..accent_hues.len() {
                 assert_ne!(
-                    accent_hues[i], accent_hues[j],
+                    accent_hues[i],
+                    accent_hues[j],
                     "accent themes {} and {} should have distinct primary hues",
                     i + 3,
                     j + 3

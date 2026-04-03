@@ -94,7 +94,14 @@ impl RegistryMeta {
                     default: Some("Default".to_string()),
                     required: false,
                     description: "Visual style variant.".to_string(),
-                    values: vec!["Default".into(), "Destructive".into(), "Outline".into(), "Secondary".into(), "Ghost".into(), "Link".into()],
+                    values: vec![
+                        "Default".into(),
+                        "Destructive".into(),
+                        "Outline".into(),
+                        "Secondary".into(),
+                        "Ghost".into(),
+                        "Link".into(),
+                    ],
                 },
                 PropMeta {
                     name: "size".to_string(),
@@ -102,7 +109,13 @@ impl RegistryMeta {
                     default: Some("Md".to_string()),
                     required: false,
                     description: "Button size.".to_string(),
-                    values: vec!["Xs".into(), "Sm".into(), "Md".into(), "Lg".into(), "Xl".into()],
+                    values: vec![
+                        "Xs".into(),
+                        "Sm".into(),
+                        "Md".into(),
+                        "Lg".into(),
+                        "Xl".into(),
+                    ],
                 },
                 PropMeta {
                     name: "disabled".to_string(),
@@ -123,8 +136,14 @@ impl RegistryMeta {
             ],
             aria_role: Some("button".to_string()),
             keyboard: vec![
-                KeyboardMeta { key: "Enter".to_string(), action: "Activates the button.".to_string() },
-                KeyboardMeta { key: "Space".to_string(), action: "Activates the button.".to_string() },
+                KeyboardMeta {
+                    key: "Enter".to_string(),
+                    action: "Activates the button.".to_string(),
+                },
+                KeyboardMeta {
+                    key: "Space".to_string(),
+                    action: "Activates the button.".to_string(),
+                },
             ],
         });
 
@@ -134,13 +153,33 @@ impl RegistryMeta {
             category: "Overlay".to_string(),
             description: "A modal dialog with focus trap and backdrop.".to_string(),
             props: vec![
-                PropMeta { name: "open".to_string(), prop_type: "Option<bool>".to_string(), default: None, required: false, description: "Controlled open state.".to_string(), values: vec![] },
-                PropMeta { name: "modal".to_string(), prop_type: "bool".to_string(), default: Some("true".to_string()), required: false, description: "Whether to trap focus.".to_string(), values: vec![] },
+                PropMeta {
+                    name: "open".to_string(),
+                    prop_type: "Option<bool>".to_string(),
+                    default: None,
+                    required: false,
+                    description: "Controlled open state.".to_string(),
+                    values: vec![],
+                },
+                PropMeta {
+                    name: "modal".to_string(),
+                    prop_type: "bool".to_string(),
+                    default: Some("true".to_string()),
+                    required: false,
+                    description: "Whether to trap focus.".to_string(),
+                    values: vec![],
+                },
             ],
             aria_role: Some("dialog".to_string()),
             keyboard: vec![
-                KeyboardMeta { key: "Escape".to_string(), action: "Closes the dialog.".to_string() },
-                KeyboardMeta { key: "Tab".to_string(), action: "Cycles focus within the dialog.".to_string() },
+                KeyboardMeta {
+                    key: "Escape".to_string(),
+                    action: "Closes the dialog.".to_string(),
+                },
+                KeyboardMeta {
+                    key: "Tab".to_string(),
+                    action: "Cycles focus within the dialog.".to_string(),
+                },
             ],
         });
 
@@ -150,13 +189,33 @@ impl RegistryMeta {
             category: "Navigation".to_string(),
             description: "Tabbed interface with arrow key navigation.".to_string(),
             props: vec![
-                PropMeta { name: "value".to_string(), prop_type: "Option<String>".to_string(), default: None, required: false, description: "Controlled active tab.".to_string(), values: vec![] },
-                PropMeta { name: "orientation".to_string(), prop_type: "Orientation".to_string(), default: Some("Horizontal".to_string()), required: false, description: "Tab direction.".to_string(), values: vec!["Horizontal".into(), "Vertical".into()] },
+                PropMeta {
+                    name: "value".to_string(),
+                    prop_type: "Option<String>".to_string(),
+                    default: None,
+                    required: false,
+                    description: "Controlled active tab.".to_string(),
+                    values: vec![],
+                },
+                PropMeta {
+                    name: "orientation".to_string(),
+                    prop_type: "Orientation".to_string(),
+                    default: Some("Horizontal".to_string()),
+                    required: false,
+                    description: "Tab direction.".to_string(),
+                    values: vec!["Horizontal".into(), "Vertical".into()],
+                },
             ],
             aria_role: Some("tablist".to_string()),
             keyboard: vec![
-                KeyboardMeta { key: "Arrow keys".to_string(), action: "Navigate between tabs.".to_string() },
-                KeyboardMeta { key: "Home/End".to_string(), action: "Jump to first/last tab.".to_string() },
+                KeyboardMeta {
+                    key: "Arrow keys".to_string(),
+                    action: "Navigate between tabs.".to_string(),
+                },
+                KeyboardMeta {
+                    key: "Home/End".to_string(),
+                    action: "Jump to first/last tab.".to_string(),
+                },
             ],
         });
 
@@ -166,7 +225,9 @@ impl RegistryMeta {
     /// Find a component by name (case-insensitive).
     pub fn find(&self, name: &str) -> Option<&ComponentMeta> {
         let lower = name.to_lowercase();
-        self.components.iter().find(|c| c.name.to_lowercase() == lower)
+        self.components
+            .iter()
+            .find(|c| c.name.to_lowercase() == lower)
     }
 }
 

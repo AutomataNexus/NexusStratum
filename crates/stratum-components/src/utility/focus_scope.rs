@@ -55,7 +55,12 @@ mod tests {
             ..Default::default()
         };
         let output = FocusScope::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "focus-trap" && v == "true"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "focus-trap" && v == "true")
+        );
     }
 
     #[test]
@@ -65,6 +70,11 @@ mod tests {
             ..Default::default()
         };
         let output = FocusScope::render(&props);
-        assert!(output.data_attrs.iter().any(|(k, v)| k == "auto-focus" && v == "true"));
+        assert!(
+            output
+                .data_attrs
+                .iter()
+                .any(|(k, v)| k == "auto-focus" && v == "true")
+        );
     }
 }

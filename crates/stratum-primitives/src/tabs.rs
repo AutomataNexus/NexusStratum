@@ -3,11 +3,13 @@
 //! Provides headless tab navigation with proper ARIA roles for
 //! tablist, tab, and tabpanel elements with keyboard navigation.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
+use stratum_core::aria::Orientation;
 use stratum_core::callback::Callback;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
-use stratum_core::aria::Orientation;
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the Tabs primitive.
 #[derive(Debug, Clone, PartialEq)]
@@ -64,20 +66,28 @@ impl Component for Tabs {
     fn initial_state(props: &Self::Props) -> Self::State {
         let base_id = props.id.clone().unwrap_or_else(|| generators::TABS.next());
 
-        let active_tab = props.value.clone()
+        let active_tab = props
+            .value
+            .clone()
             .or_else(|| props.default_value.clone())
             .or_else(|| props.items.first().cloned())
             .unwrap_or_default();
 
-        let focused_index = props.items.iter()
+        let focused_index = props
+            .items
+            .iter()
             .position(|item| *item == active_tab)
             .unwrap_or(0);
 
-        let tab_ids: Vec<String> = props.items.iter()
+        let tab_ids: Vec<String> = props
+            .items
+            .iter()
             .map(|item| format!("{}-tab-{}", base_id, item))
             .collect();
 
-        let panel_ids: Vec<String> = props.items.iter()
+        let panel_ids: Vec<String> = props
+            .items
+            .iter()
             .map(|item| format!("{}-panel-{}", base_id, item))
             .collect();
 
@@ -98,9 +108,7 @@ impl Component for Tabs {
             .with_role(AriaRole::TabList)
             .with_orientation(props.orientation);
 
-        let tablist = RenderOutput::new()
-            .with_tag("div")
-            .with_aria(tablist_aria);
+        let tablist = RenderOutput::new().with_tag("div").with_aria(tablist_aria);
 
         // Individual tabs
         let mut tabs = Vec::new();
@@ -129,8 +137,7 @@ impl Component for Tabs {
         let mut panels = Vec::new();
         for (i, item) in props.items.iter().enumerate() {
             let is_active = *item == *active_tab;
-            let mut panel_aria = AriaAttributes::new()
-                .with_role(AriaRole::TabPanel);
+            let mut panel_aria = AriaAttributes::new().with_role(AriaRole::TabPanel);
 
             if i < state.tab_ids.len() {
                 panel_aria = panel_aria.with_labelledby(&state.tab_ids[i]);
@@ -177,13 +184,21 @@ impl Component for Tabs {
                         Some((state.focused_index + 1) % len)
                     }
                     Key::ArrowLeft if props.orientation == Orientation::Horizontal => {
-                        Some(if state.focused_index == 0 { len - 1 } else { state.focused_index - 1 })
+                        Some(if state.focused_index == 0 {
+                            len - 1
+                        } else {
+                            state.focused_index - 1
+                        })
                     }
                     Key::ArrowDown if props.orientation == Orientation::Vertical => {
                         Some((state.focused_index + 1) % len)
                     }
                     Key::ArrowUp if props.orientation == Orientation::Vertical => {
-                        Some(if state.focused_index == 0 { len - 1 } else { state.focused_index - 1 })
+                        Some(if state.focused_index == 0 {
+                            len - 1
+                        } else {
+                            state.focused_index - 1
+                        })
                     }
                     Key::Home => Some(0),
                     Key::End => Some(len - 1),
@@ -218,8 +233,8 @@ impl Component for Tabs {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
     use std::sync::{Arc, Mutex};
+    use stratum_core::event::ModifierKeys;
 
     fn test_props() -> TabsProps {
         TabsProps {
@@ -306,9 +321,21 @@ mod tests {
             // panels start at index 4 (after tablist + 3 tabs)
             assert_eq!(elems[4].aria.role, Some(AriaRole::TabPanel));
             // first panel visible, rest hidden
-            assert!(!elems[4].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
-            assert!(elems[5].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
-            assert!(elems[6].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                !elems[4]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
+            assert!(
+                elems[5]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
+            assert!(
+                elems[6]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 
@@ -489,9 +516,17 @@ mod tests {
         let output = Tabs::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
             // First tab (active)
-            assert!(elems[1].attrs.contains(&("tabindex".to_string(), AttrValue::String("0".to_string()))));
+            assert!(
+                elems[1]
+                    .attrs
+                    .contains(&("tabindex".to_string(), AttrValue::String("0".to_string())))
+            );
             // Second tab (inactive)
-            assert!(elems[2].attrs.contains(&("tabindex".to_string(), AttrValue::String("-1".to_string()))));
+            assert!(
+                elems[2]
+                    .attrs
+                    .contains(&("tabindex".to_string(), AttrValue::String("-1".to_string())))
+            );
         }
     }
 }

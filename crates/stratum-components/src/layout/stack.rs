@@ -140,7 +140,11 @@ impl HStack {
         cls
     }
 
-    pub fn render(spacing: StackSpacing, align: StackAlign, class: &Option<String>) -> RenderOutput {
+    pub fn render(
+        spacing: StackSpacing,
+        align: StackAlign,
+        class: &Option<String>,
+    ) -> RenderOutput {
         RenderOutput::new()
             .with_tag("div")
             .with_class(Self::classes(spacing, align, class))
@@ -165,7 +169,11 @@ impl VStack {
         cls
     }
 
-    pub fn render(spacing: StackSpacing, align: StackAlign, class: &Option<String>) -> RenderOutput {
+    pub fn render(
+        spacing: StackSpacing,
+        align: StackAlign,
+        class: &Option<String>,
+    ) -> RenderOutput {
         RenderOutput::new()
             .with_tag("div")
             .with_class(Self::classes(spacing, align, class))

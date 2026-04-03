@@ -1,6 +1,6 @@
 //! Styled Text component with size, weight, and color control.
 
-use crate::common::{merge_classes, Size};
+use crate::common::{Size, merge_classes};
 use stratum_core::render::RenderOutput;
 
 /// Font weight options.

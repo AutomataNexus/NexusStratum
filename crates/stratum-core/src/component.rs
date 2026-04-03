@@ -33,11 +33,8 @@ pub trait Component: Sized + 'static {
     ///
     /// Returns an [`EventResult`] indicating whether the event should
     /// be prevented, stopped, or if state changed (triggering re-render).
-    fn on_event(
-        props: &Self::Props,
-        state: &mut Self::State,
-        event: ComponentEvent,
-    ) -> EventResult;
+    fn on_event(props: &Self::Props, state: &mut Self::State, event: ComponentEvent)
+    -> EventResult;
 
     /// Called when props change. Returns true if state needs updating.
     ///

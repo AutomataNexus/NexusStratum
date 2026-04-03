@@ -3,10 +3,12 @@
 //! A simpler alternative to Disclosure that wraps content with
 //! open/close state without explicit trigger/content slots.
 
-use stratum_core::{Component, ComponentEvent, EventResult, RenderOutput, AriaAttributes, AriaRole, Key};
 use stratum_core::callback::Callback;
 use stratum_core::id::generators;
 use stratum_core::render::{AttrValue, ChildrenSpec};
+use stratum_core::{
+    AriaAttributes, AriaRole, Component, ComponentEvent, EventResult, Key, RenderOutput,
+};
 
 /// Props for the Collapsible primitive.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -56,8 +58,7 @@ impl Component for Collapsible {
     fn render(props: &Self::Props, state: &Self::State) -> RenderOutput {
         let effective_open = props.open.unwrap_or(state.open);
 
-        let mut aria = AriaAttributes::new()
-            .with_expanded(effective_open);
+        let mut aria = AriaAttributes::new().with_expanded(effective_open);
 
         if props.disabled {
             aria = aria.with_disabled(true);
@@ -102,7 +103,10 @@ impl Component for Collapsible {
                 }
                 EventResult::state_changed()
             }
-            ComponentEvent::KeyDown { key: Key::Enter | Key::Space, .. } => {
+            ComponentEvent::KeyDown {
+                key: Key::Enter | Key::Space,
+                ..
+            } => {
                 let current = props.open.unwrap_or(state.open);
                 let next = !current;
                 if let Some(ref cb) = props.on_open_change {
@@ -135,10 +139,10 @@ impl Component for Collapsible {
 #[cfg(test)]
 mod tests {
     use super::*;
-        use stratum_core::event::ModifierKeys;
-    use stratum_core::event::MouseButton;
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use stratum_core::event::ModifierKeys;
+    use stratum_core::event::MouseButton;
 
     fn default_props() -> CollapsibleProps {
         CollapsibleProps::default()
@@ -209,7 +213,11 @@ mod tests {
         let state = Collapsible::initial_state(&props);
         let output = Collapsible::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(elems[0].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                elems[0]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 
@@ -222,7 +230,11 @@ mod tests {
         let state = Collapsible::initial_state(&props);
         let output = Collapsible::render(&props, &state);
         if let ChildrenSpec::Elements(ref elems) = output.children {
-            assert!(!elems[0].attrs.contains(&("hidden".to_string(), AttrValue::Bool(true))));
+            assert!(
+                !elems[0]
+                    .attrs
+                    .contains(&("hidden".to_string(), AttrValue::Bool(true)))
+            );
         }
     }
 
@@ -241,7 +253,8 @@ mod tests {
         let props = default_props();
         let mut state = Collapsible::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Collapsible::on_event(&props, &mut state, event.clone());
@@ -283,7 +296,8 @@ mod tests {
         };
         let mut state = Collapsible::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         let result = Collapsible::on_event(&props, &mut state, event);
@@ -331,7 +345,8 @@ mod tests {
         };
         let mut state = Collapsible::initial_state(&props);
         let event = ComponentEvent::Click {
-            x: 0.0, y: 0.0,
+            x: 0.0,
+            y: 0.0,
             button: MouseButton::Left,
         };
         Collapsible::on_event(&props, &mut state, event);
@@ -343,6 +358,10 @@ mod tests {
         let props = default_props();
         let state = Collapsible::initial_state(&props);
         let output = Collapsible::render(&props, &state);
-        assert!(output.data_attrs.contains(&("state".to_string(), "closed".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("state".to_string(), "closed".to_string()))
+        );
     }
 }

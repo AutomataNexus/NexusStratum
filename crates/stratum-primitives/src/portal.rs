@@ -64,13 +64,12 @@ mod tests {
         let props = default_props();
         let state = Portal::initial_state(&props);
         let output = Portal::render(&props, &state);
-        assert!(output
-            .data_attrs
-            .contains(&("portal".to_string(), "true".to_string())));
-        assert!(!output
-            .data_attrs
-            .iter()
-            .any(|(k, _)| k == "portal-target"));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("portal".to_string(), "true".to_string()))
+        );
+        assert!(!output.data_attrs.iter().any(|(k, _)| k == "portal-target"));
     }
 
     #[test]
@@ -80,9 +79,11 @@ mod tests {
         };
         let state = Portal::initial_state(&props);
         let output = Portal::render(&props, &state);
-        assert!(output
-            .data_attrs
-            .contains(&("portal-target".to_string(), "modal-root".to_string())));
+        assert!(
+            output
+                .data_attrs
+                .contains(&("portal-target".to_string(), "modal-root".to_string()))
+        );
     }
 
     #[test]
