@@ -4,18 +4,27 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Breadcrumb(#[props(default = String::new())] class: String, children: Element) -> Element {
-    let classes = format!("flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 {class}");
+    let classes = format!(
+        "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 {class}"
+    );
     rsx! { nav { aria_label: "breadcrumb", ol { class: "{classes}", {children} } } }
 }
 
 #[component]
-pub fn BreadcrumbItem(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn BreadcrumbItem(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let classes = format!("inline-flex items-center gap-1.5 {class}");
     rsx! { li { class: "{classes}", {children} } }
 }
 
 #[component]
-pub fn BreadcrumbLink(href: String, #[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn BreadcrumbLink(
+    href: String,
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let classes = format!("transition-colors hover:text-foreground {class}");
     rsx! { a { href: "{href}", class: "{classes}", {children} } }
 }
@@ -33,7 +42,10 @@ pub fn BreadcrumbSeparator(#[props(default = String::new())] class: String) -> E
 }
 
 #[component]
-pub fn BreadcrumbPage(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn BreadcrumbPage(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let classes = format!("font-normal text-foreground {class}");
     rsx! { span { role: "link", aria_disabled: "true", aria_current: "page", class: "{classes}", {children} } }
 }

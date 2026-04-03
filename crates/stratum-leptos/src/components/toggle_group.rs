@@ -10,8 +10,7 @@ pub fn ToggleGroup(
     /// Whether only one can be active at a time.
     #[prop(optional, default = false)]
     single: bool,
-    #[prop(optional, default = String::new())]
-    class: String,
+    #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
     provide_context((value, single));

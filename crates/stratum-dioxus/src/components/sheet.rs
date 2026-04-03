@@ -19,7 +19,9 @@ pub fn Sheet(
     #[props(default = String::new())] class: String,
     children: Element,
 ) -> Element {
-    if !open() { return rsx! {}; }
+    if !open() {
+        return rsx! {};
+    }
 
     let side_cls = match side {
         SheetSide::Top => "inset-x-0 top-0 border-b",
@@ -27,7 +29,9 @@ pub fn Sheet(
         SheetSide::Bottom => "inset-x-0 bottom-0 border-t",
         SheetSide::Left => "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
     };
-    let classes = format!("fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out duration-300 {side_cls} {class}");
+    let classes = format!(
+        "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out duration-300 {side_cls} {class}"
+    );
 
     rsx! {
         div { class: "fixed inset-0 z-50 bg-black/80",

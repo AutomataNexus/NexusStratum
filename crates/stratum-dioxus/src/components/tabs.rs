@@ -14,7 +14,9 @@ pub fn Tabs(
 
 #[component]
 pub fn TabsList(#[props(default = String::new())] class: String, children: Element) -> Element {
-    let classes = format!("inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground {class}");
+    let classes = format!(
+        "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground {class}"
+    );
     rsx! { div { class: "{classes}", role: "tablist", {children} } }
 }
 
@@ -58,6 +60,8 @@ pub fn TabsContent(
     if active_tab() != value {
         return rsx! {};
     }
-    let classes = format!("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring {class}");
+    let classes = format!(
+        "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring {class}"
+    );
     rsx! { div { class: "{classes}", role: "tabpanel", {children} } }
 }

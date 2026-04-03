@@ -16,12 +16,9 @@ pub enum SheetSide {
 #[component]
 pub fn Sheet(
     open: ReadSignal<bool>,
-    #[prop(optional, default = SheetSide::Right)]
-    side: SheetSide,
-    #[prop(optional)]
-    on_close: Option<Callback<()>>,
-    #[prop(optional, default = String::new())]
-    class: String,
+    #[prop(optional, default = SheetSide::Right)] side: SheetSide,
+    #[prop(optional)] on_close: Option<Callback<()>>,
+    #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
     let side_cls = match side {

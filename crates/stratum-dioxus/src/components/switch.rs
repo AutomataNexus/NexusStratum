@@ -14,8 +14,16 @@ pub fn Switch(
     let mut is_on = checked.unwrap_or_else(|| Signal::new(default_checked));
 
     let track_cls = if is_on() { "bg-primary" } else { "bg-input" };
-    let thumb_translate = if is_on() { "translateX(16px)" } else { "translateX(0px)" };
-    let opacity = if disabled { "opacity-50 cursor-not-allowed" } else { "cursor-pointer" };
+    let thumb_translate = if is_on() {
+        "translateX(16px)"
+    } else {
+        "translateX(0px)"
+    };
+    let opacity = if disabled {
+        "opacity-50 cursor-not-allowed"
+    } else {
+        "cursor-pointer"
+    };
 
     rsx! {
         label { class: "flex items-center gap-2 {opacity}",

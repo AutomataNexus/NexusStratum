@@ -45,10 +45,7 @@ pub fn AlertTitle(
     #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
-    let classes = format!(
-        "mb-1 font-medium leading-none tracking-tight {}",
-        class
-    );
+    let classes = format!("mb-1 font-medium leading-none tracking-tight {}", class);
     view! { <h5 class=classes>{children()}</h5> }
 }
 

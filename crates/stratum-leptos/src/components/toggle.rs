@@ -39,7 +39,9 @@ pub fn Toggle(
 
     let variant_cls = match variant {
         ToggleVariant::Default => "",
-        ToggleVariant::Outline => "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+        ToggleVariant::Outline => {
+            "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground"
+        }
     };
 
     view! {

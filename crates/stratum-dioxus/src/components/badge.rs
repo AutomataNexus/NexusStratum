@@ -25,7 +25,9 @@ pub fn Badge(
         BadgeVariant::Default => "border-transparent bg-primary text-primary-foreground shadow",
         BadgeVariant::Secondary => "border-transparent bg-secondary text-secondary-foreground",
         BadgeVariant::Outline => "text-foreground",
-        BadgeVariant::Destructive => "border-transparent bg-destructive text-destructive-foreground shadow",
+        BadgeVariant::Destructive => {
+            "border-transparent bg-destructive text-destructive-foreground shadow"
+        }
     };
 
     let classes = format!("{base} {variant_cls} {class}");

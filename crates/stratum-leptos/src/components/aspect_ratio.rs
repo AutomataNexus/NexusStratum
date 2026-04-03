@@ -8,8 +8,7 @@ pub fn AspectRatio(
     /// Aspect ratio (e.g., 16.0/9.0 = 1.777).
     #[prop(optional, default = 1.0)]
     ratio: f64,
-    #[prop(optional, default = String::new())]
-    class: String,
+    #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
     let padding = format!("{}%", (1.0 / ratio) * 100.0);

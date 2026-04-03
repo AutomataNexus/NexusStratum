@@ -25,7 +25,11 @@ pub fn Toggle(
         ToggleVariant::Default => "",
         ToggleVariant::Outline => "border border-input bg-transparent shadow-sm",
     };
-    let state_cls = if is_pressed() { "bg-accent text-accent-foreground" } else { "" };
+    let state_cls = if is_pressed() {
+        "bg-accent text-accent-foreground"
+    } else {
+        ""
+    };
     let classes = format!("{base} {variant_cls} {state_cls} {class}");
 
     rsx! {

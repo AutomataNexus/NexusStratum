@@ -15,8 +15,7 @@ pub enum ToastVariant {
 /// A toast notification message.
 #[component]
 pub fn Toast(
-    #[prop(optional, default = ToastVariant::Default)]
-    variant: ToastVariant,
+    #[prop(optional, default = ToastVariant::Default)] variant: ToastVariant,
     /// Whether visible.
     #[prop(optional, default = true)]
     open: bool,
@@ -56,8 +55,7 @@ pub fn Toast(
 /// Container for positioning toasts.
 #[component]
 pub fn Toaster(
-    #[prop(optional, default = String::from("bottom-right"))]
-    position: String,
+    #[prop(optional, default = String::from("bottom-right"))] position: String,
     children: Children,
 ) -> impl IntoView {
     let pos_cls = match position.as_str() {

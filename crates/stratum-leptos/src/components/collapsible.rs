@@ -22,7 +22,8 @@ pub fn CollapsibleTrigger(
     #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
-    let open = use_context::<RwSignal<bool>>().expect("CollapsibleTrigger must be inside Collapsible");
+    let open =
+        use_context::<RwSignal<bool>>().expect("CollapsibleTrigger must be inside Collapsible");
     view! {
         <button
             class=class
@@ -40,7 +41,8 @@ pub fn CollapsibleContent(
     #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
-    let open = use_context::<RwSignal<bool>>().expect("CollapsibleContent must be inside Collapsible");
+    let open =
+        use_context::<RwSignal<bool>>().expect("CollapsibleContent must be inside Collapsible");
     let rendered = children();
     view! {
         <div class=class style=move || if open.get() { "" } else { "display:none" }>

@@ -21,8 +21,12 @@ pub fn NumberInput(
 
     let clamp = move |v: f64| -> f64 {
         let mut c = v;
-        if let Some(lo) = min { c = c.max(lo); }
-        if let Some(hi) = max { c = c.min(hi); }
+        if let Some(lo) = min {
+            c = c.max(lo);
+        }
+        if let Some(hi) = max {
+            c = c.min(hi);
+        }
         c
     };
 

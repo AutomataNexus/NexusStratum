@@ -4,8 +4,14 @@ use leptos::prelude::*;
 
 /// A command palette / searchable list.
 #[component]
-pub fn Command(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
-    let classes = format!("flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground {}", class);
+pub fn Command(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
+    let classes = format!(
+        "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground {}",
+        class
+    );
     view! { <div class=classes>{children()}</div> }
 }
 
@@ -17,7 +23,10 @@ pub fn CommandInput(
     #[prop(optional, default = String::new())] class: String,
 ) -> impl IntoView {
     let val = value.unwrap_or_else(|| RwSignal::new(String::new()));
-    let classes = format!("flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 {}", class);
+    let classes = format!(
+        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 {}",
+        class
+    );
     view! {
         <div class="flex items-center border-b px-3">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4 shrink-0 opacity-50"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
@@ -28,7 +37,10 @@ pub fn CommandInput(
 
 /// Container for command items.
 #[component]
-pub fn CommandList(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
+pub fn CommandList(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
     let classes = format!("max-h-[300px] overflow-y-auto overflow-x-hidden {}", class);
     view! { <div class=classes role="listbox">{children()}</div> }
 }
@@ -59,7 +71,12 @@ pub fn CommandItem(
 ) -> impl IntoView {
     let classes = format!(
         "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground {} {}",
-        if disabled { "pointer-events-none opacity-50" } else { "cursor-pointer" }, class
+        if disabled {
+            "pointer-events-none opacity-50"
+        } else {
+            "cursor-pointer"
+        },
+        class
     );
     view! {
         <div class=classes role="option" aria-disabled=disabled.then_some("true") on:click=move |_| {
@@ -77,7 +94,10 @@ pub fn CommandSeparator(#[prop(optional, default = String::new())] class: String
 
 /// Empty state when no results found.
 #[component]
-pub fn CommandEmpty(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
+pub fn CommandEmpty(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
     let classes = format!("py-6 text-center text-sm {}", class);
     view! { <div class=classes>{children()}</div> }
 }

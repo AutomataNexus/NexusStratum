@@ -11,7 +11,10 @@ pub fn DropdownMenu(#[props(default = String::new())] class: String, children: E
 }
 
 #[component]
-pub fn DropdownMenuTrigger(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn DropdownMenuTrigger(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let mut open = use_context::<Signal<bool>>();
     rsx! {
         div { class: "{class}", onclick: move |_| open.set(!open()), aria_expanded: if open() { "true" } else { "false" }, aria_haspopup: "menu",
@@ -21,10 +24,17 @@ pub fn DropdownMenuTrigger(#[props(default = String::new())] class: String, chil
 }
 
 #[component]
-pub fn DropdownMenuContent(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn DropdownMenuContent(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let open = use_context::<Signal<bool>>();
-    if !open() { return rsx! {}; }
-    let classes = format!("absolute right-0 z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md {class}");
+    if !open() {
+        return rsx! {};
+    }
+    let classes = format!(
+        "absolute right-0 z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md {class}"
+    );
     rsx! { div { class: "{classes}", role: "menu", {children} } }
 }
 
@@ -36,8 +46,14 @@ pub fn DropdownMenuItem(
     children: Element,
 ) -> Element {
     let mut open = use_context::<Signal<bool>>();
-    let cls = if disabled { "pointer-events-none opacity-50" } else { "cursor-pointer" };
-    let classes = format!("relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground {cls} {class}");
+    let cls = if disabled {
+        "pointer-events-none opacity-50"
+    } else {
+        "cursor-pointer"
+    };
+    let classes = format!(
+        "relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground {cls} {class}"
+    );
     rsx! {
         div { class: "{classes}", role: "menuitem", onclick: move |_| {
             if !disabled { if let Some(handler) = &on_select { handler.call(()); } open.set(false); }
@@ -52,7 +68,10 @@ pub fn DropdownMenuSeparator(#[props(default = String::new())] class: String) ->
 }
 
 #[component]
-pub fn DropdownMenuLabel(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn DropdownMenuLabel(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let classes = format!("px-2 py-1.5 text-sm font-semibold {class}");
     rsx! { div { class: "{classes}", {children} } }
 }

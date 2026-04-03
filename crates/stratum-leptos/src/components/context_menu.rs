@@ -3,7 +3,10 @@
 use leptos::prelude::*;
 
 #[component]
-pub fn ContextMenu(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
+pub fn ContextMenu(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
     let open = RwSignal::new(false);
     let pos = RwSignal::new((0i32, 0i32));
     provide_context((open, pos));
@@ -20,7 +23,10 @@ pub fn ContextMenu(#[prop(optional, default = String::new())] class: String, chi
 }
 
 #[component]
-pub fn ContextMenuContent(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
+pub fn ContextMenuContent(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
     let (open, pos) = use_context::<(RwSignal<bool>, RwSignal<(i32, i32)>)>()
         .expect("ContextMenuContent must be inside ContextMenu");
 
@@ -57,8 +63,15 @@ pub fn ContextMenuItem(
 ) -> impl IntoView {
     let (open, _) = use_context::<(RwSignal<bool>, RwSignal<(i32, i32)>)>()
         .expect("ContextMenuItem must be inside ContextMenu");
-    let cls = if disabled { "pointer-events-none opacity-50" } else { "cursor-pointer" };
-    let classes = format!("relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground {} {}", cls, class);
+    let cls = if disabled {
+        "pointer-events-none opacity-50"
+    } else {
+        "cursor-pointer"
+    };
+    let classes = format!(
+        "relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground {} {}",
+        cls, class
+    );
     view! {
         <div class=classes role="menuitem" on:click=move |_| {
             if !disabled { if let Some(handler) = &on_select { handler.run(()); } open.set(false); }
@@ -67,7 +80,9 @@ pub fn ContextMenuItem(
 }
 
 #[component]
-pub fn ContextMenuSeparator(#[prop(optional, default = String::new())] class: String) -> impl IntoView {
+pub fn ContextMenuSeparator(
+    #[prop(optional, default = String::new())] class: String,
+) -> impl IntoView {
     let classes = format!("-mx-1 my-1 h-px bg-border {}", class);
     view! { <div class=classes role="separator"></div> }
 }

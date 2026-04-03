@@ -21,7 +21,9 @@ pub fn Heading(
 ) -> Element {
     let size_cls = match level {
         HeadingLevel::H1 => "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
-        HeadingLevel::H2 => "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
+        HeadingLevel::H2 => {
+            "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0"
+        }
         HeadingLevel::H3 => "scroll-m-20 text-2xl font-semibold tracking-tight",
         HeadingLevel::H4 => "scroll-m-20 text-xl font-semibold tracking-tight",
         HeadingLevel::H5 => "scroll-m-20 text-lg font-semibold tracking-tight",

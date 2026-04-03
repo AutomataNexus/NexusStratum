@@ -8,7 +8,11 @@ pub fn ResizablePanelGroup(
     #[props(default = String::new())] class: String,
     children: Element,
 ) -> Element {
-    let dir_cls = if direction == "vertical" { "flex-col" } else { "flex-row" };
+    let dir_cls = if direction == "vertical" {
+        "flex-col"
+    } else {
+        "flex-row"
+    };
     let classes = format!("flex h-full w-full {dir_cls} {class}");
     rsx! { div { class: "{classes}", {children} } }
 }
@@ -26,7 +30,9 @@ pub fn ResizablePanel(
 
 #[component]
 pub fn ResizableHandle(#[props(default = String::new())] class: String) -> Element {
-    let classes = format!("relative flex w-px items-center justify-center bg-border cursor-col-resize {class}");
+    let classes = format!(
+        "relative flex w-px items-center justify-center bg-border cursor-col-resize {class}"
+    );
     rsx! {
         div { class: "{classes}", role: "separator", tabindex: "0",
             div { class: "z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border",

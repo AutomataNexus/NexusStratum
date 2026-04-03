@@ -8,12 +8,18 @@ pub fn ResizablePanelGroup(
     /// Direction: "horizontal" or "vertical".
     #[prop(optional, default = String::from("horizontal"))]
     direction: String,
-    #[prop(optional, default = String::new())]
-    class: String,
+    #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
-    let dir_cls = if direction == "vertical" { "flex-col" } else { "flex-row" };
-    let classes = format!("flex h-full w-full data-[panel-group-direction=vertical]:flex-col {} {}", dir_cls, class);
+    let dir_cls = if direction == "vertical" {
+        "flex-col"
+    } else {
+        "flex-row"
+    };
+    let classes = format!(
+        "flex h-full w-full data-[panel-group-direction=vertical]:flex-col {} {}",
+        dir_cls, class
+    );
     view! { <div class=classes data-panel-group-direction=direction>{children()}</div> }
 }
 
@@ -26,8 +32,7 @@ pub fn ResizablePanel(
     /// Minimum size as percentage.
     #[prop(optional, default = 10)]
     min_size: u32,
-    #[prop(optional, default = String::new())]
-    class: String,
+    #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
     let classes = format!("flex-1 overflow-auto {}", class);

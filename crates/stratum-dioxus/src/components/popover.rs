@@ -14,7 +14,10 @@ pub fn Popover(
 }
 
 #[component]
-pub fn PopoverTrigger(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn PopoverTrigger(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let mut open = use_context::<Signal<bool>>();
     rsx! {
         div {
@@ -28,9 +31,14 @@ pub fn PopoverTrigger(#[props(default = String::new())] class: String, children:
 }
 
 #[component]
-pub fn PopoverContent(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn PopoverContent(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let open = use_context::<Signal<bool>>();
-    let classes = format!("absolute z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none top-full mt-2 {class}");
+    let classes = format!(
+        "absolute z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none top-full mt-2 {class}"
+    );
 
     if !open() {
         return rsx! {};

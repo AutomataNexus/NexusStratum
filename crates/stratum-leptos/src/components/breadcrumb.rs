@@ -3,13 +3,22 @@
 use leptos::prelude::*;
 
 #[component]
-pub fn Breadcrumb(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
-    let classes = format!("flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 {}", class);
+pub fn Breadcrumb(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
+    let classes = format!(
+        "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 {}",
+        class
+    );
     view! { <nav aria-label="breadcrumb"><ol class=classes>{children()}</ol></nav> }
 }
 
 #[component]
-pub fn BreadcrumbItem(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
+pub fn BreadcrumbItem(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
     let classes = format!("inline-flex items-center gap-1.5 {}", class);
     view! { <li class=classes>{children()}</li> }
 }
@@ -25,7 +34,9 @@ pub fn BreadcrumbLink(
 }
 
 #[component]
-pub fn BreadcrumbSeparator(#[prop(optional, default = String::new())] class: String) -> impl IntoView {
+pub fn BreadcrumbSeparator(
+    #[prop(optional, default = String::new())] class: String,
+) -> impl IntoView {
     let classes = format!("[&>svg]:size-3.5 {}", class);
     view! {
         <li role="presentation" aria-hidden="true" class=classes>
@@ -35,7 +46,10 @@ pub fn BreadcrumbSeparator(#[prop(optional, default = String::new())] class: Str
 }
 
 #[component]
-pub fn BreadcrumbPage(#[prop(optional, default = String::new())] class: String, children: Children) -> impl IntoView {
+pub fn BreadcrumbPage(
+    #[prop(optional, default = String::new())] class: String,
+    children: Children,
+) -> impl IntoView {
     let classes = format!("font-normal text-foreground {}", class);
     view! { <span role="link" aria-disabled="true" aria-current="page" class=classes>{children()}</span> }
 }

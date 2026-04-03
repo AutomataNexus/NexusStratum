@@ -16,7 +16,9 @@ pub fn Muted(#[props(default = String::new())] class: String, children: Element)
 
 #[component]
 pub fn InlineCode(#[props(default = String::new())] class: String, children: Element) -> Element {
-    let classes = format!("relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold {class}");
+    let classes = format!(
+        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold {class}"
+    );
     rsx! { code { class: "{classes}", {children} } }
 }
 
@@ -27,7 +29,9 @@ pub fn Link(
     #[props(default = String::new())] class: String,
     children: Element,
 ) -> Element {
-    let classes = format!("font-medium text-primary underline underline-offset-4 hover:text-primary/80 {class}");
+    let classes = format!(
+        "font-medium text-primary underline underline-offset-4 hover:text-primary/80 {class}"
+    );
     rsx! {
         a {
             href: "{href}",

@@ -67,7 +67,6 @@ pub fn DialogDescription(
 
 #[component]
 pub fn DialogFooter(#[props(default = String::new())] class: String, children: Element) -> Element {
-    let classes =
-        format!("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 {class}");
+    let classes = format!("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 {class}");
     rsx! { div { class: "{classes}", {children} } }
 }

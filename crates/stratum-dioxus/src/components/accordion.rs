@@ -26,7 +26,9 @@ pub fn AccordionTrigger(
     children: Element,
 ) -> Element {
     let mut is_open = use_context::<Signal<bool>>();
-    let classes = format!("flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all hover:underline {class}");
+    let classes = format!(
+        "flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all hover:underline {class}"
+    );
     let rotate = if is_open() {
         "transform: rotate(180deg)"
     } else {

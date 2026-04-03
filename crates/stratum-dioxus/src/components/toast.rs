@@ -25,8 +25,16 @@ pub fn Toast(
         ToastVariant::Error => "bg-destructive text-destructive-foreground border-destructive",
         ToastVariant::Warning => "bg-background text-foreground border-l-4 border-l-yellow-500",
     };
-    let role = if matches!(variant, ToastVariant::Error) { "alert" } else { "status" };
-    let live = if matches!(variant, ToastVariant::Error) { "assertive" } else { "polite" };
+    let role = if matches!(variant, ToastVariant::Error) {
+        "alert"
+    } else {
+        "status"
+    };
+    let live = if matches!(variant, ToastVariant::Error) {
+        "assertive"
+    } else {
+        "polite"
+    };
     let classes = format!("{base} {variant_cls} {class}");
 
     if !open {
@@ -49,6 +57,8 @@ pub fn Toaster(
         "bottom-center" => "bottom-0 left-1/2 -translate-x-1/2",
         _ => "bottom-0 right-0",
     };
-    let classes = format!("fixed z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:flex-col md:max-w-[420px] {pos_cls}");
+    let classes = format!(
+        "fixed z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:flex-col md:max-w-[420px] {pos_cls}"
+    );
     rsx! { div { class: "{classes}", {children} } }
 }

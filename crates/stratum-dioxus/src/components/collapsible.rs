@@ -13,7 +13,10 @@ pub fn Collapsible(
 }
 
 #[component]
-pub fn CollapsibleTrigger(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn CollapsibleTrigger(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let mut open = use_context::<Signal<bool>>();
     rsx! {
         button {
@@ -26,7 +29,10 @@ pub fn CollapsibleTrigger(#[props(default = String::new())] class: String, child
 }
 
 #[component]
-pub fn CollapsibleContent(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn CollapsibleContent(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let open = use_context::<Signal<bool>>();
     if !open() {
         return rsx! {};

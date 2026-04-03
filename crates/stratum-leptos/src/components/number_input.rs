@@ -19,10 +19,16 @@ pub fn NumberInput(
     let update = move |delta: f64| {
         if !disabled {
             let mut new_val = val.get() + delta;
-            if let Some(lo) = min { new_val = new_val.max(lo); }
-            if let Some(hi) = max { new_val = new_val.min(hi); }
+            if let Some(lo) = min {
+                new_val = new_val.max(lo);
+            }
+            if let Some(hi) = max {
+                new_val = new_val.min(hi);
+            }
             val.set(new_val);
-            if let Some(handler) = &on_change { handler.run(new_val); }
+            if let Some(handler) = &on_change {
+                handler.run(new_val);
+            }
         }
     };
 

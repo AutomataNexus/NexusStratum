@@ -10,7 +10,10 @@ pub fn EmptyState(
     #[prop(optional, default = String::new())] class: String,
     #[prop(optional)] children: Option<Children>,
 ) -> impl IntoView {
-    let classes = format!("flex flex-col items-center justify-center py-12 text-center {}", class);
+    let classes = format!(
+        "flex flex-col items-center justify-center py-12 text-center {}",
+        class
+    );
     view! {
         <div class=classes>
             <h3 class="mt-2 text-sm font-semibold text-foreground">{title}</h3>

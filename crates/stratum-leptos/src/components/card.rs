@@ -33,10 +33,7 @@ pub fn CardTitle(
     #[prop(optional, default = String::new())] class: String,
     children: Children,
 ) -> impl IntoView {
-    let classes = format!(
-        "font-semibold leading-none tracking-tight {}",
-        class
-    );
+    let classes = format!("font-semibold leading-none tracking-tight {}", class);
     view! { <h3 class=classes>{children()}</h3> }
 }
 

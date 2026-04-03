@@ -18,11 +18,18 @@ pub fn ContextMenu(#[props(default = String::new())] class: String, children: El
 }
 
 #[component]
-pub fn ContextMenuContent(#[props(default = String::new())] class: String, children: Element) -> Element {
+pub fn ContextMenuContent(
+    #[props(default = String::new())] class: String,
+    children: Element,
+) -> Element {
     let (open, pos) = use_context::<(Signal<bool>, Signal<(i32, i32)>)>();
-    if !open() { return rsx! {}; }
+    if !open() {
+        return rsx! {};
+    }
     let (x, y) = pos();
-    let classes = format!("z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md {class}");
+    let classes = format!(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md {class}"
+    );
     rsx! { div { class: "{classes}", role: "menu", style: "position:fixed;left:{x}px;top:{y}px", {children} } }
 }
 
@@ -34,8 +41,14 @@ pub fn ContextMenuItem(
     children: Element,
 ) -> Element {
     let mut open = use_context::<(Signal<bool>, Signal<(i32, i32)>)>().0;
-    let cls = if disabled { "pointer-events-none opacity-50" } else { "cursor-pointer" };
-    let classes = format!("relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground {cls} {class}");
+    let cls = if disabled {
+        "pointer-events-none opacity-50"
+    } else {
+        "cursor-pointer"
+    };
+    let classes = format!(
+        "relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground {cls} {class}"
+    );
     rsx! {
         div { class: "{classes}", role: "menuitem", onclick: move |_| {
             if !disabled { if let Some(handler) = &on_select { handler.call(()); } open.set(false); }
