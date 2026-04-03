@@ -1,21 +1,20 @@
 //! # stratum-explorer
 //!
-//! Component explorer for NexusStratum.
+//! Component explorer for NexusStratum — a browsable catalog of all
+//! components with their props, variants, ARIA roles, and keyboard patterns.
 //!
-//! **Status: Phase 2** -- This crate is scaffolded but not yet implemented.
-//! The explorer will provide a live, interactive catalog of all NexusStratum
-//! components, similar to Storybook, allowing developers to browse variants,
-//! tweak props, and inspect accessibility attributes.
+//! The explorer reads component metadata from `stratum-sdk` and generates
+//! a static HTML site that can be served locally or deployed.
 //!
-//! ## Planned features
+//! ## Usage
 //!
-//! - Browse all registered components with live previews
-//! - Interactive prop editors with type-aware controls
-//! - Accessibility audit panel per component
-//! - Theme switcher for light/dark/custom themes
+//! ```rust,no_run
+//! use stratum_explorer::Explorer;
 //!
-//! ## Dependencies
-//!
-//! Only `stratum-core` is required at this stage. Additional dependencies
-//! (`stratum-components`, `stratum-leptos`, `stratum-theme`, `stratum-sdk`)
-//! will be added when implementation begins.
+//! let explorer = Explorer::new();
+//! explorer.generate("./explorer-output");
+//! ```
+
+pub mod generator;
+
+pub use generator::Explorer;
