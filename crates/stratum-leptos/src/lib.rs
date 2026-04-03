@@ -20,14 +20,17 @@ pub mod provider;
 // Re-export everything at crate root for ergonomic imports
 pub use components::accordion::*;
 pub use components::alert::*;
+pub use components::avatar::Avatar;
 pub use components::badge::*;
 pub use components::button::*;
 pub use components::card::*;
 pub use components::checkbox::*;
+pub use components::collapsible::*;
 pub use components::dialog::*;
 pub use components::heading::*;
 pub use components::input::*;
 pub use components::label::*;
+pub use components::popover::*;
 pub use components::progress::*;
 pub use components::radio::*;
 pub use components::select::*;
@@ -38,7 +41,9 @@ pub use components::switch::*;
 pub use components::tabs::*;
 pub use components::text::*;
 pub use components::textarea::*;
+pub use components::toast::*;
 pub use components::tooltip::*;
+pub use components::visually_hidden::VisuallyHidden;
 
 pub use adapter::StratumAdapter;
 pub use provider::ThemeContext;
