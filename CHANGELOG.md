@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - stratum-components: 30+ styled components across 7 categories (Forms, Overlay, Navigation, Data Display, Layout, Typography, Utility) with Tailwind class generation and RenderOutput
 - stratum-leptos: StratumAdapter (DOM event conversion), ThemeContext, ToasterContext, component re-exports
 - stratum-cli: All commands implemented — init (creates stratum.toml/components dir), add (writes component source files), theme list/create/apply, diff (GitHub compare URL), docs (opens browser), explorer, list
+- stratum-dioxus: DioxusAdapter (event conversion, render attrs), ThemeContext, ToasterContext, all component re-exports
+- stratum-sdk: ComponentMeta, PropMeta, KeyboardMeta, RegistryMeta with JSON serialization, built-in Button/Dialog/Tabs metadata, case-insensitive lookup
+- stratum-explorer: Static site generator from SDK metadata, index + per-component pages with props tables and keyboard patterns
 - stratum-test: Test utility functions (assert_aria_role, assert_has_class, assert_has_attr, etc.)
 - stratum (umbrella): Feature-gated re-exports for all subcrates
 - Landing site at stratum-ui.com: 35 pages (landing, components catalog, 28 component detail pages, docs, installation, blocks)

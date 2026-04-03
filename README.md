@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://github.com/AutomataNexus/NexusStratum#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg" alt="License"></a>
   <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/rust-1.85%2B-orange.svg" alt="Rust"></a>
-  <a href="https://github.com/AutomataNexus/NexusStratum"><img src="https://img.shields.io/badge/tests-676%20passing-brightgreen.svg" alt="Tests"></a>
+  <a href="https://github.com/AutomataNexus/NexusStratum"><img src="https://img.shields.io/badge/tests-701%20passing-brightgreen.svg" alt="Tests"></a>
 </p>
 
 ---
@@ -110,7 +110,7 @@ Components ship with sensible defaults, full keyboard support, and ARIA attribut
 | Framework | Adapter | Status |
 |---|---|---|
 | Leptos 0.8+ | `stratum-leptos` | Supported |
-| Dioxus 0.6+ | `stratum-dioxus` | Phase 2 |
+| Dioxus 0.6+ | `stratum-dioxus` | Supported |
 
 Components written against `stratum-primitives` are portable between frameworks.
 
