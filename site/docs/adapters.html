@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Framework Adapters — NexusStratum</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/style.css"></head><body>
+<nav class="nav"><div class="nav-inner"><div class="nav-left"><a href="/" class="nav-logo"><img src="/assets/favicon-32.png" alt="" width="24" height="24" style="border-radius:4px"> NexusStratum</a><div class="nav-links"><a href="/docs/" class="active">Docs</a><a href="/components/">Components</a><a href="/blocks/">Blocks</a></div></div><div class="nav-right"><button class="nav-search" data-search-trigger><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search...<kbd>Ctrl K</kbd></button><a href="https://github.com/AutomataNexus/NexusStratum" class="nav-gh" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a><a href="/docs/installation.html" class="nav-cta">Get Started &rarr;</a></div></div></nav>
+<div class="search-overlay" id="search-overlay"><div class="search-modal"><div class="search-input-row"><svg class="search-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" class="search-input" id="search-input" placeholder="Search..."></div><div class="search-results" id="search-results"></div></div></div>
+<div class="layout-sidebar">
+  <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-heading">Getting Started</div><div class="sidebar-list"><a href="/docs/">Introduction</a><a href="/docs/installation.html">Installation</a><a href="/docs/theming.html">Theming</a><a href="/docs/dark-mode.html">Dark Mode</a><a href="/docs/cli.html">CLI</a></div></div><div class="sidebar-section"><div class="sidebar-heading">Architecture</div><div class="sidebar-list"><a href="/docs/primitives.html">Headless Primitives</a><a href="/docs/components.html">Styled Components</a><a href="/docs/adapters.html" class="active">Framework Adapters</a><a href="/docs/accessibility.html">Accessibility</a><a href="/docs/security.html">Security</a></div></div><div class="sidebar-section"><div class="sidebar-heading">Frameworks</div><div class="sidebar-list"><a href="/docs/leptos.html">Leptos</a><a href="/docs/dioxus.html">Dioxus</a></div></div></aside>
+  <main class="main-content doc-content">
+    <h1 style="font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;border:none;padding:0;">Framework Adapters</h1>
+    <p style="font-size:17px;color:var(--text-2);margin-bottom:32px;">How NexusStratum bridges framework-agnostic components to Leptos and Dioxus.</p>
+
+    <h2>The Adapter Pattern</h2>
+    <p>NexusStratum's primitives and styled components produce <code>RenderOutput</code> — a framework-agnostic description of what to render (tag, classes, ARIA attributes, children). Framework adapters translate this into each framework's native rendering model.</p>
+    <div class="code-block"><div class="code-header"><div class="code-header-left"><span class="code-filename">Architecture</span></div></div><pre><code>stratum-primitives (Component trait)
+        |
+        +-- stratum-leptos (bridges to Leptos signals + view!)
+        |
+        +-- stratum-dioxus (bridges to Dioxus signals + rsx!)</code></pre></div>
+
+    <h2>What Adapters Do</h2>
+    <ul>
+      <li><strong>Event conversion</strong> — DOM events (click, keydown) to <code>ComponentEvent</code></li>
+      <li><strong>Render translation</strong> — <code>RenderOutput</code> to HTML attribute pairs</li>
+      <li><strong>Context providers</strong> — <code>ThemeContext</code>, <code>ToasterContext</code></li>
+      <li><strong>Type re-exports</strong> — all component types accessible from one import</li>
+    </ul>
+
+    <h2>Supported Frameworks</h2>
+    <table class="props-table"><thead><tr><th>Framework</th><th>Crate</th><th>Adapter</th></tr></thead><tbody>
+      <tr><td>Leptos 0.8+</td><td>stratum-leptos</td><td>StratumAdapter</td></tr>
+      <tr><td>Dioxus 0.6+</td><td>stratum-dioxus</td><td>DioxusAdapter</td></tr>
+    </tbody></table>
+
+    <h2>Adding a New Framework</h2>
+    <p>To support a new Rust frontend framework (e.g., Sycamore, Yew), create a new adapter crate that:</p>
+    <ul>
+      <li>Converts the framework's events to <code>ComponentEvent</code></li>
+      <li>Translates <code>RenderOutput</code> to the framework's view model</li>
+      <li>Provides context providers for theming</li>
+      <li>Re-exports all component types</li>
+    </ul>
+
+    <div style="margin-top:40px;display:flex;gap:12px">
+      <a href="/docs/leptos.html" class="btn btn-secondary">Leptos Guide</a>
+      <a href="/docs/dioxus.html" class="btn btn-secondary">Dioxus Guide</a>
+    </div>
+  </main>
+</div>
+<script src="/assets/app.js"></script></body></html>
