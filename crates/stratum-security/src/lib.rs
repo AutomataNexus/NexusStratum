@@ -19,7 +19,7 @@ pub mod sanitize;
 pub mod sri;
 
 pub use csp::CspNonce;
-pub use csrf::CsrfToken;
+pub use csrf::{CsrfError, CsrfKey, CsrfToken};
 pub use headers::SecurityHeaders;
 pub use sanitize::Sanitizer;
 pub use sri::SriHash;

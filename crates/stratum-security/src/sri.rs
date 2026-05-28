@@ -100,8 +100,10 @@ fn base64_encode(data: &[u8]) -> String {
 }
 
 /// Minimal SHA-256 implementation (FIPS 180-4).
-/// Only used for SRI — not for general cryptographic purposes.
-fn sha256_digest(data: &[u8]) -> Vec<u8> {
+///
+/// Shared within the crate as the hash primitive for SRI digests and for the
+/// HMAC-SHA256 used by time-based CSRF tokens (see [`crate::csrf`]).
+pub(crate) fn sha256_digest(data: &[u8]) -> Vec<u8> {
     let mut h: [u32; 8] = [
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
         0x5be0cd19,
